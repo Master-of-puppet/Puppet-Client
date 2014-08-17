@@ -7,8 +7,7 @@ namespace Puppet.Core.Network.Socket
 {
     public interface ISocket
     {
-        IServerMode serverMode;
-
+        IServerMode ServerBase { get; }
         void Init();
         void Start();
         void Connect(Action<bool> action);

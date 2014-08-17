@@ -10,19 +10,24 @@ namespace Puppet
         class Setting : IPuSettings
         {
             ServerMode server;
-            public Setting()
+            EPlatform _platform;
+            EEngine _engine;
+
+            public Setting(EPlatform platform, EEngine engine)
             {
                 server = new ServerMode();
+                _platform = platform;
+                _engine = engine;
             }
 
             public EPlatform Platform
             {
-                get { return EPlatform.Editor; }
+                get { return _platform; }
             }
 
             public EEngine Engine
             {
-                get { return EEngine.Base; }
+                get { return _engine; }
             }
 
             public string PathCache
@@ -80,7 +85,7 @@ namespace Puppet
         public static void Main()
         {
             //Initialized Setting before use
-            PuMain.Setting = new Setting();
+            PuMain.Setting = new Setting(EPlatform.Editor, EEngine.Base);
             #region TYPE TEST SCRIPTS IN HERE
 
             TestCaching();
