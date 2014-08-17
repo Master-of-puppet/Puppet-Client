@@ -50,7 +50,6 @@ namespace Puppet.Utils.Storage
                     CacheModel model = new CacheModel(type, value);
                     memCache[fullKey] = model;
                 }
-
             }
             else
             {
@@ -192,7 +191,6 @@ namespace Puppet.Utils.Storage
 
         public bool HasKey(string key)
         {
-            key = GetFullKey(key);
             return memCache.ContainsKey(key);
         }
 

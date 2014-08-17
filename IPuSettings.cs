@@ -24,7 +24,7 @@ namespace Puppet
         EPlatform Platform { get; }
         EEngine Engine { get; }
         ServerEnvironment Environment { get; }
-        IServerMode ServerModeWeb { get; }
+        IServerMode ServerModeHttp { get; }
         IServerMode ServerModeBundle { get; }
         IServerMode ServerModeSocket { get; }
         string PathCache { get; }

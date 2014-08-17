@@ -1,6 +1,8 @@
 ﻿using Puppet.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace Puppet
 {
@@ -12,12 +14,14 @@ namespace Puppet
             ServerMode server;
             EPlatform _platform;
             EEngine _engine;
+            string _pathCaching;
 
-            public Setting(EPlatform platform, EEngine engine)
+            public Setting(EPlatform platform, EEngine engine, string pathCaching)
             {
                 server = new ServerMode();
                 _platform = platform;
                 _engine = engine;
+                _pathCaching = pathCaching;
             }
 
             public EPlatform Platform
@@ -32,11 +36,7 @@ namespace Puppet
 
             public string PathCache
             {
-                get 
-                {
-                    string directory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                    return System.IO.Path.Combine(directory, "Caching.save"); 
-                }
+                get  { return _pathCaching; }
             }
 
             public ServerEnvironment Environment
@@ -44,7 +44,7 @@ namespace Puppet
                 get { return ServerEnvironment.Dev; }
             }
 
-            public IServerMode ServerModeWeb
+            public IServerMode ServerModeHttp
             {
                 get { return server; }
             }
@@ -85,7 +85,8 @@ namespace Puppet
         public static void Main()
         {
             //Initialized Setting before use
-            PuMain.Setting = new Setting(EPlatform.Editor, EEngine.Base);
+            string pathCaching = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Caching.save");
+            PuMain.Setting = new Setting(EPlatform.Editor, EEngine.Base, pathCaching);
             #region TYPE TEST SCRIPTS IN HERE
 
             TestCaching();
@@ -99,11 +100,13 @@ namespace Puppet
         {
             Logger.Log(PuMain.Setting.PathCache);
 
-            CacheHandler.Instance.SetString("string_key", "string_value");
+            //CacheHandler.Instance.SetObject("setting_object", PuMain.Setting);
 
             CacheHandler.Instance.SaveFile((bool status) => {
                 Logger.Log("Save cache file {0}: {1}", PuMain.Setting.PathCache, status);
             });
+
+            //Logger.Log(CacheHandler.Instance.GetObject("setting_object").ToString());
         }
     }
 }

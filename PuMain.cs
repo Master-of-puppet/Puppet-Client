@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Puppet.Core.Network.Http;
+using System;
 using System.Collections.Generic;
 
 namespace Puppet
@@ -24,6 +25,17 @@ namespace Puppet
         public override void Init()
         {
             Logger.Log("PuppetMain has been initialized");
+        }
+
+        static HttpHandler _wwwHandler;
+        public static HttpHandler WWWHandler
+        {
+            get
+            {
+                if (_wwwHandler == null)
+                    _wwwHandler = new HttpHandler(Setting.ServerModeHttp, Setting.Engine);
+                return _wwwHandler;
+            }
         }
     }
 }
