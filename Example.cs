@@ -1,8 +1,11 @@
-﻿using Puppet.Utils;
+﻿using Puppet.Core.Network.Socket;
+using Puppet.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Serialization;
+using System.Threading;
 
 namespace Puppet
 {
@@ -84,16 +87,26 @@ namespace Puppet
 
         public static void Main()
         {
+            AppDomain.CurrentDomain.AssemblyResolve += RegisterAssembly;
+            
             //Initialized Setting before use
             string pathCaching = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Caching.save");
             PuMain.Setting = new Setting(EPlatform.Editor, EEngine.Base, pathCaching);
             #region TYPE TEST SCRIPTS IN HERE
 
-            TestCaching();
+            //TestCaching();
+
+            TestSocket();
 
             #endregion
             //Wait for Enter to close console.
             Console.ReadLine();
+        }
+
+        static Assembly RegisterAssembly(object sender, ResolveEventArgs args)
+        {
+            //return Assembly.LoadFrom(@"D:\PROJECTS\Personal\Unity3D\PuppetClient\lib\UnityEngine.dll");
+            return Assembly.LoadFrom(@"D:\PROJECTS\Personal\Unity3D\PuppetClient\lib\SmartFox2X.dll");
         }
 
         static void TestCaching()
@@ -107,6 +120,23 @@ namespace Puppet
             });
 
             //Logger.Log(CacheHandler.Instance.GetObject("setting_object").ToString());
+        }
+
+        static void TestSocket()
+        {
+            CSmartFox sf = new CSmartFox();
+            sf.Start();
+
+            sf.Connect();
+
+            Thread thread = new Thread(new ThreadStart(
+            () => 
+                {
+                    Thread.Sleep(1000);
+                    sf.FixedUpdate();
+                }
+            ));
+            thread.Start();
         }
     }
 }
