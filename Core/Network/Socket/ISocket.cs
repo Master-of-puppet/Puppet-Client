@@ -14,12 +14,11 @@ namespace Puppet.Core.Network.Socket
     {
         void Init();
         void Start();
-        void Dispatch();
-        bool Ping();
         bool IsConnected { get; }
         void Connect(SocketOpenDelegate openDelegate, SocketMessageDelegate messageDelegate);
-        void Disconnect(Action<bool> action);
+        void Disconnect();
         void Request(ISocketRequest request);
+        void Dispatch();
         void Close();
     }
 
