@@ -4,7 +4,7 @@ using Puppet.Utils.Storage;
 
 namespace Puppet.Utils
 {
-    public sealed class CacheHandler : Patterns.BaseSingleton<CacheHandler>, IStorage, IStorageFile
+    public sealed class CacheHandler : BaseSingleton<CacheHandler>, IStorage, IStorageFile
     {
         AbstractCacheService _cache;
 

@@ -5,26 +5,26 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Puppet.Utils.Storage
 {
-    public sealed class PlayerPrefStorage : Puppet.Patterns.BaseSingleton<PlayerPrefStorage>, IStorage
+    public sealed class PlayerPrefStorage : BaseSingleton<PlayerPrefStorage>, IStorage
     {
         public override void Init(){}
 
         public void SetInt(string key, int value)
         {
             key = GetFullKey(key);
-            UnityEngine.PlayerPrefs.SetInt(key, value);
+            PuMain.Setting.PlayerPref.SetInt(key, value);
         }
 
         public void SetFloat(string key, float value)
         {
             key = GetFullKey(key);
-            UnityEngine.PlayerPrefs.SetFloat(key, value);
+            PuMain.Setting.PlayerPref.SetFloat(key, value);
         }
 
         public void SetString(string key, string value)
         {
             key = GetFullKey(key);
-            UnityEngine.PlayerPrefs.SetString(key, value);
+            PuMain.Setting.PlayerPref.SetString(key, value);
         }
 
         public void SetObject(string key, object value)
@@ -40,19 +40,19 @@ namespace Puppet.Utils.Storage
         public int GetInt(string key)
         {
             key = GetFullKey(key);
-            return UnityEngine.PlayerPrefs.GetInt(key);
+            return PuMain.Setting.PlayerPref.GetInt(key);
         }
 
         public float GetFloat(string key)
         {
             key = GetFullKey(key);
-            return UnityEngine.PlayerPrefs.GetFloat(key);
+            return PuMain.Setting.PlayerPref.GetFloat(key);
         }
 
         public string GetString(string key)
         {
             key = GetFullKey(key);
-            return UnityEngine.PlayerPrefs.GetString(key);
+            return PuMain.Setting.PlayerPref.GetString(key);
         }
 
         public object GetObject(string key)
@@ -69,19 +69,19 @@ namespace Puppet.Utils.Storage
 
         public void DeleteAll()
         {
-            UnityEngine.PlayerPrefs.DeleteAll();
+            PuMain.Setting.PlayerPref.DeleteAll();
         }
 
         public void DeleteKey(string key)
         {
             key = GetFullKey(key);
-            UnityEngine.PlayerPrefs.DeleteKey(key);
+            PuMain.Setting.PlayerPref.DeleteKey(key);
         }
 
         public bool HasKey(string key)
         {
             key = GetFullKey(key);
-            return UnityEngine.PlayerPrefs.HasKey(key);
+            return PuMain.Setting.PlayerPref.HasKey(key);
         }
 
         public string GetFullKey(string key)

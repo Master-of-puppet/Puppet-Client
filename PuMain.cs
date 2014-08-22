@@ -8,7 +8,7 @@ namespace Puppet
     /// Author: Dung Nguyen Viet
     /// Puppet Main class
     /// </summary>
-    public class PuMain : Patterns.BaseSingleton<PuMain>
+    public class PuMain : BaseSingleton<PuMain>
     {
         static IPuSettings _settings = null;
         public static IPuSettings Setting 
@@ -33,7 +33,7 @@ namespace Puppet
             get
             {
                 if (_wwwHandler == null)
-                    _wwwHandler = new HttpHandler(Setting.ServerModeHttp, Setting.Engine);
+                    _wwwHandler = new HttpHandler(Setting.ServerModeHttp);
                 return _wwwHandler;
             }
         }

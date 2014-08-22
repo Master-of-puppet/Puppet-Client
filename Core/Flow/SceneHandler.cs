@@ -1,35 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Puppet.Patterns;
+using Puppet;
 using Puppet.Core.Model;
 
 namespace Puppet.Core.Flow
 {
     public class SceneHandler : BaseSingleton<SceneHandler>
     {
-        public Action<string, string, bool, float> onChangeScene;
-        public IScene _currentScene;
+        IScene _currentScene;
+        EScene _lastScene = EScene.None;
+        List<IScene> allSceneInGame = new List<IScene>();
 
         public override void Init()
         {
-            
+            _currentScene = SceneSplashScreen.Instance;
+
+            IScene temp = _currentScene;
+            while (temp != null && !allSceneInGame.Contains(temp))
+            {
+                allSceneInGame.Add(temp);
+                temp = temp.NextScene;
+            }
         }
 
-        public IScene CurrentScene
+        public IScene Current
         {
             get { return _currentScene; }
+            set
+            {
+                _lastScene = _currentScene.SceneType;
+                _currentScene.EndScene();
+                _currentScene = value;
+                _currentScene.BeginScene();
+            }
+        }
+
+        public EScene LastScene
+        {
+            get { return _lastScene; }
         }
 
         public void Scene_Back()
         {
             if(_currentScene.PrevScene != null)
             {
-                IScene oldScene = _currentScene;
                 ChangeScene(_currentScene.PrevScene.SceneName);
-                _currentScene = _currentScene.PrevScene;
-                _currentScene.OldScene = oldScene;
+                Current = _currentScene.PrevScene;
             }
         }
 
@@ -37,33 +53,26 @@ namespace Puppet.Core.Flow
         {
             if(_currentScene.NextScene != null)
             {
-                IScene oldScene = _currentScene;
                 ChangeScene(_currentScene.NextScene.SceneName);
-                _currentScene = _currentScene.NextScene;
-                _currentScene.OldScene = oldScene;
+                Current = _currentScene.NextScene;
             }
         }
 
-        public void Scene_GoTo(IScene scene)
+        public void Scene_GoTo(EScene sceneType)
         {
+            IScene scene = allSceneInGame.Find(s =>s.SceneType == sceneType);
             if (scene != null)
             {
-                IScene oldScene = _currentScene;
                 ChangeScene(scene.SceneName);
-                _currentScene = scene;
-                _currentScene.OldScene = oldScene;
+                Current = scene;
             }
+            else
+                Logger.LogError("Did not find scene fit");
         }
 
         void ChangeScene(string sceneName)
         {
-            if (PuMain.Setting.Engine == EEngine.Unity)
-            {
-                UnityEngine.AsyncOperation asyn = UnityEngine.Application.LoadLevelAdditiveAsync(sceneName);
-
-                if (onChangeScene != null)
-                    onChangeScene(_currentScene.SceneName, sceneName, asyn.isDone, asyn.progress);
-            }
+            PuMain.Setting.ActionChangeScene(Current.SceneName, sceneName);
         }
     }
 }

@@ -11,7 +11,6 @@ namespace Puppet.Core.Model
         EScene SceneType { get; }
         IScene NextScene { get; }
         IScene PrevScene { get; }
-        IScene OldScene { get; set; }
         void BeginScene();
         void EndScene();
     }

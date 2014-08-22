@@ -113,7 +113,6 @@ namespace Puppet.Core.Network.Http
             set { _onResponse = value; }
         }
 
-
         void Dispose(WWW www)
         {
             if (--RetryCount > 0)

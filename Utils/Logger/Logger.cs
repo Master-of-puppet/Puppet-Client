@@ -3,21 +3,13 @@ using Puppet.Utils.Loggers;
 
 namespace Puppet
 {
-    public class Logger : Patterns.BaseSingleton<Logger>
+    public class Logger : BaseSingleton<Logger>
     {
         ILogger _logger;
 
         public override void Init()
         {
-            switch (PuMain.Setting.Engine)
-            {
-                case EEngine.Base:
-                    _logger = new CSharpLogger();
-                    break;
-                case EEngine.Unity:
-                    _logger = new UnityLogger();
-                    break;
-            }
+            _logger = new PuLogger();
         }
 
         public static void Info(object message, params object[] list)

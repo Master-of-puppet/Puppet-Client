@@ -7,10 +7,11 @@ namespace Puppet
 {
     public enum EScene
     {
-        SplashScreen,
-        LoginScreen,
-        Pocker_Plaza,
-        Pocker_Lobby,
-        Pocker_Gameplay,
+        None = 0,
+        SplashScreen = 1,
+        LoginScreen = 2,
+        Pocker_Plaza = 3,
+        Pocker_Lobby = 4,
+        Pocker_Gameplay = 5,
     }
 }

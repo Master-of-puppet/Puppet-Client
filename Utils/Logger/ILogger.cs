@@ -16,4 +16,12 @@ namespace Puppet.Utils.Loggers
 
         void LogException(Exception exception);
     }
+
+    public enum ELogType
+    {
+        Info,
+        Error,
+        Warning,
+        Exception
+    }
 }

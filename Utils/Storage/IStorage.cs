@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Puppet.Utils.Storage
 {
-    interface IStorage
+    public interface IStorage
     {
         void SetInt(string key, int value);
         void SetFloat(string key, float value);

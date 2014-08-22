@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Puppet.Utils.Threading
 {
-    class UnityThread : IThread
+    internal class UnityThread : BaseSingleton<UnityThread>, IThread
     {
         public void QueueOnMainThread(Action action)
         {
@@ -18,6 +18,11 @@ namespace Puppet.Utils.Threading
         public System.Threading.Thread RunAsync(Action a)
         {
             return Loom.RunAsync(a);
+        }
+
+        public override void Init()
+        {
+            throw new NotImplementedException();
         }
     }
 }

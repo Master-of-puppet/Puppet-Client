@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Puppet.Utils.Threading
 {
-    class CsharpThread : IThread
+    internal class CsharpThread : BaseSingleton<CsharpThread>, IThread
     {
         public void QueueOnMainThread(Action action)
         {
@@ -33,6 +33,10 @@ namespace Puppet.Utils.Threading
         private static void RunAction(object action)
         {
             ((Action)action)();
+        }
+
+        public override void Init()
+        {
         }
     }
 }

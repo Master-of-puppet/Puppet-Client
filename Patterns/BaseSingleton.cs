@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Puppet.Patterns
+namespace Puppet
 {
     public abstract class BaseSingleton<T> where T : BaseSingleton<T>, new()
     {

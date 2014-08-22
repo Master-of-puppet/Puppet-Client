@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Puppet.Core.Network.Http
 {
-    sealed class UnityHttp : IHttp
+    sealed class BaseHttp : IHttp
     {
         IServerMode serverMode;
-        public UnityHttp(IServerMode server)
+        public BaseHttp(IServerMode server)
         {
             this.serverMode = server;
         }

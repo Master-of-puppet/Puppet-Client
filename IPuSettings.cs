@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Puppet.Utils.Loggers;
+using Puppet.Utils.Storage;
+using Puppet.Utils.Threading;
+using System;
 
 namespace Puppet
 {
@@ -13,20 +13,19 @@ namespace Puppet
         WebPlayer,
     }
 
-    public enum EEngine
-    {
-        Base,
-        Unity,
-    }
-
     public interface IPuSettings
     {
         EPlatform Platform { get; }
-        EEngine Engine { get; }
         ServerEnvironment Environment { get; }
         IServerMode ServerModeHttp { get; }
         IServerMode ServerModeBundle { get; }
         IServerMode ServerModeSocket { get; }
         string PathCache { get; }
+
+        IStorage PlayerPref { get; }
+        IThread Threading { get; }
+
+        void ActionChangeScene(string fromScene, string toScene);
+        void ActionPrintLog(ELogType type, object message);
     }
 }

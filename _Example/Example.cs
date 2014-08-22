@@ -1,5 +1,8 @@
-﻿using Puppet.Core.Network.Socket;
+﻿using Puppet.Core.Flow;
+using Puppet.Core.Model;
+using Puppet.Core.Network.Socket;
 using Puppet.Utils;
+using Puppet.Utils.Loggers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,25 +19,18 @@ namespace Puppet
         {
             ServerMode server;
             EPlatform _platform;
-            EEngine _engine;
             string _pathCaching;
 
-            public Setting(EPlatform platform, EEngine engine, string pathCaching)
+            public Setting(EPlatform platform, string pathCaching)
             {
                 server = new ServerMode();
                 _platform = platform;
-                _engine = engine;
                 _pathCaching = pathCaching;
             }
 
             public EPlatform Platform
             {
                 get { return _platform; }
-            }
-
-            public EEngine Engine
-            {
-                get { return _engine; }
             }
 
             public string PathCache
@@ -82,6 +78,39 @@ namespace Puppet
                     return string.Format("{0}/{1}", GetBaseUrl(), path);
                 }
             }
+
+            public void ActionChangeScene(string fromScene, string toScene)
+            {
+
+            }
+
+            public void ActionPrintLog(ELogType type, object message)
+            {
+                Console.WriteLine(string.Format("{0}: {1}", type.ToString(), message.ToString()));
+                StackTrace();
+            }
+
+            void StackTrace()
+            {
+                //System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+                //for (int i = 3; i < stackTrace.FrameCount;i++)
+                //{
+                //    System.Diagnostics.StackFrame frame = stackTrace.GetFrame(i);
+                //    Console.WriteLine("- {0}", frame.ToString());
+                //}
+                Console.WriteLine();
+            }
+
+
+            public Utils.Storage.IStorage PlayerPref
+            {
+                get { return UnityPlayerPrefab.Instance; }
+            }
+
+            public Utils.Threading.IThread Threading
+            {
+                get { return Utils.Threading.CsharpThread.Instance; }
+            }
         }
         #endregion
 
@@ -91,12 +120,14 @@ namespace Puppet
             
             //Initialized Setting before use
             string pathCaching = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "Caching.save");
-            PuMain.Setting = new Setting(EPlatform.Editor, EEngine.Base, pathCaching);
+            PuMain.Setting = new Setting(EPlatform.Editor, pathCaching);
             #region TYPE TEST SCRIPTS IN HERE
 
             //TestCaching();
 
-            TestSocket();
+            //TestSocket();
+
+            TestSceneFlow();
 
             #endregion
             //Wait for Enter to close console.
@@ -113,13 +144,9 @@ namespace Puppet
         {
             Logger.Log(PuMain.Setting.PathCache);
 
-            //CacheHandler.Instance.SetObject("setting_object", PuMain.Setting);
-
             CacheHandler.Instance.SaveFile((bool status) => {
                 Logger.Log("Save cache file {0}: {1}", PuMain.Setting.PathCache, status);
             });
-
-            //Logger.Log(CacheHandler.Instance.GetObject("setting_object").ToString());
         }
 
         static void TestSocket()
@@ -137,6 +164,31 @@ namespace Puppet
                 }
             ));
             thread.Start();
+        }
+
+        static void TestSceneFlow()
+        {
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_Next();
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_Next();
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_Next();
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_Next();
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_Next();
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_Back();
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_Back();
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_Back();
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_GoTo(EScene.Pocker_Gameplay);
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
+            SceneHandler.Instance.Scene_GoTo(EScene.LoginScreen);
+            Logger.Log(SceneHandler.Instance.Current.SceneName);
         }
     }
 }

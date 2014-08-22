@@ -3,21 +3,13 @@ using Puppet.Utils.Threading;
 
 namespace Puppet.Utils
 {
-    public sealed class ThreadHandler : Puppet.Patterns.BaseSingleton<ThreadHandler>
+    public sealed class ThreadHandler : BaseSingleton<ThreadHandler>
     {
          IThread _thread;
 
         public override void Init()
         {
-            switch (PuMain.Setting.Engine)
-            {
-                case EEngine.Base:
-                    _thread = new CsharpThread();
-                    break;
-                case EEngine.Unity:
-                    _thread = new UnityThread();
-                    break;
-            }
+            _thread = PuMain.Setting.Threading;
         }
 
         public static void QueueOnMainThread(Action action)
