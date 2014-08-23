@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using Puppet.Utils;
 
-namespace Puppet.Model
+namespace Puppet.Core.Model
 {
     [Serializable()]
     public class DataModel : IDataModel, ISerializable

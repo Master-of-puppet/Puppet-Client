@@ -1,4 +1,4 @@
-﻿using Puppet.Model;
+﻿using Puppet.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;

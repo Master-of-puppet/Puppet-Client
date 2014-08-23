@@ -19,14 +19,14 @@ namespace Puppet.Utils
             if (type != null)
                 return type;
 
-            var typeWithNamespace = Type.GetType("Esimo." + typeName);
+            var typeWithNamespace = Type.GetType("Puppet." + typeName);
             if (typeWithNamespace != null)
                 return typeWithNamespace;
 
             foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
             {
                 type = a.GetType(typeName);
-                typeWithNamespace = a.GetType("Esimo." + typeName);
+                typeWithNamespace = a.GetType("Puppet." + typeName);
                 if (type != null)
                     return type;
                 if (typeWithNamespace != null)

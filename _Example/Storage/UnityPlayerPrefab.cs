@@ -1,78 +1,73 @@
-﻿using System;
+﻿using Puppet.Utils.Storage;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using UnityEngine;
 
 namespace Puppet
 {
-    class UnityPlayerPrefab : BaseSingleton<UnityPlayerPrefab>, Utils.Storage.IStorage
+    public class UnityPlayerPrefab : BaseSingleton<UnityPlayerPrefab>, IStorage
     {
         public void SetInt(string key, int value)
         {
-            throw new NotImplementedException();
+            PlayerPrefs.SetInt(key, value);
         }
 
         public void SetFloat(string key, float value)
         {
-            throw new NotImplementedException();
+            PlayerPrefs.SetFloat(key, value);
         }
 
         public void SetString(string key, string value)
         {
-            throw new NotImplementedException();
+            PlayerPrefs.SetString(key, value);
         }
 
         public void SetObject(string key, object value)
         {
-            //NotImplement
-            throw new NotImplementedException();
         }
 
         public int GetInt(string key)
         {
-            throw new NotImplementedException();
+            return PlayerPrefs.GetInt(key);
         }
 
         public float GetFloat(string key)
         {
-            throw new NotImplementedException();
+            return PlayerPrefs.GetFloat(key);
         }
 
         public string GetString(string key)
         {
-            throw new NotImplementedException();
+            return PlayerPrefs.GetString(key);
         }
 
         public object GetObject(string key)
         {
-            //NotImplement
-            throw new NotImplementedException();
+            return null;
         }
 
         public void DeleteAll()
         {
-            throw new NotImplementedException();
+            PlayerPrefs.DeleteAll();
         }
 
         public void DeleteKey(string key)
         {
-            throw new NotImplementedException();
+            PlayerPrefs.DeleteKey(key);
         }
 
         public bool HasKey(string key)
         {
-            throw new NotImplementedException();
+            return PlayerPrefs.HasKey(key);
         }
 
         public string GetFullKey(string key)
         {
-            //NotImplement
-            throw new NotImplementedException();
+            return null;
         }
 
         public override void Init()
         {
-            throw new NotImplementedException();
         }
     }
 }

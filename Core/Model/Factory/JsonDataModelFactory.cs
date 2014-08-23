@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using LitJson;
-using Puppet.Model;
+using Puppet.Core.Model;
+using Puppet.Utils;
 
-namespace Puppet.Utils
+namespace Puppet.Core.Model.Factory
 {
     public class JsonDataModelFactory
     {

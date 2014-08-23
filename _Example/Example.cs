@@ -1,5 +1,6 @@
 ﻿using Puppet.Core.Flow;
 using Puppet.Core.Model;
+using Puppet.Core.Network.Http;
 using Puppet.Core.Network.Socket;
 using Puppet.Utils;
 using Puppet.Utils.Loggers;
@@ -17,13 +18,14 @@ namespace Puppet
         #region IMPLEMENT PUPPET SDK SETTING 
         class Setting : IPuSettings
         {
-            ServerMode server;
+            IServerMode server, serverWeb;
             EPlatform _platform;
             string _pathCaching;
 
             public Setting(EPlatform platform, string pathCaching)
             {
                 server = new ServerMode();
+                serverWeb = new WebServerMode();
                 _platform = platform;
                 _pathCaching = pathCaching;
             }
@@ -45,7 +47,7 @@ namespace Puppet
 
             public IServerMode ServerModeHttp
             {
-                get { return server; }
+                get { return serverWeb; }
             }
             public IServerMode ServerModeBundle
             {
@@ -65,17 +67,40 @@ namespace Puppet
 
                 public string Port
                 {
-                    get { return "8888"; }
+                    get { return "9933"; }
                 }
 
                 public string Domain
                 {
-                    get { return "localhost"; }
+                    get { return "test.esimo.vn"; }
                 }
 
                 public string GetPath(string path)
                 {
                     return string.Format("{0}/{1}", GetBaseUrl(), path);
+                }
+            }
+
+            class WebServerMode : IServerMode
+            {
+                public string GetBaseUrl()
+                {
+                    return string.Format("http://{0}:{1}", Domain, Port);
+                }
+
+                public string Port
+                {
+                    get { return "1990"; }
+                }
+
+                public string Domain
+                {
+                    get { return "test.esimo.vn"; }
+                }
+
+                public string GetPath(string path)
+                {
+                    return string.Format("{0}/puppet/{1}", GetBaseUrl(), path);
                 }
             }
 
@@ -127,7 +152,9 @@ namespace Puppet
 
             //TestSocket();
 
-            TestSceneFlow();
+            //TestSceneFlow();
+
+            TestGetToken();
 
             #endregion
             //Wait for Enter to close console.
@@ -151,9 +178,7 @@ namespace Puppet
 
         static void TestSocket()
         {
-            CSmartFox sf = new CSmartFox();
-            sf.Start();
-
+            CSmartFox sf = new CSmartFox(string.Empty);
             sf.Connect();
 
             Thread thread = new Thread(new ThreadStart(
@@ -189,6 +214,22 @@ namespace Puppet
             Logger.Log(SceneHandler.Instance.Current.SceneName);
             SceneHandler.Instance.Scene_GoTo(EScene.LoginScreen);
             Logger.Log(SceneHandler.Instance.Current.SceneName);
+        }
+
+        static void TestGetToken()
+        {
+            string accessToken = string.Empty;
+            WWWRequest request = new WWWRequest(null, "?command=get_access_token", 30, 0);
+            request.Method = HttpMethod.Post;
+            request.PostData = new Dictionary<string, object>();
+            request.PostData.Add("userName", "dungnv");
+            request.PostData.Add("password", "puppet#89");
+            request.onResponse = (IHttpRequest myRequest, IHttpResponse response) =>
+            {
+                if (!string.IsNullOrEmpty(response.Error))
+                    accessToken = response.Data;
+            };
+            PuMain.WWWHandler.Request(request);
         }
     }
 }

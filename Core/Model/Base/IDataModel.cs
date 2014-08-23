@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Puppet.Model
+namespace Puppet.Core.Model
 {
     public interface IDataModel
     {

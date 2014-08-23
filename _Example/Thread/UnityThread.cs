@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Puppet.Utils.Threading
 {
-    internal class UnityThread : BaseSingleton<UnityThread>, IThread
+    public class UnityThread : BaseSingleton<UnityThread>, IThread
     {
         public void QueueOnMainThread(Action action)
         {

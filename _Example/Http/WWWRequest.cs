@@ -44,13 +44,27 @@ namespace Puppet.Core.Network.Http
 
         IEnumerator DownloadData()
         {
-            string url = serverMode + Path;
+            string url = serverMode.GetPath(Path);
+            Logger.Log("Url: " + url);
             WWW www;
             if (Method == HttpMethod.Get)
                 www = new WWW(url);
             else
             {
                 WWWForm form = new WWWForm();
+                foreach(string key in PostData.Keys)
+                {
+                    object obj = PostData[key];
+                    if (obj is int)
+                        form.AddField(key, (int)obj);
+                    else if (obj is string)
+                        form.AddField(key, (string)obj);
+                    else if (obj is byte[])
+                        form.AddBinaryData(key, (byte[])obj);
+                    else
+                        Logger.Log("Type invalid {0}", key);
+                }
+                
                 www = new WWW(url, form);
             }
 
@@ -146,3 +160,4 @@ namespace Puppet.Core.Network.Http
         }
     }
 }
+
