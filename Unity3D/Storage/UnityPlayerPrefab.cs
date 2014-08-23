@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Puppet
 {
-    public class UnityPlayerPrefab : BaseSingleton<UnityPlayerPrefab>, IStorage
+    internal class UnityPlayerPrefab : BaseSingleton<UnityPlayerPrefab>, IStorage
     {
         public void SetInt(string key, int value)
         {

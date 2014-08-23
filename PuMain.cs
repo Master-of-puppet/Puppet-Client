@@ -16,7 +16,10 @@ namespace Puppet
             get
             {
                 if (_settings == null)
-                    throw new NullReferenceException("Please initialized setting for Puppet before use!");
+                {
+                    _settings = PuSetting.Instance;
+                    Logger.Log("you did not initialized the Settings for application. Used the default configuration!");
+                }
                 return _settings;
             }
             set { _settings = value; }

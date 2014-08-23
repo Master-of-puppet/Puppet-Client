@@ -15,15 +15,15 @@ namespace Puppet
 
     public interface IPuSettings
     {
-        EPlatform Platform { get; }
-        ServerEnvironment Environment { get; }
-        IServerMode ServerModeHttp { get; }
-        IServerMode ServerModeBundle { get; }
-        IServerMode ServerModeSocket { get; }
-        string PathCache { get; }
+        EPlatform Platform { get; set; }
+        ServerEnvironment Environment { get; set; }
+        IServerMode ServerModeHttp { get; set; }
+        IServerMode ServerModeBundle { get; set; }
+        IServerMode ServerModeSocket { get; set; }
 
         IStorage PlayerPref { get; }
         IThread Threading { get; }
+        string PathCache { get; }
 
         void ActionChangeScene(string fromScene, string toScene);
         void ActionPrintLog(ELogType type, object message);

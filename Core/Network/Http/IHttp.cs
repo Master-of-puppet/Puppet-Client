@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace Puppet.Core.Network.Http
@@ -22,25 +23,9 @@ namespace Puppet.Core.Network.Http
 
     public interface IHttpResponse
     {
-        StateResponse State { get; set; }
+        HttpStatusCode State { get; set; }
         string Error { get; set; }
         string Data { get; set; }
-    }
-
-    public enum StateResponse
-    {
-        None,
-        Request_Timeout,
-		Network_Fail,
-		Missing_Parameter,
-		Invalid_Input,
-		Invalid_Json,
-		Success, //200
-		Server_Error, //500
-		Server_Maintenance,//503
-		Unsupport_App, //505
-		Unauthorized, // 401,
-		Missing_Request_Header, //417
     }
 
     public enum HttpMethod

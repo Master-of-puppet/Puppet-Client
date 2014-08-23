@@ -22,6 +22,7 @@ namespace Puppet.Utils.Storage
             string json = string.Empty;
             if (File.Exists(filePath))
             {
+                AOTSafe.SetEnvironmentVariables();
                 Stream stream = File.Open(filePath, FileMode.Open);
                 BinaryFormatter bformatter = new BinaryFormatter();
                 bformatter.Binder = new VersionDeserializationBinder();
@@ -61,6 +62,7 @@ namespace Puppet.Utils.Storage
             string data = JsonUtil.Serialize(memCache);
             Logger.Log("data: " + data);
 
+            AOTSafe.SetEnvironmentVariables();
             Stream stream = File.Open(filePath, FileMode.OpenOrCreate);
             BinaryFormatter bformatter = new BinaryFormatter();
             bformatter.Binder = new VersionDeserializationBinder();
@@ -94,5 +96,6 @@ namespace Puppet.Utils.Storage
                 return null;
             }
         }
+
     }
 }

@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 namespace Puppet.Core.Network.Http
 {
     public class WWWResponse : IHttpResponse
     {
-        StateResponse _state = StateResponse.None;
+        HttpStatusCode _state = HttpStatusCode.Unused;
         string _error;
         string _data;
         public WWW www;
 
-        public StateResponse State
+        public HttpStatusCode State
         {
             get { return _state; }
             set { _state = value; }

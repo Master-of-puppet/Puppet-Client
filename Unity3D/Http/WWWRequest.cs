@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 namespace Puppet.Core.Network.Http
@@ -86,7 +87,7 @@ namespace Puppet.Core.Network.Http
             if (IsTimeOut)
             {
                 //DOWNLOAD TIMEOUT!!!
-                dataResponse.State = StateResponse.Request_Timeout;
+                dataResponse.State = HttpStatusCode.RequestTimeout;
             }
             else
             {
@@ -96,10 +97,10 @@ namespace Puppet.Core.Network.Http
                     yield return www;
                     //Set RetryCount to less than or equal 0 for not continue to download more 
                     RetryCount = -1;
-                    dataResponse.State = StateResponse.Success;
+                    dataResponse.State = HttpStatusCode.OK;
                 }
                 else
-                    dataResponse.State = StateResponse.Network_Fail;
+                    dataResponse.State = HttpStatusCode.BadRequest;
             }
             Dispose(www);
             yield return null;

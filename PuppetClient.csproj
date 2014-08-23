@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8EC0682D-1905-480E-9DC0-35DCFC2F8729}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Puppet</RootNamespace>
     <AssemblyName>PuppetClient</AssemblyName>
@@ -30,8 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Puppet.Example</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SmartFox2X, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -51,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\APIAuthentication.cs" />
+    <Compile Include="Patterns\Constant\Commands.cs" />
+    <Compile Include="Patterns\Constant\Fields.cs" />
     <Compile Include="Core\Config\Enum.cs" />
     <Compile Include="Core\Flow\SceneHandler.cs" />
     <Compile Include="Core\Flow\SceneLogin.cs" />
@@ -67,12 +68,16 @@
     <Compile Include="Core\Model\DataUser.cs" />
     <Compile Include="Core\Model\Factory\SFSDataModelFactory.cs" />
     <Compile Include="Core\Network\Http\BaseHttp.cs" />
+    <Compile Include="Core\Network\Http\SimpleHttpRequest.cs" />
     <Compile Include="Core\Network\Http\HttpHandler.cs" />
     <Compile Include="Core\Network\Http\IHttp.cs" />
     <Compile Include="Core\Network\Socket\CSmartFox.cs" />
     <Compile Include="Core\Network\Socket\ISocket.cs" />
     <Compile Include="Core\Network\IServerMode.cs" />
+    <Compile Include="PuSetting.cs" />
     <Compile Include="Utils\Logger\PuLogger.cs" />
+    <Compile Include="lib\AOT\AOTSafe.cs" />
+    <Compile Include="Utils\Utility\Utility.cs" />
     <Compile Include="Utils\Storage\Caching\AbstractCacheService.cs" />
     <Compile Include="Utils\Storage\Caching\CacheHandler.cs" />
     <Compile Include="Utils\Storage\Caching\DeviceCacheService.cs" />
@@ -100,12 +105,12 @@
     <Compile Include="Utils\Logger\Logger.cs" />
     <Compile Include="Utils\Thread\IThread.cs" />
     <Compile Include="Utils\Thread\ThreadHandler.cs" />
-    <Compile Include="_Example\Example.cs" />
-    <Compile Include="_Example\Http\WWWRequest.cs" />
-    <Compile Include="_Example\Http\WWWResponse.cs" />
-    <Compile Include="_Example\Storage\UnityPlayerPrefab.cs" />
-    <Compile Include="_Example\Thread\CsharpThread.cs" />
-    <Compile Include="_Example\Thread\UnityThread.cs" />
+    <Compile Include="Example.cs" />
+    <Compile Include="Unity3D\Http\WWWRequest.cs" />
+    <Compile Include="Unity3D\Http\WWWResponse.cs" />
+    <Compile Include="Unity3D\Storage\UnityPlayerPrefab.cs" />
+    <Compile Include="Utils\Thread\SimpleThread.cs" />
+    <Compile Include="Unity3D\Thread\UnityThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\SmartFox2X.dll">
@@ -115,7 +120,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /y $(SolutionDir)$(OutDir)$(TargetFileName) $(SolutionDir)$(TargetFileName)
