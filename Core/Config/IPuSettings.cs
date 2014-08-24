@@ -5,14 +5,6 @@ using System;
 
 namespace Puppet
 {
-    public enum EPlatform
-    {
-        Editor,
-        iOS,
-        Android,
-        WebPlayer,
-    }
-
     public interface IPuSettings
     {
         EPlatform Platform { get; set; }

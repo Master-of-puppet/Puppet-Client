@@ -39,7 +39,6 @@ namespace Puppet
 
         static Assembly RegisterAssembly(object sender, ResolveEventArgs args)
         {
-            //return Assembly.LoadFrom(@"D:\PROJECTS\Personal\Unity3D\PuppetClient\lib\UnityEngine.dll");
             return Assembly.LoadFrom(@"D:\PROJECTS\Personal\Unity3D\PuppetClient\lib\SmartFox2X.dll");
         }
 

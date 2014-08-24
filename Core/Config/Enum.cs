@@ -5,6 +5,14 @@ using System.Text;
 
 namespace Puppet
 {
+    public enum EPlatform
+    {
+        Editor,
+        iOS,
+        Android,
+        WebPlayer,
+    }
+
     public enum EScene
     {
         None = 0,

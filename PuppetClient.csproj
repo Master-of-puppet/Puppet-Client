@@ -5,12 +5,27 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8EC0682D-1905-480E-9DC0-35DCFC2F8729}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Puppet</RootNamespace>
     <AssemblyName>PuppetClient</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +35,11 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>3</LangVersion>
+    <DocumentationFile>
+    </DocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +50,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Puppet.Example</StartupObject>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>Internet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SmartFox2X, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -50,8 +84,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\APIAuthentication.cs" />
-    <Compile Include="Patterns\Constant\Commands.cs" />
-    <Compile Include="Patterns\Constant\Fields.cs" />
+    <Compile Include="Core\Patterns\Constant\Commands.cs" />
+    <Compile Include="Core\Patterns\Constant\Fields.cs" />
     <Compile Include="Core\Config\Enum.cs" />
     <Compile Include="Core\Flow\SceneHandler.cs" />
     <Compile Include="Core\Flow\SceneLogin.cs" />
@@ -74,9 +108,11 @@
     <Compile Include="Core\Network\Socket\CSmartFox.cs" />
     <Compile Include="Core\Network\Socket\ISocket.cs" />
     <Compile Include="Core\Network\IServerMode.cs" />
-    <Compile Include="PuSetting.cs" />
+    <Compile Include="Core\Config\PuSetting.cs" />
     <Compile Include="Utils\Logger\PuLogger.cs" />
-    <Compile Include="lib\AOT\AOTSafe.cs" />
+    <Compile Include="Utils\Unity3D\Patterns\Singleton.cs" />
+    <Compile Include="Utils\Unity3D\Utility\ExtensionMethods.cs" />
+    <Compile Include="Utils\Utility\AOTSafe.cs" />
     <Compile Include="Utils\Utility\Utility.cs" />
     <Compile Include="Utils\Storage\Caching\AbstractCacheService.cs" />
     <Compile Include="Utils\Storage\Caching\CacheHandler.cs" />
@@ -84,7 +120,7 @@
     <Compile Include="Utils\Storage\Caching\WebplayerCacheService.cs" />
     <Compile Include="Utils\Storage\IStorage.cs" />
     <Compile Include="Utils\Storage\PlayerPrefStorage.cs" />
-    <Compile Include="IPuSettings.cs" />
+    <Compile Include="Core\Config\IPuSettings.cs" />
     <Compile Include="lib\LitJson\IJsonWrapper.cs" />
     <Compile Include="lib\LitJson\JsonData.cs" />
     <Compile Include="lib\LitJson\JsonException.cs" />
@@ -93,9 +129,9 @@
     <Compile Include="lib\LitJson\JsonWriter.cs" />
     <Compile Include="lib\LitJson\Lexer.cs" />
     <Compile Include="lib\LitJson\ParserToken.cs" />
-    <Compile Include="lib\Loom\Radical\System\Loom.cs" />
+    <Compile Include="Utils\Unity3D\Thread\Loom.cs" />
     <Compile Include="lib\MiniJSON\MiniJSON.cs" />
-    <Compile Include="Patterns\BaseSingleton.cs" />
+    <Compile Include="Core\Patterns\BaseSingleton.cs" />
     <Compile Include="PuMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Model\Factory\JsonDataModelFactory.cs" />
@@ -106,11 +142,11 @@
     <Compile Include="Utils\Thread\IThread.cs" />
     <Compile Include="Utils\Thread\ThreadHandler.cs" />
     <Compile Include="Example.cs" />
-    <Compile Include="Unity3D\Http\WWWRequest.cs" />
-    <Compile Include="Unity3D\Http\WWWResponse.cs" />
-    <Compile Include="Unity3D\Storage\UnityPlayerPrefab.cs" />
+    <Compile Include="Utils\Unity3D\Http\WWWRequest.cs" />
+    <Compile Include="Utils\Unity3D\Http\WWWResponse.cs" />
+    <Compile Include="Utils\Unity3D\Storage\UnityPlayerPrefab.cs" />
     <Compile Include="Utils\Thread\SimpleThread.cs" />
-    <Compile Include="Unity3D\Thread\UnityThread.cs" />
+    <Compile Include="Utils\Unity3D\Thread\UnityThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\SmartFox2X.dll">
@@ -119,6 +155,40 @@
     <Content Include="lib\UnityEngine.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="lib\SmartFox2X.dll">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="lib\UnityEngine.dll">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
