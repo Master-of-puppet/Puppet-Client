@@ -10,7 +10,7 @@ using System;
 [assembly: AssemblyTitle("Puppet SDK for C#")]
 [assembly: AssemblyDescription("Puppet SDK for C# with Unity & Smartfox")]
 [assembly: AssemblyConfiguration("Release")]
-[assembly: AssemblyCompany("Nguyễn Việt Dũng")]
+[assembly: AssemblyCompany("www.dungnv.info")]
 [assembly: AssemblyProduct("PuppetClient")]
 [assembly: AssemblyCopyright("Copyright © Nguyễn Việt Dũng")]
 [assembly: AssemblyTrademark("vietdungvn88@gmail.com")]

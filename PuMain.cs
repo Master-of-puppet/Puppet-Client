@@ -10,6 +10,7 @@ namespace Puppet
     /// </summary>
     public class PuMain : BaseSingleton<PuMain>
     {
+        #region PuSetting
         static IPuSettings _settings = null;
         public static IPuSettings Setting 
         {
@@ -24,12 +25,9 @@ namespace Puppet
             }
             set { _settings = value; }
         }
+        #endregion
 
-        public override void Init()
-        {
-            Logger.Log("PuppetMain has been initialized");
-        }
-
+        #region HttpHandler
         static HttpHandler _wwwHandler;
         public static HttpHandler WWWHandler
         {
@@ -39,6 +37,12 @@ namespace Puppet
                     _wwwHandler = new HttpHandler(Setting.ServerModeHttp);
                 return _wwwHandler;
             }
+        }
+        #endregion
+
+        public override void Init()
+        {
+            Logger.Log("PuppetMain has been initialized");
         }
     }
 }

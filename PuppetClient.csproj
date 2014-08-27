@@ -84,6 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\APIAuthentication.cs" />
+    <Compile Include="API\Client\APIChannel.cs" />
+    <Compile Include="API\Client\APILogin.cs" />
+    <Compile Include="API\Client\APIPlaza.cs" />
     <Compile Include="Core\Patterns\Constant\Commands.cs" />
     <Compile Include="Core\Patterns\Constant\Fields.cs" />
     <Compile Include="Core\Config\Enum.cs" />
