@@ -1,8 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30324.0
-MinimumVisualStudioVersion = 10.0.40219.1
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuppetClient", "PuppetClient.csproj", "{8EC0682D-1905-480E-9DC0-35DCFC2F8729}"
 EndProject
 Global
@@ -20,3 +18,4 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
+
