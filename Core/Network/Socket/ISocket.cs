@@ -5,30 +5,13 @@ using System.Text;
 
 namespace Puppet.Core.Network.Socket
 {
-    public delegate void SocketMessageDelegate(object sender, ISocketResponse e);
-    public delegate void SocketOpenDelegate(object sender, EventArgs e);
-    public delegate void SocketErrorDelegate(object sender, EventArgs e);
-    public delegate void SocketCloseDelegate(object sender, EventArgs e);
-
-    public interface ISocket
+    public interface ISocket<R, E>
     {
-        void Init();
-        void Start();
+        void AddListener(Action<string, E> onResponse);
         bool IsConnected { get; }
-        void Connect(SocketOpenDelegate openDelegate, SocketMessageDelegate messageDelegate);
+        void Connect();
         void Disconnect();
-        void Request(ISocketRequest request);
-        void Dispatch();
+        void Request(R request);
         void Close();
-    }
-
-    public interface ISocketRequest
-    {
-
-    }
-
-    public interface ISocketResponse
-    {
-
     }
 }

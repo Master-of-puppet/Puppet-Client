@@ -12,11 +12,13 @@ using System.Threading;
 
 namespace Puppet.Core.Network.Socket
 {
-    public class CSmartFox 
+    internal class CSmartFox : ISocket<BaseRequest, BaseEvent>
     {
+        event Action<string, BaseEvent> onResponse;
         SmartFox smartFox;
         string accessToken = string.Empty;
-        public CSmartFox(string token)
+
+        public CSmartFox(string token, Action<string, BaseEvent> onEventResponse)
         {
             smartFox = new SmartFox(true);
             accessToken = token;
@@ -76,66 +78,64 @@ namespace Puppet.Core.Network.Socket
             smartFox.AddEventListener(SFSEvent.USER_EXIT_ROOM, ListenerDelegate);
             smartFox.AddEventListener(SFSEvent.USER_FIND_RESULT, ListenerDelegate);
             smartFox.AddEventListener(SFSEvent.USER_VARIABLES_UPDATE, ListenerDelegate);
-        }
 
-        public void Connect()
-        {
-            if (!smartFox.IsConnected)
-            {
-                smartFox.Connect(PuMain.Setting.ServerModeSocket.Domain, int.Parse(PuMain.Setting.ServerModeSocket.Port));
-                Logger.Log("Connecting...");
-            }  
-        }
-
-        void OnConnection(BaseEvent evt)
-        {
-            if (evt.Params.Contains("success"))
-            {
-                bool success = (bool)evt.Params["success"];
-                if(success)
-                {
-                    Logger.Log("LoginRequest Sending...");
-                    ISFSObject obj = new SFSObject();
-                    obj.PutUtfString("token", accessToken);
-                    smartFox.Send(new LoginRequest(string.Empty, string.Empty, "FoxPoker", obj));
-
-                    ExtensionRequest request = new ExtensionRequest("test", new SFSObject());
-                    smartFox.Send(request);
-                }
-            }
-        }
-
-        void ListenerDelegate(BaseEvent evt)
-        {
-            Logger.Log("SFServer: {0}: {1}", evt.Type, MiniJSON.Json.Serialize(evt.Params));
-
-            if(evt.Type == "extensionResponse")
-            {
-                SFSObject obj = (SFSObject)evt.Params["params"];
-                DataTest test = SFSDataModelFactory.CreateDataModel<DataTest>(obj);
-                Logger.Log(test.ToString());
-            }
-
-            if (evt.Type == "login")
-            {
-                SFSObject obj = (SFSObject)evt.Params["data"];
-                Logger.Log(Utility.SFSObjectToString(obj));
-            }
-        }
-
-        public void ListenerDelegateLog(BaseEvent evt)
-        {
-            Logger.Log("SFLog: {0}: {1}", evt.Type, MiniJSON.Json.Serialize(evt.Params));
-        }
-
-        public void StartProcessEvent()
-        {
-            Thread thread = new Thread(new ThreadStart(() => 
+            Thread thread = new Thread(new ThreadStart(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(PuMain.Setting.DeltaTime));
                 smartFox.ProcessEvents();
             }));
             thread.Start();
+        }
+
+        public void AddListener(Action<string, BaseEvent> onEventResponse)
+        {
+            this.onResponse += onEventResponse;
+        }
+
+        public void Request<ISocketRequest>(ISocketRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsConnected
+        {
+            get { return smartFox.IsConnected; }
+        }
+
+        public void Connect()
+        {
+            if (!IsConnected)
+            {
+                smartFox.Connect(PuMain.Setting.ServerModeSocket.Domain, int.Parse(PuMain.Setting.ServerModeSocket.Port));
+                Logger.Log("Connecting...");
+            }
+        }
+
+        public void Disconnect()
+        {
+            smartFox.Disconnect();
+        }
+
+        public void Request(BaseRequest request)
+        {
+            smartFox.Send(request);
+        }
+
+        public void Close()
+        {
+            smartFox.KillConnection();
+        }
+
+        void ListenerDelegate(BaseEvent evt)
+        {
+            Logger.Log("SFServer: {0}: {1}", evt.Type, MiniJSON.Json.Serialize(evt.Params));
+            if(onResponse != null)
+                onResponse(evt.Type, evt);
+        }
+
+        void ListenerDelegateLog(BaseEvent evt)
+        {
+            Logger.Log("SFLog: {0}: {1}", evt.Type, MiniJSON.Json.Serialize(evt.Params));
         }
     }
 }

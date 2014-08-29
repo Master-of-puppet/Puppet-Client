@@ -57,13 +57,12 @@ namespace Puppet
             {
                 Logger.Log("Status:{0} - Token:{1}", status, token);
                 
-                sf = new CSmartFox(token);
-
-                if(status)
-                {
-                    StartFixedUpdate();
-                    sf.Connect();
-                }
+                //sf = new CSmartFox(token);
+                //if(status)
+                //{
+                //    StartFixedUpdate();
+                //    sf.Connect();
+                //}
             });
         }
     }

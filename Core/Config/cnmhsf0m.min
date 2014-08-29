@@ -1,6 +1,4 @@
-﻿//#define USE_UNITY
-
-using Puppet.Utils.Loggers;
+﻿using Puppet.Utils.Loggers;
 using Puppet.Utils.Threading;
 using System;
 using System.Collections.Generic;
@@ -11,22 +9,50 @@ using System.Text;
 
 namespace Puppet
 {
-    internal class PuSetting : BaseSingleton<PuSetting>, IPuSettings
+    internal class DefaultSetting : IPuSettings
     {
         IServerMode server, serverWeb, serverBundle;
         EPlatform _platform;
         ServerEnvironment _env;
+        float deltaTime;
+        string zoneName;
 
-        public override void Init()
+        internal DefaultSetting()
         {
             server = new ServerMode();
             serverWeb = new WebServerMode();
             serverBundle = new WebServerMode();
+
+#if UNITY_ANDROID
+            _platform = EPlatform.Android;
+#elif UNITY_IPHONE
+            _platform = EPlatform.iOS;
+#elif UNITY_WEBPLAYER
+            _platform = EPlatform.WebPlayer;
+#else
             _platform = EPlatform.Editor;
+#endif
+
             _env = ServerEnvironment.Dev;
         }
 
-        public EPlatform Platform { get { return _platform; } set { _platform = value; } }
+        public float DeltaTime
+        {
+            get { return deltaTime; }
+            set { deltaTime = value; }
+        }
+
+        public string ZoneName
+        {
+            get { return zoneName; }
+            set { zoneName = value; }
+        }
+
+        public EPlatform Platform 
+        { 
+            get { return _platform; } 
+            set { _platform = value; } 
+        }
 
         public string PathCache 
         { 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -36,7 +36,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>Version3</LangVersion>
+    <LangVersion>3</LangVersion>
     <DocumentationFile>
     </DocumentationFile>
     <RegisterForComInterop>false</RegisterForComInterop>
@@ -48,7 +48,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>Version3</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Puppet.Example</StartupObject>
@@ -92,7 +91,9 @@
     <Compile Include="Core\Model\DataGameplay.cs" />
     <Compile Include="Core\Model\DataPlayerController.cs" />
     <Compile Include="Core\Model\DataPlaza.cs" />
+    <Compile Include="Core\Network\Socket\Smartfox\CSmartFox.cs" />
     <Compile Include="Core\Patterns\Constant\Commands.cs" />
+    <Compile Include="Core\Patterns\Constant\Configuration.cs" />
     <Compile Include="Core\Patterns\Constant\Fields.cs" />
     <Compile Include="Core\Config\Enum.cs" />
     <Compile Include="Core\Flow\SceneHandler.cs" />
@@ -113,10 +114,10 @@
     <Compile Include="Core\Network\Http\SimpleHttpRequest.cs" />
     <Compile Include="Core\Network\Http\HttpHandler.cs" />
     <Compile Include="Core\Network\Http\IHttp.cs" />
-    <Compile Include="Core\Network\Socket\CSmartFox.cs" />
+    <Compile Include="Core\Network\Socket\SocketHandler.cs" />
     <Compile Include="Core\Network\Socket\ISocket.cs" />
     <Compile Include="Core\Network\IServerMode.cs" />
-    <Compile Include="Core\Config\PuSetting.cs" />
+    <Compile Include="Core\Config\DefaultSetting.cs" />
     <Compile Include="Utils\Logger\PuLogger.cs" />
     <Compile Include="Utils\Unity3D\Patterns\Singleton.cs" />
     <Compile Include="Utils\Unity3D\Utility\ExtensionMethods.cs" />
