@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace Puppet.Core.Model
 {
-    public class DataTest : DataModel
+    public class DataCard : DataModel
     {
-        public string command { get; set; }
-        public string name { get; set; }
+        public int CardId { get; set; }
 
-        public DataTest() 
+        public DataCard() 
             : base()
         {
         }
 
-        public DataTest(SerializationInfo info, StreamingContext ctxt)
+        public DataCard(SerializationInfo info, StreamingContext ctxt)
             : base(info, ctxt)
     	{				
    	 	}

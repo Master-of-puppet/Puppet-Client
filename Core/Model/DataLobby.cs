@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace Puppet.Core.Model
 {
-    public class DataTest : DataModel
+    public class DataLobby : DataModel
     {
-        public string command { get; set; }
-        public string name { get; set; }
 
-        public DataTest() 
+        public DataLobby() 
             : base()
         {
         }
 
-        public DataTest(SerializationInfo info, StreamingContext ctxt)
+        public DataLobby(SerializationInfo info, StreamingContext ctxt)
             : base(info, ctxt)
     	{				
    	 	}

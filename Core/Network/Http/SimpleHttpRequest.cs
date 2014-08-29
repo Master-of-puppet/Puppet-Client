@@ -78,8 +78,7 @@ namespace Puppet.Core.Network.Http
                 {
                     simpleResponse.Error = e.Message;
                     simpleResponse.State = HttpStatusCode.ServiceUnavailable;
-                    if (onResponse != null)
-                        onResponse(this, simpleResponse);
+                    DispatchEventResponse();
                     yield break;
                 }
             }
@@ -100,8 +99,7 @@ namespace Puppet.Core.Network.Http
 
             if (onProgress != null)
                 onProgress(this, 1f);
-            if (onResponse != null)
-                onResponse(this, simpleResponse);
+            DispatchEventResponse();
         }
 
         void FinishWebRequest(IAsyncResult result)
@@ -139,6 +137,16 @@ namespace Puppet.Core.Network.Http
             }
         }
 
+        void DispatchEventResponse()
+        {
+            if (string.IsNullOrEmpty(simpleResponse.Error))
+                Logger.Log("Request Response: {0}", simpleResponse.Data);
+            else
+                Logger.LogError("Request Error: {0}", simpleResponse.Error);
+
+            if (onResponse != null)
+                onResponse(this, simpleResponse);
+        }
 
         public float TimeOut
         {

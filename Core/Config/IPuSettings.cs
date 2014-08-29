@@ -7,6 +7,7 @@ namespace Puppet
 {
     public interface IPuSettings
     {
+        float DeltaTime { get; set; }
         EPlatform Platform { get; set; }
         ServerEnvironment Environment { get; set; }
         IServerMode ServerModeHttp { get; set; }
