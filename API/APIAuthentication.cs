@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Puppet.Utils;
+using Puppet.Core.Flow;
 
 namespace Puppet.API
 {
@@ -26,5 +27,11 @@ namespace Puppet.API
             };
             PuMain.WWWHandler.Request(request);
         }
+
+        internal static void Login(string token, Action<bool, string> onLoginCallback)
+        {
+            SceneLogin.Instance.Login(token, onLoginCallback);
+        }
+
     }
 }

@@ -7,7 +7,7 @@ namespace Puppet.API.Client
 {
     public sealed class APIPlaza
     {
-        public static void PlayNow()
+        public static void Play()
         {
 
         }

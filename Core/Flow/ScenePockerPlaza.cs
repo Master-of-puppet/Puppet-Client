@@ -9,6 +9,7 @@ namespace Puppet.Core.Flow
 {
     internal class ScenePockerPlaza : BaseSingleton<ScenePockerPlaza>, IScene
     {
+        #region DEFAULT NOT MODIFY
         public string SceneName
         {
             get { return "PockerPlaza"; }
@@ -28,6 +29,7 @@ namespace Puppet.Core.Flow
         {
             get { return SceneLogin.Instance; }
         }
+        #endregion
 
         public void BeginScene()
         {
@@ -38,6 +40,10 @@ namespace Puppet.Core.Flow
         }
 
         public override void Init()
+        {
+        }
+
+        public void ProcessEvents(string eventType, Network.Socket.ISocketResponse onEventResponse)
         {
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Puppet.Core.Network.Http;
+using Puppet.Core.Network.Socket;
 using System;
 using System.Collections.Generic;
 
@@ -36,6 +37,19 @@ namespace Puppet
                 if (_wwwHandler == null)
                     _wwwHandler = new HttpHandler(Setting.ServerModeHttp);
                 return _wwwHandler;
+            }
+        }
+        #endregion
+
+        #region Socket Handler
+        static SocketHandler _socket;
+        public static SocketHandler Socket
+        {
+            get
+            {
+                if (_socket == null)
+                    _socket = SocketHandler.Instance;
+                return _socket;
             }
         }
         #endregion

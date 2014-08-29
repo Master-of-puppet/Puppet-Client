@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\APIAuthentication.cs" />
+    <Compile Include="API\APIUsers.cs" />
     <Compile Include="API\Client\APIChannel.cs" />
     <Compile Include="API\Client\APILogin.cs" />
     <Compile Include="API\Client\APIPlaza.cs" />
@@ -91,7 +92,10 @@
     <Compile Include="Core\Model\DataGameplay.cs" />
     <Compile Include="Core\Model\DataPlayerController.cs" />
     <Compile Include="Core\Model\DataPlaza.cs" />
+    <Compile Include="Core\Network\Socket\RequestPool.cs" />
     <Compile Include="Core\Network\Socket\Smartfox\CSmartFox.cs" />
+    <Compile Include="Core\Network\Socket\Smartfox\SFSocketRequest.cs" />
+    <Compile Include="Core\Network\Socket\Smartfox\SFSocketResponse.cs" />
     <Compile Include="Core\Patterns\Constant\Commands.cs" />
     <Compile Include="Core\Patterns\Constant\Configuration.cs" />
     <Compile Include="Core\Patterns\Constant\Fields.cs" />
@@ -101,7 +105,6 @@
     <Compile Include="Core\Flow\ScenePockerGameplay.cs" />
     <Compile Include="Core\Flow\ScenePockerLobby.cs" />
     <Compile Include="Core\Flow\ScenePockerPlaza.cs" />
-    <Compile Include="Core\Flow\SceneSplashScreen.cs" />
     <Compile Include="Core\Model\Base\DataModel.cs" />
     <Compile Include="Core\Model\Base\IDataModel.cs" />
     <Compile Include="Core\Model\Common\IGameplay.cs" />

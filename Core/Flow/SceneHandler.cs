@@ -8,12 +8,12 @@ namespace Puppet.Core.Flow
     public class SceneHandler : BaseSingleton<SceneHandler>
     {
         IScene _currentScene;
-        EScene _lastScene = EScene.None;
+        EScene _lastScene = EScene.LoginScreen;
         List<IScene> allSceneInGame = new List<IScene>();
 
         public override void Init()
         {
-            _currentScene = SceneSplashScreen.Instance;
+            Current = SceneLogin.Instance;
 
             IScene temp = _currentScene;
             while (temp != null && !allSceneInGame.Contains(temp))
@@ -29,8 +29,10 @@ namespace Puppet.Core.Flow
             set
             {
                 _lastScene = _currentScene.SceneType;
+                Logger.Log("EndScene - {0}", Current.SceneName);
                 _currentScene.EndScene();
                 _currentScene = value;
+                Logger.Log("BeginScene - {0}", Current.SceneName);
                 _currentScene.BeginScene();
             }
         }

@@ -9,9 +9,14 @@ namespace Puppet.API.Client
 {
     public sealed class APILogin
     {
+        /// <summary>
+        /// Yêu cầu đăng nhập hệ thống
+        /// </summary>
+        /// <param name="token">Với accessToken đã có</param>
+        /// <param name="onLoginCallback">Callback khi kết thúc đăng nhập</param>
         public static void Login(string token, Action<bool, string> onLoginCallback)
         {
-            onLoginCallback(false, "Thông tin đăng nhập không hợp lệ.");
+            APIAuthentication.Login(token, onLoginCallback);
         }
 
         public static void SocialLogin(string socialType, string accessToken, Action<bool, string> onLoginCallback)

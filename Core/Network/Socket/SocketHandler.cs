@@ -9,55 +9,66 @@ using Puppet.Utils;
 using Puppet.Core.Model.Factory;
 using Puppet.Core.Model;
 using System.Threading;
+using Puppet.Core.Flow;
 
 namespace Puppet.Core.Network.Socket
 {
-    public class SocketHandler
+    public class SocketHandler : BaseSingleton<SocketHandler>
     {
-        CSmartFox socket;
-        string accessToken;
+        ISocket socket;
 
-        public SocketHandler()
+        public override void Init() 
         {
-
-
+            socket = new CSmartFox(OnResponse);
         }
 
-
-        void OnConnection(BaseEvent evt)
+        void OnResponse(string eventType, ISocketResponse response)
         {
-            if (evt.Params.Contains("success"))
+            SceneHandler.Instance.Current.ProcessEvents(eventType, response);
+
+            if(eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
             {
-                bool success = (bool)evt.Params["success"];
-                if(success)
-                {
-                    Logger.Log("LoginRequest Sending...");
-                    ISFSObject obj = new SFSObject();
-                    obj.PutUtfString("token", accessToken);
-                    //smartFox.Send(new LoginRequest(string.Empty, string.Empty, PuMain.Setting.ZoneName, obj));
-
-                    ExtensionRequest request = new ExtensionRequest("test", new SFSObject());
-                    //smartFox.Send(request);
-                }
-            }
-        }
-
-        void ListenerDelegate(BaseEvent evt)
-        {
-            Logger.Log("SFServer: {0}: {1}", evt.Type, MiniJSON.Json.Serialize(evt.Params));
-
-            if(evt.Type == "extensionResponse")
-            {
-                SFSObject obj = (SFSObject)evt.Params["params"];
+                SFSObject obj = (SFSObject)response.Params[Fields.PARAMS];
                 DataTest test = SFSDataModelFactory.CreateDataModel<DataTest>(obj);
                 Logger.Log(test.ToString());
             }
-
-            if (evt.Type == "login")
-            {
-                SFSObject obj = (SFSObject)evt.Params["data"];
-                Logger.Log(Utility.SFSObjectToString(obj));
-            }
         }
+
+        #region Base
+        public void AddListener(Action<string, ISocketResponse> onEventResponse)
+        {
+            socket.onResponse += onEventResponse;
+        }
+
+        public void RemoveListener(Action<string, ISocketResponse> onEventResponse)
+        {
+            socket.onResponse -= onEventResponse;
+        }
+
+        public bool IsConnected
+        {
+            get { return socket.IsConnected; }
+        }
+
+        public void Connect()
+        {
+            socket.Connect();
+        }
+
+        public void Disconnect()
+        {
+            socket.Disconnect();
+        }
+
+        public void Request(ISocketRequest request)
+        {
+            socket.Request(request);
+        }
+
+        public void Close()
+        {
+            socket.Close();
+        }
+        #endregion
     }
 }

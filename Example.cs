@@ -53,16 +53,13 @@ namespace Puppet
 
         static void TestGetToken()
         {
-            API.APIAuthentication.GetAccessToken("dungnv", "puppet#89", (IHttpResponse response, bool status, string token) =>
+            API.Client.APILogin.GetAccessToken("dungnv", "puppet#89", (IHttpResponse response, bool status, string token) =>
             {
-                Logger.Log("Status:{0} - Token:{1}", status, token);
+                if(string.IsNullOrEmpty(response.Error))
+                    Logger.Log("Status:{0} - Token:{1}", status, token);
                 
-                //sf = new CSmartFox(token);
-                //if(status)
-                //{
-                //    StartFixedUpdate();
-                //    sf.Connect();
-                //}
+                if(status)
+                    API.Client.APILogin.Login(token, null);
             });
         }
     }

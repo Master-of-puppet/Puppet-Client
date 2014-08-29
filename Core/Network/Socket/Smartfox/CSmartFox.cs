@@ -9,19 +9,19 @@ using Puppet.Utils;
 using Puppet.Core.Model.Factory;
 using Puppet.Core.Model;
 using System.Threading;
+using Puppet.Core.Network.Socket;
 
 namespace Puppet.Core.Network.Socket
 {
-    internal class CSmartFox : ISocket<BaseRequest, BaseEvent>
+    internal class CSmartFox : ISocket
     {
-        event Action<string, BaseEvent> onResponse;
+        public event Action<string, ISocketResponse> onResponse;
         SmartFox smartFox;
-        string accessToken = string.Empty;
 
-        public CSmartFox(string token, Action<string, BaseEvent> onEventResponse)
+        public CSmartFox(Action<string, ISocketResponse> onEventResponse)
         {
             smartFox = new SmartFox(true);
-            accessToken = token;
+            AddListener(onEventResponse);
 
             smartFox.AddLogListener(Sfs2X.Logging.LogLevel.ERROR, ListenerDelegateLog);
             smartFox.AddLogListener(Sfs2X.Logging.LogLevel.INFO, ListenerDelegateLog);
@@ -87,14 +87,9 @@ namespace Puppet.Core.Network.Socket
             thread.Start();
         }
 
-        public void AddListener(Action<string, BaseEvent> onEventResponse)
+        public void AddListener(Action<string, ISocketResponse> onEventResponse)
         {
             this.onResponse += onEventResponse;
-        }
-
-        public void Request<ISocketRequest>(ISocketRequest request)
-        {
-            throw new NotImplementedException();
         }
 
         public bool IsConnected
@@ -121,6 +116,12 @@ namespace Puppet.Core.Network.Socket
             smartFox.Send(request);
         }
 
+        public void Request(ISocketRequest request)
+        {
+            SFSocketRequest myRequest = (SFSocketRequest)request;
+            smartFox.Send(myRequest.Resquest);
+        }
+
         public void Close()
         {
             smartFox.KillConnection();
@@ -130,7 +131,7 @@ namespace Puppet.Core.Network.Socket
         {
             Logger.Log("SFServer: {0}: {1}", evt.Type, MiniJSON.Json.Serialize(evt.Params));
             if(onResponse != null)
-                onResponse(evt.Type, evt);
+                onResponse(evt.Type, new SFSocketResponse(evt));
         }
 
         void ListenerDelegateLog(BaseEvent evt)
