@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8EC0682D-1905-480E-9DC0-35DCFC2F8729}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Puppet</RootNamespace>
     <AssemblyName>PuppetClient</AssemblyName>
@@ -50,8 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Puppet.Example</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -87,6 +86,13 @@
     <Compile Include="API\Client\APIChannel.cs" />
     <Compile Include="API\Client\APILogin.cs" />
     <Compile Include="API\Client\APIPlaza.cs" />
+    <Compile Include="Core\Model\DataCard.cs" />
+    <Compile Include="Core\Model\DataChannel.cs" />
+    <Compile Include="Core\Model\DataLobby.cs" />
+    <Compile Include="Core\Model\DataMessage.cs" />
+    <Compile Include="Core\Model\DataGameplay.cs" />
+    <Compile Include="Core\Model\DataPlayerController.cs" />
+    <Compile Include="Core\Model\DataPlaza.cs" />
     <Compile Include="Core\Patterns\Constant\Commands.cs" />
     <Compile Include="Core\Patterns\Constant\Fields.cs" />
     <Compile Include="Core\Config\Enum.cs" />
