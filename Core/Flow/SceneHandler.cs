@@ -28,11 +28,14 @@ namespace Puppet.Core.Flow
             get { return _currentScene; }
             set
             {
-                _lastScene = _currentScene.SceneType;
-                Logger.Log("EndScene - {0}", Current.SceneName);
-                _currentScene.EndScene();
+                if (_currentScene != null)
+                {
+                    _lastScene = _currentScene.SceneType;
+                    Logger.Log("EndScene - {0}", _currentScene.SceneName);
+                    _currentScene.EndScene();
+                }
                 _currentScene = value;
-                Logger.Log("BeginScene - {0}", Current.SceneName);
+                Logger.Log("BeginScene - {0}", _currentScene.SceneName);
                 _currentScene.BeginScene();
             }
         }

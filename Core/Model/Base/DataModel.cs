@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Puppet.Utils;
+using Sfs2X.Entities.Data;
 
 namespace Puppet.Core.Model
 {
@@ -63,6 +64,48 @@ namespace Puppet.Core.Model
         public override string ToString()
         {
             return JsonUtil.Serialize(this.ToDictionary());
+        }
+
+        public SFSObject ToSFSObject()
+        {
+            SFSObject obj = new SFSObject();
+            if (this.GetType().GetProperties().Length > 0)
+            {
+                foreach (PropertyInfo property in this.GetType().GetProperties())
+                {
+                    string key = property.Name;
+                    object value = property.GetValue(this, null);
+                    if(property.PropertyType == typeof(int))
+                    {
+                        obj.PutInt(key, (int)value);
+                    }
+                    else if (property.PropertyType == typeof(int[]))
+                    {
+                        obj.PutIntArray(key, (int[])value);
+                    }
+                    else if (property.PropertyType == typeof(string))
+                    {
+                        obj.PutUtfString(key, (string)value);
+                    }
+                    else if (property.PropertyType == typeof(string[]))
+                    {
+                        obj.PutUtfStringArray(key, (string[])value);
+                    }
+                    else if (property.PropertyType == typeof(DataModel))
+                    {
+                        obj.PutSFSObject(key, ((DataModel)value).ToSFSObject());
+                    }
+                    else if(property.PropertyType == typeof(bool))
+                    {
+                        obj.PutBool(key, (bool)value);
+                    }
+                    else if (property.PropertyType == typeof(bool[]))
+                    {
+                        obj.PutBoolArray(key, (bool[])value);
+                    }
+                }
+            }
+            return obj;
         }
     }
 }

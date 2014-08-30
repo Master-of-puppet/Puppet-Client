@@ -14,8 +14,8 @@ namespace Puppet
         IServerMode server, serverWeb, serverBundle;
         EPlatform _platform;
         ServerEnvironment _env;
-        float deltaTime;
-        string zoneName;
+        float deltaTime = 0.5f;
+        string zoneName = "FoxPoker";
 
         internal DefaultSetting()
         {
@@ -143,7 +143,10 @@ namespace Puppet
 
         public string Port { get { return "9933"; } }
 
-        public string Domain { get { return "test.esimo.vn"; } }
+        public string Domain { get { return
+            //"test.esimo.vn"; 
+            "192.168.10.127";
+        } }
 
         public string GetPath(string path) { return string.Format("{0}/{1}", GetBaseUrl(), path); }
     }
@@ -154,7 +157,10 @@ namespace Puppet
 
         public string Port { get { return "1990"; } }
 
-        public string Domain { get { return "test.esimo.vn"; } }
+        public string Domain { get { return 
+            //"test.esimo.vn"; 
+            "192.168.10.127";
+        } }
 
         public string GetPath(string path) { return string.Format("{0}/puppet/{1}", GetBaseUrl(), path); }
     }

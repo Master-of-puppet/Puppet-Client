@@ -59,8 +59,7 @@ namespace Puppet.Core.Flow
             this.token = token;
             this.onLoginCallback = onLoginCallback;
 
-            if(!PuMain.Socket.IsConnected)
-                PuMain.Socket.Connect();
+            PuMain.Socket.Connect();
         }
 
         public void ProcessEvents(string eventType, ISocketResponse response)
@@ -85,6 +84,8 @@ namespace Puppet.Core.Flow
                 Logger.Log(Utility.SFSObjectToString(obj));
 
                 DispathEventLogin(true, string.Empty);
+
+                PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(2));
 
                 SceneHandler.Instance.Scene_Next();
             }

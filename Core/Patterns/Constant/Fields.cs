@@ -14,5 +14,7 @@ namespace Puppet
         public const string TOKEN               = "token";
         public const string DATA                = "data";
         public const string PARAMS              = "params";
+
+        public const string CLIENT_DETAILS      = "clientDetails";
     }
 }
