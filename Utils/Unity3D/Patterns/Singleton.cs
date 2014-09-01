@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Puppet
 {
-    public abstract class Singleton<T> where T : UnityEngine.MonoBehaviour
+    public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         private static T _instance;
         private static object _lock = new object();
@@ -38,6 +39,7 @@ namespace Puppet
 
                             UnityEngine.GameObject.DontDestroyOnLoad(singleton);
                             Logger.Log("[Singleton] An instance of {0} is needed in the scene, so '{1}' was created with DontDestroyOnLoad.", typeof(T), singleton);
+                            _instance.Init();
                         }
                         else
                             Logger.Log("[Singleton] Using instance already created: {0}", _instance.gameObject.name);
@@ -61,5 +63,7 @@ namespace Puppet
         {
             applicationIsQuitting = true;
         }
+
+        public abstract void Init();
     }
 }

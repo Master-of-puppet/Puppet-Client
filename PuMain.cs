@@ -20,6 +20,7 @@ namespace Puppet
                 if (_settings == null)
                 {
                     _settings = new DefaultSetting();
+                    _settings.Init();
                     Logger.Log("you did not initialized the Settings for application. Used the default configuration!");
                 }
                 return _settings;

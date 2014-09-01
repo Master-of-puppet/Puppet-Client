@@ -6,6 +6,8 @@ using Sfs2X.Core;
 using Puppet.Core.Network.Socket;
 using Sfs2X.Entities.Data;
 using Puppet.Utils;
+using Puppet.Core.Model.Datagram;
+using Sfs2X.Requests;
 
 namespace Puppet.Core.Flow
 {
@@ -83,16 +85,28 @@ namespace Puppet.Core.Flow
                 SFSObject obj = (SFSObject)response.Params[Fields.DATA];
                 Logger.Log(Utility.SFSObjectToString(obj));
 
-                DispathEventLogin(true, string.Empty);
+                RoomInfo room = Utility.GetDataFromResponse<RoomInfo>(response, Fields.DATA, Fields.RESPONSE_FIRST_ROOM_TO_JOIN);
 
-                PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(2));
+                ThreadHandler.QueueOnMainThread(() =>
+                {
+                    PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(room));
+                    Logger.Log("JoinRoomRequest Sending... {0}", room.ToString());
 
-                SceneHandler.Instance.Scene_Next();
+                    ExtensionRequest request = new ExtensionRequest("test", new SFSObject());
+                    PuMain.Socket.Request(new SFSocketRequest(request));
+                });
+
+                //DispathEventLogin(true, string.Empty);
+                //SceneHandler.Instance.Scene_Next();
             }
             else if (eventType.Equals(SFSEvent.LOGIN_ERROR))
             {
                 #warning Note: Need to localization content
                 DispathEventLogin(false, "Thông tin đăng nhập không hợp lệ");
+            }
+            else if(eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
+            {
+                Logger.Log(response.Type);
             }
         }
 

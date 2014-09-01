@@ -1,4 +1,8 @@
-﻿using Puppet.Utils.Loggers;
+﻿using Puppet.Core.Model;
+using Puppet.Core.Network.Socket;
+using Puppet.Utils;
+using Puppet.Utils.Loggers;
+using Puppet.Utils.Storage;
 using Puppet.Utils.Threading;
 using System;
 using System.Collections.Generic;
@@ -11,18 +15,15 @@ namespace Puppet
 {
     internal class DefaultSetting : IPuSettings
     {
+        DataClientDetails _clientDetails;
         IServerMode server, serverWeb, serverBundle;
         EPlatform _platform;
         ServerEnvironment _env;
-        float deltaTime = 0.5f;
+        ISocket _socket;
         string zoneName = "FoxPoker";
 
         internal DefaultSetting()
         {
-            server = new ServerMode();
-            serverWeb = new WebServerMode();
-            serverBundle = new WebServerMode();
-
 #if UNITY_ANDROID
             _platform = EPlatform.Android;
 #elif UNITY_IPHONE
@@ -36,10 +37,14 @@ namespace Puppet
             _env = ServerEnvironment.Dev;
         }
 
-        public float DeltaTime
+        public void Init()
         {
-            get { return deltaTime; }
-            set { deltaTime = value; }
+            server = new ServerMode();
+            serverWeb = new WebServerMode();
+            serverBundle = new WebServerMode();
+            
+            _socket = new CSmartFox(null);
+            _clientDetails = new DataClientDetails();
         }
 
         public string ZoneName
@@ -73,6 +78,7 @@ namespace Puppet
         public IServerMode ServerModeHttp { get { return serverWeb; } set { serverWeb = value; } }
         public IServerMode ServerModeBundle { get { return serverBundle; } set { serverBundle = value; } }
         public IServerMode ServerModeSocket { get { return server; } set { server = value; } }
+        public ISocket Socket { get { return _socket;  } set { _socket = value; } }
 
         public void ActionChangeScene(string fromScene, string toScene)
         {
@@ -107,17 +113,19 @@ namespace Puppet
 
         void StackTrace()
         {
-            //System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
-            //for (int i = 3; i < stackTrace.FrameCount;i++)
-            //{
-            //    System.Diagnostics.StackFrame frame = stackTrace.GetFrame(i);
-            //    Console.WriteLine("- {0}", frame.ToString());
-            //}
+#if USE_DEBUG_CONSOLE
+            System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+            for (int i = 3; i < stackTrace.FrameCount; i++)
+            {
+                System.Diagnostics.StackFrame frame = stackTrace.GetFrame(i);
+                Console.WriteLine("- {0}", frame.ToString());
+            }
+#endif
             Console.WriteLine();
         }
 
 
-        public Utils.Storage.IStorage PlayerPref
+        public IStorage PlayerPref
         {
             get 
             { 
@@ -125,7 +133,7 @@ namespace Puppet
             }
         }
 
-        public Utils.Threading.IThread Threading
+        public IThread Threading
         {
             get { 
 #if USE_UNITY
@@ -135,17 +143,22 @@ namespace Puppet
 #endif
             }
         }
+
+        public DataClientDetails ClientDetails
+        {
+            get { return _clientDetails; }
+            set { _clientDetails = value; }
+        }
     }
 
     class ServerMode : IServerMode
     {
         public string GetBaseUrl() { return string.Format("https://{0}:{1}", Domain, Port); }
 
-        public string Port { get { return "9933"; } }
+        public int Port { get { return 9933; } }
 
         public string Domain { get { return
-            //"test.esimo.vn"; 
-            "192.168.10.127";
+            "127.0.0.1";
         } }
 
         public string GetPath(string path) { return string.Format("{0}/{1}", GetBaseUrl(), path); }
@@ -155,11 +168,10 @@ namespace Puppet
     {
         public string GetBaseUrl() { return string.Format("http://{0}:{1}", Domain, Port); }
 
-        public string Port { get { return "1990"; } }
+        public int Port { get { return 1990; } }
 
         public string Domain { get { return 
-            //"test.esimo.vn"; 
-            "192.168.10.127";
+            "127.0.0.1";
         } }
 
         public string GetPath(string path) { return string.Format("{0}/puppet/{1}", GetBaseUrl(), path); }

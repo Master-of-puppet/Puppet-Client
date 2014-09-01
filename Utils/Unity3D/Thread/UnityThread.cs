@@ -22,7 +22,6 @@ namespace Puppet.Utils.Threading
 
         public override void Init()
         {
-            throw new NotImplementedException();
         }
     }
 }

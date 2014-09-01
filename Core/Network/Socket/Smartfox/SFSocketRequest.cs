@@ -7,10 +7,10 @@ using Puppet.Core.Network.Socket;
 
 namespace Puppet.Core.Network.Socket
 {
-    internal class SFSocketRequest : ISocketRequest
+    public class SFSocketRequest : ISocketRequest
     {
         IRequest _request;
-        internal SFSocketRequest(IRequest r)
+        public SFSocketRequest(IRequest r)
         {
             this._request = r;
         }

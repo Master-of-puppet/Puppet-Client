@@ -1,7 +1,11 @@
-﻿using Sfs2X.Entities.Data;
+﻿using Puppet.Core.Model;
+using Puppet.Core.Model.Factory;
+using Puppet.Core.Network.Socket;
+using Sfs2X.Entities.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Puppet.Utils
 {
@@ -11,8 +15,7 @@ namespace Puppet.Utils
         {
             try
             {
-                while (!ienumerator.MoveNext())
-                    break;
+                while (!ienumerator.MoveNext()) break;
             }
             finally
             {
@@ -22,12 +25,28 @@ namespace Puppet.Utils
             }
         }
 
-        public static string SFSObjectToString(SFSObject obj)
+        public static string SFSObjectToString(ISFSObject obj)
         {
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (string key in obj.GetKeys())
                 dict.Add(key, obj.GetData(key).Data);
             return JsonUtil.Serialize(dict);
+        }
+
+        public static FieldInfo[] GetFieldInfo(Type t, BindingFlags bindingFlags)
+        {
+            return t.GetFields(bindingFlags);
+        }
+
+        public static T GetDataFromResponse<T>(ISocketResponse response, string key) where T : AbstractData
+        {
+            return SFSDataModelFactory.CreateDataModel<T>((SFSObject)response.Params[key]);
+        }
+
+        public static T GetDataFromResponse<T>(ISocketResponse response, string parentKey, string key) where T : AbstractData
+        {
+            SFSObject obj = (SFSObject)response.Params[parentKey];
+            return SFSDataModelFactory.CreateDataModel<T>((SFSObject)obj.GetSFSObject(key));
         }
 
     }

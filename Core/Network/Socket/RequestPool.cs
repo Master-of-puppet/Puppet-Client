@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Puppet.Core.Model;
+using Puppet.Core.Model.Datagram;
+using Puppet.Utils;
 
 namespace Puppet.Core.Network.Socket
 {
@@ -12,17 +14,16 @@ namespace Puppet.Core.Network.Socket
     {
         public static ISocketRequest GetLoginRequest(string token)
         {
-            ISFSObject obj = new SFSObject();
-            obj.PutUtfString(Fields.TOKEN, token);
-            obj.PutSFSObject(Fields.CLIENT_DETAILS, new DataClientDetails().ToSFSObject());
-            return new SFSocketRequest(new LoginRequest(string.Empty, string.Empty, PuMain.Setting.ZoneName, obj));
+            ISFSObject obj = new RequestLogin(token).ToSFSObject();
+            Logger.Log("LoginRequest: " + obj.GetDump());
+            return new SFSocketRequest(new LoginRequest(string.Empty, string.Empty, "FoxPoker", obj));
         }
 
-        public static ISocketRequest GetJoinRoomRequest(int roomId)
+        public static ISocketRequest GetJoinRoomRequest(RoomInfo room)
         {
-            ISFSObject obj = new SFSObject();
-            obj.PutInt("roomId", roomId);
-            return new SFSocketRequest(new ExtensionRequest("joinRoomRequest", obj));
+            ISFSObject obj = room.ToSFSObject();
+            Logger.Log("ExtensionRequest: " + obj.GetDump());
+            return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_JOIN_ROOM, obj));
         }
     }
 }

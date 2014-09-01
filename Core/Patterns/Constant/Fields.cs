@@ -15,6 +15,9 @@ namespace Puppet
         public const string DATA                = "data";
         public const string PARAMS              = "params";
 
-        public const string CLIENT_DETAILS      = "clientDetails";
+
+        public const string REQUEST_JOIN_ROOM = "joinRoomRequest";
+
+        public const string RESPONSE_FIRST_ROOM_TO_JOIN = "firstRoomToJoin";
     }
 }

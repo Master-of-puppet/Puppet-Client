@@ -11,6 +11,7 @@ namespace Puppet.Utils.Threading
     {
         public static int maxThreads = 8;
         static int numThreads;
+        List<Action> _currentActions = new List<Action>();
 
         private static Loom _current;
         public static Loom Current
@@ -26,6 +27,7 @@ namespace Puppet.Utils.Threading
         {
             _current = this;
             initialized = true;
+            GameObject.DontDestroyOnLoad(gameObject);
         }
 
         static bool initialized;
@@ -93,18 +95,18 @@ namespace Puppet.Utils.Threading
             {
                 ((Action)action)();
             }
-            catch
+            catch (Exception e)
             {
+                Logger.Log("Loom RunAction Exception: {0}", e.Message);
             }
             finally
             {
                 Interlocked.Decrement(ref numThreads);
             }
-
         }
 
 
-        void OnDisable()
+        void OnDestroy()
         {
             if (_current == this)
             {
@@ -112,16 +114,6 @@ namespace Puppet.Utils.Threading
                 _current = null;
             }
         }
-
-
-
-        // Use this for initialization
-        void Start()
-        {
-
-        }
-
-        List<Action> _currentActions = new List<Action>();
 
         // Update is called once per frame
         void Update()
@@ -132,10 +124,10 @@ namespace Puppet.Utils.Threading
                 _currentActions.AddRange(_actions);
                 _actions.Clear();
             }
+
             foreach (var a in _currentActions)
-            {
                 a();
-            }
+            
             lock (_delayed)
             {
                 _currentDelayed.Clear();
@@ -143,10 +135,9 @@ namespace Puppet.Utils.Threading
                 foreach (var item in _currentDelayed)
                     _delayed.Remove(item);
             }
+
             foreach (var delayed in _currentDelayed)
-            {
                 delayed.action();
-            }
         }
     }
 }

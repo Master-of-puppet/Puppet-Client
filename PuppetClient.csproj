@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -11,6 +12,8 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,35 +28,35 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <ProductVersion>10.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>3</LangVersion>
     <DocumentationFile>
     </DocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>True</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Puppet.Example</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>True</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>Internet</TargetZone>
@@ -66,15 +69,17 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SmartFox2X, Version=1.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\SmartFox2X.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
-    <Reference Include="SmartFox2X">
-      <HintPath>lib\SmartFox2X.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -85,13 +90,17 @@
     <Compile Include="API\Client\APIChannel.cs" />
     <Compile Include="API\Client\APILogin.cs" />
     <Compile Include="API\Client\APIPlaza.cs" />
+    <Compile Include="Core\Model\Base\AbstractData.cs" />
     <Compile Include="Core\Model\DataCard.cs" />
     <Compile Include="Core\Model\DataChannel.cs" />
+    <Compile Include="Core\Model\DataClientDetails.cs" />
     <Compile Include="Core\Model\DataLobby.cs" />
     <Compile Include="Core\Model\DataMessage.cs" />
     <Compile Include="Core\Model\DataGameplay.cs" />
     <Compile Include="Core\Model\DataPlayerController.cs" />
     <Compile Include="Core\Model\DataPlaza.cs" />
+    <Compile Include="Core\Model\Datagram\RequestLogin.cs" />
+    <Compile Include="Core\Model\RoomInfo.cs" />
     <Compile Include="Core\Network\Socket\RequestPool.cs" />
     <Compile Include="Core\Network\Socket\Smartfox\CSmartFox.cs" />
     <Compile Include="Core\Network\Socket\Smartfox\SFSocketRequest.cs" />
@@ -202,9 +211,17 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /y $(SolutionDir)$(OutDir)$(TargetFileName) $(SolutionDir)$(TargetFileName)
-copy /y $(SolutionDir)$(OutDir)$(TargetFileName) $(SolutionDir)..\FoxPoker\Assets\Plugins\$(TargetFileName)</PostBuildEvent>
+copy /y $(SolutionDir)$(OutDir)$(TargetFileName) $(SolutionDir)..\FoxPoker\Assets\Plugins\$(TargetFileName)
+</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>

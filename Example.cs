@@ -16,10 +16,11 @@ namespace Puppet
 {
     class Example
     {
-        static CSmartFox sf;
         public static void Main()
         {
             AppDomain.CurrentDomain.AssemblyResolve += RegisterAssembly;
+
+            PuMain.Instance.Init();
             
             //Initialized Setting before use
             #region TYPE TEST SCRIPTS IN HERE
@@ -33,8 +34,7 @@ namespace Puppet
 
         static Assembly RegisterAssembly(object sender, ResolveEventArgs args)
         {
-            //return Assembly.LoadFrom(@"D:\PROJECTS\Personal\Unity3D\PuppetClient\lib\SmartFox2X.dll");
-            return Assembly.LoadFrom(@"E:\Projects\Unity3D\PuppetClient\lib\SmartFox2X.dll");
+            return Assembly.LoadFrom(@"D:\PROJECTS\Personal\Unity3D\PuppetClient\lib\SmartFox2X.dll");
         }
 
         static void TestCaching()
@@ -44,11 +44,6 @@ namespace Puppet
             CacheHandler.Instance.SaveFile((bool status) => {
                 Logger.Log("Save cache file {0}: {1}", PuMain.Setting.PathCache, status);
             });
-        }
-
-        static void StartFixedUpdate()
-        {
-
         }
 
         static void TestGetToken()

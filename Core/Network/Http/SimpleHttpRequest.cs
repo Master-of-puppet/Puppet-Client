@@ -48,10 +48,10 @@ namespace Puppet.Core.Network.Http
         public void Start(IServerMode server)
         {
             this.server = server;
-            Utility.StartCoroutine(StartWebRequest());
+            StartWebRequest();
         }
 
-        IEnumerator StartWebRequest()
+        void StartWebRequest()
         {
             string url = server.GetPath(_path);
             Logger.Log("Url: " + url);
@@ -79,27 +79,18 @@ namespace Puppet.Core.Network.Http
                     simpleResponse.Error = e.Message;
                     simpleResponse.State = HttpStatusCode.ServiceUnavailable;
                     DispatchEventResponse();
-                    yield break;
+                    return;
                 }
             }
 
             if (onProgress != null)
                 onProgress(this, 0f);
-
             IAsyncResult asyncResult = request.BeginGetResponse(new AsyncCallback(FinishWebRequest), request);
-
             long timeOut = Convert.ToInt64(this.TimeOut * 1000f);
             ThreadPool.RegisterWaitForSingleObject(asyncResult.AsyncWaitHandle, 
                 new WaitOrTimerCallback(ScanTimeoutCallback),
                 request, timeOut, true
             );
-
-            while (!asyncResult.IsCompleted) 
-                yield return null; 
-
-            if (onProgress != null)
-                onProgress(this, 1f);
-            DispatchEventResponse();
         }
 
         void FinishWebRequest(IAsyncResult result)
@@ -113,8 +104,6 @@ namespace Puppet.Core.Network.Http
                 Stream dataStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(dataStream);
                 simpleResponse.Data = reader.ReadToEnd();
-
-                Logger.Log("responseFromServer: " + simpleResponse.Data);
                 simpleResponse.State = HttpStatusCode.OK;
             }
             catch (Exception e)
@@ -122,6 +111,10 @@ namespace Puppet.Core.Network.Http
                 simpleResponse.Error = e.Message;
                 simpleResponse.State = HttpStatusCode.BadRequest;
             }
+
+            if (onProgress != null)
+                onProgress(this, 1f);
+            DispatchEventResponse();
         }
 
         private void ScanTimeoutCallback(object state, bool timedOut)

@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Puppet.Core.Network.Socket
 {
-    internal class SFSocketResponse : ISocketResponse
+    public class SFSocketResponse : ISocketResponse
     {
         BaseEvent response;
 
-        internal SFSocketResponse(BaseEvent e)
+        public SFSocketResponse(BaseEvent e)
         {
             this.response = e;
         }

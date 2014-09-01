@@ -16,22 +16,16 @@ namespace Puppet.Core.Network.Socket
     public class SocketHandler : BaseSingleton<SocketHandler>
     {
         ISocket socket;
-
         public override void Init() 
         {
-            socket = new CSmartFox(OnResponse);
+            socket = PuMain.Setting.Socket;
+            socket.AddListener(OnResponse);
         }
 
         void OnResponse(string eventType, ISocketResponse response)
         {
-            SceneHandler.Instance.Current.ProcessEvents(eventType, response);
-
-            if(eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
-            {
-                SFSObject obj = (SFSObject)response.Params[Fields.PARAMS];
-                DataTest test = SFSDataModelFactory.CreateDataModel<DataTest>(obj);
-                Logger.Log(test.ToString());
-            }
+            if (response != null && SceneHandler.Instance.Current != null)
+                SceneHandler.Instance.Current.ProcessEvents(eventType, response);
         }
 
         #region Base

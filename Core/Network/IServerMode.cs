@@ -13,7 +13,7 @@ namespace Puppet
     {
         string GetBaseUrl();
 
-        string Port { get; }
+        int Port { get; }
 
         string Domain { get; }
 
