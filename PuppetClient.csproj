@@ -52,8 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Puppet.Example</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -106,7 +105,6 @@
     <Compile Include="Core\Network\Socket\Smartfox\SFSocketRequest.cs" />
     <Compile Include="Core\Network\Socket\Smartfox\SFSocketResponse.cs" />
     <Compile Include="Core\Patterns\Constant\Commands.cs" />
-    <Compile Include="Core\Patterns\Constant\Configuration.cs" />
     <Compile Include="Core\Patterns\Constant\Fields.cs" />
     <Compile Include="Core\Config\Enum.cs" />
     <Compile Include="Core\Flow\SceneHandler.cs" />

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace Puppet.Utils
 {
@@ -13,10 +14,7 @@ namespace Puppet.Utils
     {
         public static void StartCoroutine(IEnumerator ienumerator)
         {
-            try
-            {
-                while (!ienumerator.MoveNext()) break;
-            }
+            try { while (!ienumerator.MoveNext()) break; }
             finally
             {
                 IDisposable disposable = ienumerator as IDisposable;
@@ -47,6 +45,21 @@ namespace Puppet.Utils
         {
             SFSObject obj = (SFSObject)response.Params[parentKey];
             return SFSDataModelFactory.CreateDataModel<T>((SFSObject)obj.GetSFSObject(key));
+        }
+
+        public static T GetCustomAttribute<T>(Enum e) where T : System.Attribute
+        {
+            return GetCustomAttributes<T>(e).FirstOrDefault();
+        }
+
+        public static List<T> GetCustomAttributes<T>(Enum e) where T : System.Attribute
+        {
+            List<T> attrs = new List<T>();
+            System.Reflection.FieldInfo fi = e.GetType().GetField(e.ToString());
+            object[] objs = fi.GetCustomAttributes(typeof(T), false);
+            foreach (object a in objs)
+                if (a is T) attrs.Add((T)a);
+            return attrs;
         }
 
     }

@@ -11,7 +11,7 @@ namespace Puppet.Core.Flow
         EScene _lastScene = EScene.LoginScreen;
         List<IScene> allSceneInGame = new List<IScene>();
 
-        public override void Init()
+        protected override void Init()
         {
             Current = SceneLogin.Instance;
 

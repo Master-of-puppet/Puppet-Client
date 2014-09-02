@@ -7,7 +7,7 @@ namespace Puppet.Utils.Storage
 {
     public sealed class PlayerPrefStorage : BaseSingleton<PlayerPrefStorage>, IStorage
     {
-        public override void Init(){}
+        protected override void Init() { }
 
         public void SetInt(string key, int value)
         {

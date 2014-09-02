@@ -39,7 +39,7 @@ namespace Puppet.Core.Flow
         {
         }
 
-        public override void Init()
+        protected override void Init()
         {
         }
 

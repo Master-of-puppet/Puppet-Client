@@ -1,5 +1,6 @@
 ﻿using Puppet.Utils;
 using Sfs2X.Entities.Data;
+using Sfs2X.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,33 +43,52 @@ namespace Puppet.Core.Model
                         continue;
 
                     if (property.PropertyType == typeof(int))
-                    {
                         obj.PutInt(key, (int)value);
-                    }
                     else if (property.PropertyType == typeof(int[]))
-                    {
                         obj.PutIntArray(key, (int[])value);
-                    }
                     else if (property.PropertyType == typeof(string))
-                    {
                         obj.PutUtfString(key, (string)value);
-                    }
                     else if (property.PropertyType == typeof(string[]))
-                    {
                         obj.PutUtfStringArray(key, (string[])value);
-                    }
                     else if (property.PropertyType == typeof(bool))
-                    {
                         obj.PutBool(key, (bool)value);
-                    }
                     else if (property.PropertyType == typeof(bool[]))
-                    {
                         obj.PutBoolArray(key, (bool[])value);
-                    }
+                    else if (property.PropertyType == typeof(float))
+                        obj.PutFloat(key, (float)value);
+                    else if (property.PropertyType == typeof(float[]))
+                        obj.PutFloatArray(key, (float[])value);
+                    else if (property.PropertyType == typeof(double))
+                        obj.PutDouble(key, (double)value);
+                    else if (property.PropertyType == typeof(double[]))
+                        obj.PutDoubleArray(key, (double[])value);
+                    else if (property.PropertyType == typeof(short))
+                        obj.PutShort(key, (short)value);
+                    else if (property.PropertyType == typeof(short[]))
+                        obj.PutShortArray(key, (short[])value);
+                    else if (property.PropertyType == typeof(long))
+                        obj.PutLong(key, (long)value);
+                    else if (property.PropertyType == typeof(long[]))
+                        obj.PutLongArray(key, (long[])value);
+                    else if (property.PropertyType == typeof(byte))
+                        obj.PutByte(key, (byte)value);
                     else if (property.PropertyType.IsSubclassOf(typeof(AbstractData)))
-                    {
                         obj.PutSFSObject(key, ((AbstractData)value).ToSFSObject());
+                    else if (property.PropertyType == typeof(byte[]))
+                    {
+                        ByteArray byteArray = new ByteArray((byte[])value);
+                        obj.PutByteArray(key, byteArray);
                     }
+                    else if (property.PropertyType.IsSubclassOf(typeof(AbstractData[])))
+                    {
+                        ISFSArray sfsArray = SFSArray.NewInstance();
+                        AbstractData[] array = (AbstractData[])value;
+                        foreach(AbstractData data in array)
+                            sfsArray.AddSFSObject(data.ToSFSObject());
+                        obj.PutSFSArray(key, sfsArray);
+                    }
+                    else
+                        Logger.LogError("Not found suitable for the type of '{0}'", property.PropertyType);
                 }
             }
             return obj;

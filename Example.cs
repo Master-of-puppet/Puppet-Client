@@ -20,18 +20,22 @@ namespace Puppet
         {
             AppDomain.CurrentDomain.AssemblyResolve += RegisterAssembly;
 
-            PuMain.Instance.Init();
+            //Required called before using
+            PuMain.Instance.Load();
             
-            //Initialized Setting before use
             #region TYPE TEST SCRIPTS IN HERE
 
             TestGetToken();
 
             #endregion
+
             //Wait for Enter to close console.
             Console.ReadLine();
         }
 
+        /// <summary>
+        /// Registration Assembly for Console Application
+        /// </summary>
         static Assembly RegisterAssembly(object sender, ResolveEventArgs args)
         {
             return Assembly.LoadFrom(@"D:\PROJECTS\Personal\Unity3D\PuppetClient\lib\SmartFox2X.dll");

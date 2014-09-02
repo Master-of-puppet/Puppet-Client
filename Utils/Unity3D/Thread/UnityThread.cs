@@ -20,7 +20,7 @@ namespace Puppet.Utils.Threading
             return Loom.RunAsync(a);
         }
 
-        public override void Init()
+        protected override void Init()
         {
         }
     }

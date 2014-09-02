@@ -7,7 +7,8 @@ namespace Puppet
 {
     /// <summary>
     /// Author: Dung Nguyen Viet
-    /// Puppet Main class
+    /// Puppet Main class.
+    /// Please use 'PuMain.Instance.Load();' as initialization 
     /// </summary>
     public class PuMain : BaseSingleton<PuMain>
     {
@@ -55,9 +56,17 @@ namespace Puppet
         }
         #endregion
 
-        public override void Init()
+        protected override void Init()
         {
             Logger.Log("PuppetMain has been initialized");
+        }
+
+        /// <summary>
+        /// Called to initialize
+        /// </summary>
+        public void Load()
+        {
+            
         }
     }
 }

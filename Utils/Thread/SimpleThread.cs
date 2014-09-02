@@ -35,7 +35,7 @@ namespace Puppet.Utils.Threading
             ((Action)action)();
         }
 
-        public override void Init()
+        protected override void Init()
         {
         }
     }

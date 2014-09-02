@@ -52,7 +52,7 @@ namespace Puppet.Core.Flow
         {
         }
 
-        public override void Init()
+        protected override void Init()
         {
         }
 
@@ -87,17 +87,12 @@ namespace Puppet.Core.Flow
 
                 RoomInfo room = Utility.GetDataFromResponse<RoomInfo>(response, Fields.DATA, Fields.RESPONSE_FIRST_ROOM_TO_JOIN);
 
-                ThreadHandler.QueueOnMainThread(() =>
-                {
-                    PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(room));
-                    Logger.Log("JoinRoomRequest Sending... {0}", room.ToString());
 
-                    ExtensionRequest request = new ExtensionRequest("test", new SFSObject());
-                    PuMain.Socket.Request(new SFSocketRequest(request));
-                });
+                PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(room));
+                Logger.Log("JoinRoomRequest Sending... {0}", room.ToString());
 
-                //DispathEventLogin(true, string.Empty);
-                //SceneHandler.Instance.Scene_Next();
+                //ExtensionRequest request = new ExtensionRequest("test", new SFSObject());
+                //PuMain.Socket.Request(new SFSocketRequest(request));
             }
             else if (eventType.Equals(SFSEvent.LOGIN_ERROR))
             {
@@ -107,6 +102,9 @@ namespace Puppet.Core.Flow
             else if(eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
             {
                 Logger.Log(response.Type);
+
+                DispathEventLogin(true, string.Empty);
+                SceneHandler.Instance.Scene_Next();
             }
         }
 

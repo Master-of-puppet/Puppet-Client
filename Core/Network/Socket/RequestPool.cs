@@ -16,7 +16,7 @@ namespace Puppet.Core.Network.Socket
         {
             ISFSObject obj = new RequestLogin(token).ToSFSObject();
             Logger.Log("LoginRequest: " + obj.GetDump());
-            return new SFSocketRequest(new LoginRequest(string.Empty, string.Empty, "FoxPoker", obj));
+            return new SFSocketRequest(new LoginRequest(string.Empty, string.Empty, string.Empty, obj));
         }
 
         public static ISocketRequest GetJoinRoomRequest(RoomInfo room)

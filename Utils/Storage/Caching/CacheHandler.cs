@@ -8,7 +8,7 @@ namespace Puppet.Utils
     {
         AbstractCacheService _cache;
 
-        public override void Init()
+        protected override void Init()
         {
             switch (PuMain.Setting.Platform)
             {

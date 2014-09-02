@@ -19,6 +19,6 @@ namespace Puppet
             }
         }
 
-        public abstract void Init();
+        protected abstract void Init();
     }
 }

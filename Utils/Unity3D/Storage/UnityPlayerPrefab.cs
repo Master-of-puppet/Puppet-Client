@@ -66,7 +66,7 @@ namespace Puppet
             return null;
         }
 
-        public override void Init()
+        protected override void Init()
         {
         }
     }

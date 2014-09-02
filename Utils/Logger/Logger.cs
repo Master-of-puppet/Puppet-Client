@@ -7,7 +7,7 @@ namespace Puppet
     {
         ILogger _logger;
 
-        public override void Init()
+        protected override void Init()
         {
             _logger = new PuLogger();
         }

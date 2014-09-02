@@ -64,6 +64,6 @@ namespace Puppet
             applicationIsQuitting = true;
         }
 
-        public abstract void Init();
+        protected abstract void Init();
     }
 }

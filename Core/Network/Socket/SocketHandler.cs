@@ -16,7 +16,7 @@ namespace Puppet.Core.Network.Socket
     public class SocketHandler : BaseSingleton<SocketHandler>
     {
         ISocket socket;
-        public override void Init() 
+        protected override void Init() 
         {
             socket = PuMain.Setting.Socket;
             socket.AddListener(OnResponse);

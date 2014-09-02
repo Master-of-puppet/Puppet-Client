@@ -7,7 +7,7 @@ namespace Puppet.Utils
     {
          IThread _thread;
 
-        public override void Init()
+         protected override void Init()
         {
             _thread = PuMain.Setting.Threading;
         }

@@ -9,6 +9,7 @@ namespace Puppet
 {
     public interface IPuSettings
     {
+        bool IsDebug { get; set; }
         DataClientDetails ClientDetails { get; set; }
         string ZoneName { get; set; }
         EPlatform Platform { get; set; }
@@ -17,12 +18,10 @@ namespace Puppet
         IServerMode ServerModeBundle { get; set; }
         IServerMode ServerModeSocket { get; set; }
         ISocket Socket { get; set; }
+        Action ActionUpdate { get; set; }
 
         IStorage PlayerPref { get; }
         IThread Threading { get; }
-        /// <summary>
-        /// Path to save cache
-        /// </summary>
         string PathCache { get; }
         
         void ActionChangeScene(string fromScene, string toScene);

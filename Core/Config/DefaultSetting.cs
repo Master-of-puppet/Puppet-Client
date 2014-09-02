@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 
 namespace Puppet
 {
@@ -21,6 +22,8 @@ namespace Puppet
         ServerEnvironment _env;
         ISocket _socket;
         string zoneName = "FoxPoker";
+        Action _actionUpdate;
+        bool isDebug = true;
 
         internal DefaultSetting()
         {
@@ -45,6 +48,22 @@ namespace Puppet
             
             _socket = new CSmartFox(null);
             _clientDetails = new DataClientDetails();
+
+#if !USE_UNITY
+            Thread thread = new Thread(new ThreadStart(() =>
+            {
+                Thread.Sleep(TimeSpan.FromSeconds(0.1f));
+                if(ActionUpdate != null)
+                    ActionUpdate();
+            }));
+            thread.Start();
+#endif
+        }
+
+        public bool IsDebug
+        {
+            get { return isDebug; }
+            set { isDebug = value; }
         }
 
         public string ZoneName
@@ -89,6 +108,9 @@ namespace Puppet
 
         public void ActionPrintLog(ELogType type, object message)
         {
+            if (!PuMain.Setting.IsDebug)
+                return;
+
 #if USE_UNITY
             switch(type)
             {
@@ -107,30 +129,21 @@ namespace Puppet
             }
 #else
             Console.WriteLine(string.Format("{0}: {1}", type.ToString(), message.ToString()));
-            StackTrace();
-#endif
-        }
-
-        void StackTrace()
-        {
-#if USE_DEBUG_CONSOLE
+            #if USE_DEBUG_CONSOLE
             System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
             for (int i = 3; i < stackTrace.FrameCount; i++)
             {
                 System.Diagnostics.StackFrame frame = stackTrace.GetFrame(i);
                 Console.WriteLine("- {0}", frame.ToString());
             }
-#endif
+            #endif
             Console.WriteLine();
+#endif
         }
-
 
         public IStorage PlayerPref
         {
-            get 
-            { 
-                return UnityPlayerPrefab.Instance; 
-            }
+            get { return UnityPlayerPrefab.Instance; }
         }
 
         public IThread Threading
@@ -148,6 +161,12 @@ namespace Puppet
         {
             get { return _clientDetails; }
             set { _clientDetails = value; }
+        }
+
+        public Action ActionUpdate
+        {
+            get { return _actionUpdate; }
+            set { _actionUpdate = value; }
         }
     }
 
