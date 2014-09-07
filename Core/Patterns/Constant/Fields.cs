@@ -14,10 +14,16 @@ namespace Puppet
         public const string TOKEN               = "token";
         public const string DATA                = "data";
         public const string PARAMS              = "params";
+        public const string MESSAGE             = "message";
+        public const string CMD                 = "cmd";
 
+        public const string COMMAND_GET_CHIDREN  = "getChildren";
 
         public const string REQUEST_JOIN_ROOM = "joinRoomRequest";
+        public const string REQUEST_PLUGIN = "pluginRequest";
 
         public const string RESPONSE_FIRST_ROOM_TO_JOIN = "firstRoomToJoin";
+
+        public const string RESPONSE_CMD_PLUGIN_MESSAGE = "pluginMessage";
     }
 }

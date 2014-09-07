@@ -18,5 +18,10 @@ namespace Puppet.Core.Model
         public RoomInfo(SerializationInfo info, StreamingContext ctxt) : base(info, ctxt)
     	{				
    	 	}
+
+        public RoomInfo(int roomId)
+        {
+            this.roomId = roomId;
+        }
     }
 }

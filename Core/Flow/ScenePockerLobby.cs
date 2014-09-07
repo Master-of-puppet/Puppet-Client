@@ -2,11 +2,19 @@
 using Puppet;
 using System;
 using System.Collections.Generic;
+using Puppet.Core.Network.Socket;
+using Sfs2X.Entities.Data;
+using Sfs2X.Core;
+using Puppet.Core.Model.Datagram;
 
 namespace Puppet.Core.Flow
 {
     internal class ScenePockerLobby : BaseSingleton<ScenePockerLobby>, IScene
     {
+        ResponseListChannel responseChannel;
+
+        Action<bool, string, List<DataChannel>> onGetListChannel;
+
         #region DEFAULT NOT MODIFY
         public string SceneName
         {
@@ -43,6 +51,31 @@ namespace Puppet.Core.Flow
 
         public void ProcessEvents(string eventType, Network.Socket.ISocketResponse onEventResponse)
         {
+            if (eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
+            {
+                string cmd = onEventResponse.Params[Fields.CMD].ToString();
+                if (cmd == Fields.RESPONSE_CMD_PLUGIN_MESSAGE)
+                {
+                    SFSObject data = (SFSObject)onEventResponse.Params[Fields.PARAMS];
+                    Logger.Log(data.GetDump(true));
+                    ISFSObject obj = data.GetSFSObject(Fields.MESSAGE);
+                    responseChannel = Puppet.Core.Model.Factory.SFSDataModelFactory.CreateDataModel<ResponseListChannel>(obj);
+                    DispathGetListChannel(true, string.Empty);
+                }
+            }
+        }
+
+        internal void GetListChannel(Action<bool, string, List<DataChannel>> onGetListChannel)
+        {
+            this.onGetListChannel = onGetListChannel;
+            PuMain.Socket.Request(RequestPool.GetRequestGetChidren());
+        }
+
+        void DispathGetListChannel(bool status, string message)
+        {
+            if (onGetListChannel != null)
+                onGetListChannel(status, message, new List<DataChannel>(responseChannel.children));
+            onGetListChannel = null;
         }
     }
 }

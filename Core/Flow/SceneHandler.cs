@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using Puppet;
 using Puppet.Core.Model;
+using Sfs2X.Entities;
+using Puppet.Core.Network.Socket;
+using Sfs2X.Core;
 
 namespace Puppet.Core.Flow
 {
@@ -45,39 +48,45 @@ namespace Puppet.Core.Flow
             get { return _lastScene; }
         }
 
-        public void Scene_Back()
+        public void Scene_Back(string serverSceneName)
         {
             if(_currentScene.PrevScene != null)
             {
-                ChangeScene(_currentScene.PrevScene.SceneName);
+                ChangeScene(_currentScene.PrevScene, serverSceneName);
                 Current = _currentScene.PrevScene;
             }
         }
 
-        public void Scene_Next()
+        public void Scene_Next(string serverSceneName)
         {
             if(_currentScene.NextScene != null)
             {
-                ChangeScene(_currentScene.NextScene.SceneName);
+                ChangeScene(_currentScene.NextScene, serverSceneName);
                 Current = _currentScene.NextScene;
             }
         }
 
-        public void Scene_GoTo(EScene sceneType)
+        public void Scene_GoTo(EScene sceneType, string serverSceneName)
         {
             IScene scene = allSceneInGame.Find(s =>s.SceneType == sceneType);
             if (scene != null)
             {
-                ChangeScene(scene.SceneName);
+                ChangeScene(scene, serverSceneName);
                 Current = scene;
             }
             else
                 Logger.LogError("Did not find scene fit");
         }
 
-        void ChangeScene(string sceneName)
+        void ChangeScene(IScene scene, string serverSceneName)
         {
-            PuMain.Setting.ActionChangeScene(Current.SceneName, sceneName);
+            if (string.IsNullOrEmpty(serverSceneName))
+                PuMain.Setting.ActionChangeScene(Current.SceneName, scene.SceneName);
+            else
+            {
+                Logger.Log("Server want going to scene: " + serverSceneName);
+                PuMain.Setting.ActionChangeScene(Current.SceneName, serverSceneName);
+            }
         }
     }
 }

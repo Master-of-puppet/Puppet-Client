@@ -19,7 +19,8 @@ namespace Puppet.Core.Network.Socket
         protected override void Init() 
         {
             socket = PuMain.Setting.Socket;
-            socket.AddListener(OnResponse);
+
+            AddListener(OnResponse);
         }
 
         void OnResponse(string eventType, ISocketResponse response)

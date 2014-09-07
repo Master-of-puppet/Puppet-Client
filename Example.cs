@@ -54,12 +54,37 @@ namespace Puppet
         {
             API.Client.APILogin.GetAccessToken("dungnv", "puppet#89", (IHttpResponse response, bool status, string token) =>
             {
-                if(string.IsNullOrEmpty(response.Error))
-                    Logger.Log("Status:{0} - Token:{1}", status, token);
-                
                 if(status)
-                    API.Client.APILogin.Login(token, null);
+                    API.Client.APILogin.Login(token, LoginCallback);
             });
+        }
+
+        static void LoginCallback(bool status, string message)
+        {
+            if(status)
+            {
+                API.Client.APIGame.GetListGame((bool getStatus, string getMessage, List<DataGame> listGame) =>
+                {
+                    if (getStatus && listGame.Count > 0)
+                        API.Client.APIGame.JoinRoom(listGame[0], JoinGameCallback);
+                    else
+                        Logger.Log("Hiện chưa có trò chơi nào.");
+                });
+            }
+        }
+
+        static void JoinGameCallback(bool status, string message)
+        {
+            if(status)
+            {
+                API.Client.APILobby.GetAllChannel((bool getStatus, string getMessage, List<DataChannel> listChannel) =>
+                {
+                    foreach(DataChannel channel in listChannel)
+                    {
+                        Logger.Log(channel.ToSFSObject().GetDump());
+                    }
+                });
+            }
         }
     }
 }

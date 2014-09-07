@@ -31,7 +31,7 @@ namespace Puppet.Core.Flow
         {
             get
             {
-                return ScenePockerPlaza.Instance;
+                return SceneWorldGame.Instance;
             }
         }
 
@@ -72,7 +72,6 @@ namespace Puppet.Core.Flow
                 if (success)
                 {
                     PuMain.Socket.Request(RequestPool.GetLoginRequest(token));
-                    Logger.Log("LoginRequest Sending...");
                 }
                 else
                 {
@@ -83,28 +82,23 @@ namespace Puppet.Core.Flow
             else if (eventType.Equals(SFSEvent.LOGIN))
             {
                 SFSObject obj = (SFSObject)response.Params[Fields.DATA];
-                Logger.Log(Utility.SFSObjectToString(obj));
-
                 RoomInfo room = Utility.GetDataFromResponse<RoomInfo>(response, Fields.DATA, Fields.RESPONSE_FIRST_ROOM_TO_JOIN);
-
-
                 PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(room));
-                Logger.Log("JoinRoomRequest Sending... {0}", room.ToString());
-
-                //ExtensionRequest request = new ExtensionRequest("test", new SFSObject());
-                //PuMain.Socket.Request(new SFSocketRequest(request));
             }
             else if (eventType.Equals(SFSEvent.LOGIN_ERROR))
             {
                 #warning Note: Need to localization content
                 DispathEventLogin(false, "Thông tin đăng nhập không hợp lệ");
             }
-            else if(eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
+            else if (eventType.Equals(SFSEvent.ROOM_JOIN_ERROR))
             {
-                Logger.Log(response.Type);
-
+                #warning Note: Need to localization content
+                DispathEventLogin(false, "Đăng nhập thành công, nhưng không thể tham gia vào phòng chơi.");
+            }
+            else if(eventType.Equals(SFSEvent.ROOM_JOIN))
+            {
+                SceneHandler.Instance.Scene_Next(RoomHandler.Instance.GetSceneNameFromCurrentRoom);
                 DispathEventLogin(true, string.Empty);
-                SceneHandler.Instance.Scene_Next();
             }
         }
 
@@ -112,6 +106,7 @@ namespace Puppet.Core.Flow
         {
             if (onLoginCallback != null)
                 onLoginCallback(status, message);
+            onLoginCallback = null;
         }
     }
 }

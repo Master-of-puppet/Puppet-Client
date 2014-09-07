@@ -86,13 +86,21 @@
   <ItemGroup>
     <Compile Include="API\APIAuthentication.cs" />
     <Compile Include="API\APIUsers.cs" />
-    <Compile Include="API\Client\APIChannel.cs" />
+    <Compile Include="API\Client\APILobby.cs" />
+    <Compile Include="API\Client\APIGame.cs" />
     <Compile Include="API\Client\APILogin.cs" />
     <Compile Include="API\Client\APIPlaza.cs" />
+    <Compile Include="Core\Flow\SceneWorldGame.cs" />
+    <Compile Include="Core\Manager\RoomHandler.cs" />
     <Compile Include="Core\Model\Base\AbstractData.cs" />
     <Compile Include="Core\Model\DataCard.cs" />
     <Compile Include="Core\Model\DataChannel.cs" />
     <Compile Include="Core\Model\DataClientDetails.cs" />
+    <Compile Include="Core\Model\DataGame.cs" />
+    <Compile Include="Core\Model\Datagram\RequestCommand.cs" />
+    <Compile Include="Core\Model\Datagram\RequestNodePlugin.cs" />
+    <Compile Include="Core\Model\Datagram\ResponseListChannel.cs" />
+    <Compile Include="Core\Model\Datagram\ResponseListGame.cs" />
     <Compile Include="Core\Model\DataLobby.cs" />
     <Compile Include="Core\Model\DataMessage.cs" />
     <Compile Include="Core\Model\DataGameplay.cs" />

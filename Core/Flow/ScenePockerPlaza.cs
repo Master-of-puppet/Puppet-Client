@@ -27,12 +27,13 @@ namespace Puppet.Core.Flow
 
         public IScene PrevScene
         {
-            get { return SceneLogin.Instance; }
+            get { return SceneWorldGame.Instance; }
         }
         #endregion
 
         public void BeginScene()
         {
+            SceneHandler.Instance.Scene_Next(string.Empty);
         }
 
         public void EndScene()

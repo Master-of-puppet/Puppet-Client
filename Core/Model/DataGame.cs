@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Puppet.Core.Model
 {
-    public class DataChannel : DataModel
+    public class DataGame : DataModel
     {
         public int roomId { get; set; }
         public string description { get; set; }
@@ -15,14 +15,14 @@ namespace Puppet.Core.Model
         public string displayName { get; set; }
         public string groupName { get; set; }
 
-        public DataChannel() 
+        public DataGame()
             : base()
         {
         }
 
-        public DataChannel(SerializationInfo info, StreamingContext ctxt)
+        public DataGame(SerializationInfo info, StreamingContext ctxt)
             : base(info, ctxt)
-    	{				
-   	 	}
+        {
+        }
     }
 }

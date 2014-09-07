@@ -15,15 +15,24 @@ namespace Puppet.Core.Network.Socket
         public static ISocketRequest GetLoginRequest(string token)
         {
             ISFSObject obj = new RequestLogin(token).ToSFSObject();
-            Logger.Log("LoginRequest: " + obj.GetDump());
             return new SFSocketRequest(new LoginRequest(string.Empty, string.Empty, string.Empty, obj));
         }
 
         public static ISocketRequest GetJoinRoomRequest(RoomInfo room)
         {
             ISFSObject obj = room.ToSFSObject();
-            Logger.Log("ExtensionRequest: " + obj.GetDump());
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_JOIN_ROOM, obj));
+        }
+
+        public static ISocketRequest GetRequestNodePluginWithCommand(string command)
+        {
+            ISFSObject obj = new RequestNodePlugin(new RequestCommand(command)).ToSFSObject();
+            return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, RoomHandler.Instance.Current));
+        }
+
+        public static ISocketRequest GetRequestGetChidren()
+        {
+            return GetRequestNodePluginWithCommand(Fields.COMMAND_GET_CHIDREN);
         }
     }
 }

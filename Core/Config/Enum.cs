@@ -18,8 +18,9 @@ namespace Puppet
         None = 0,
         SplashScreen = 1,
         LoginScreen = 2,
-        Pocker_Plaza = 3,
-        Pocker_Lobby = 4,
-        Pocker_Gameplay = 5,
+        World_Game = 3,
+        Pocker_Plaza = 4,
+        Pocker_Lobby = 5,
+        Pocker_Gameplay = 6,
     }
 }

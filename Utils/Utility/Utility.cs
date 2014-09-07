@@ -27,8 +27,22 @@ namespace Puppet.Utils
         {
             Dictionary<string, object> dict = new Dictionary<string, object>();
             foreach (string key in obj.GetKeys())
-                dict.Add(key, obj.GetData(key).Data);
-            return JsonUtil.Serialize(dict);
+            {
+                SFSDataWrapper wrapper = obj.GetData(key);
+                if (wrapper.Type == (int)SFSDataType.SFS_OBJECT)
+                    dict.Add(key, SFSObjectToString((SFSObject)wrapper.Data));
+                else if (wrapper.Type == (int)SFSDataType.SFS_ARRAY)
+                {
+                    List<string> list = new List<string>();
+                    SFSArray array = (SFSArray)wrapper.Data;
+                    for(int i=0;i<array.Size();i++)
+                        list.Add(SFSObjectToString(array.GetSFSObject(i)));
+                    dict.Add(key, list);
+                }
+                else
+                    dict.Add(key, obj.GetData(key).Data);
+            }
+            return Puppet.Utils.JsonUtil.Serialize(dict);
         }
 
         public static FieldInfo[] GetFieldInfo(Type t, BindingFlags bindingFlags)

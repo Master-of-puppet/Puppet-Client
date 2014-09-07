@@ -19,12 +19,9 @@ namespace Puppet.Core.Model.Factory
             return (T)SFSDataModelFactory.CreateDataModel<T>(JsonUtil.Serialize(dict));
         }
 
-        public static T CreateDataModel<T>(SFSObject obj) where T : IDataModel
+        public static T CreateDataModel<T>(ISFSObject obj) where T : IDataModel
         {
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            foreach (string key in obj.GetKeys())
-                dict.Add(key, obj.GetData(key).Data);
-            return (T)SFSDataModelFactory.CreateDataModel<T>(JsonUtil.Serialize(dict));
+            return (T)SFSDataModelFactory.CreateDataModel<T>(Utility.SFSObjectToString(obj));
         }
 
     }

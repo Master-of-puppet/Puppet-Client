@@ -72,6 +72,8 @@ namespace Puppet.Core.Model
                         obj.PutLongArray(key, (long[])value);
                     else if (property.PropertyType == typeof(byte))
                         obj.PutByte(key, (byte)value);
+                    else if (property.PropertyType == (typeof(AbstractData)))
+                        obj.PutSFSObject(key, ((AbstractData)value).ToSFSObject());
                     else if (property.PropertyType.IsSubclassOf(typeof(AbstractData)))
                         obj.PutSFSObject(key, ((AbstractData)value).ToSFSObject());
                     else if (property.PropertyType == typeof(byte[]))
@@ -79,7 +81,7 @@ namespace Puppet.Core.Model
                         ByteArray byteArray = new ByteArray((byte[])value);
                         obj.PutByteArray(key, byteArray);
                     }
-                    else if (property.PropertyType.IsSubclassOf(typeof(AbstractData[])))
+                    else if (property.PropertyType.IsArray)
                     {
                         ISFSArray sfsArray = SFSArray.NewInstance();
                         AbstractData[] array = (AbstractData[])value;

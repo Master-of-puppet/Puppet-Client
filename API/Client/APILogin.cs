@@ -1,4 +1,5 @@
-﻿using Puppet.Core.Network.Http;
+﻿using Puppet.Core.Flow;
+using Puppet.Core.Network.Http;
 using Puppet.Utils;
 using System;
 using System.Collections.Generic;
@@ -16,16 +17,35 @@ namespace Puppet.API.Client
         /// <param name="onLoginCallback">Callback khi kết thúc đăng nhập</param>
         public static void Login(string token, Action<bool, string> onLoginCallback)
         {
+            if(SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
+            {
+                onLoginCallback(false, "API chỉ được thực thi khi ở màn Login");
+                return;
+            }
+
             APIAuthentication.Login(token, onLoginCallback);
+            
         }
 
         public static void SocialLogin(string socialType, string accessToken, Action<bool, string> onLoginCallback)
         {
+            if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
+            {
+                onLoginCallback(false, "API chỉ được thực thi khi ở màn Login");
+                return;
+            }
+
             onLoginCallback(false, "AccessToken đã hết hạn.");
         }
 
         public static void Register(Dictionary<string, string> registerInformation, Action<bool, string> onRegisterCallback)
         {
+            if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
+            {
+                onRegisterCallback(false, "API chỉ được thực thi khi ở màn Login");
+                return;
+            }
+
             onRegisterCallback(false, "Địa chỉ email đã tồn tại trong hệ thống.");
         }
 
@@ -41,6 +61,12 @@ namespace Puppet.API.Client
         /// </param>
         public static void GetAccessToken(string userName, string password, Action<IHttpResponse, bool, string> onGetTokenCallback)
         {
+            if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
+            {
+                onGetTokenCallback(null, false, "API chỉ được thực thi khi ở màn Login");
+                return;
+            }
+
             APIAuthentication.GetAccessToken(userName, password, onGetTokenCallback);
         }
     }

@@ -89,7 +89,12 @@ namespace Puppet.Core.Network.Socket
         {
             SFSocketRequest myRequest = (SFSocketRequest)request;
             smartFox.Send(myRequest.Resquest);
-            Logger.Log("Sending request: {0}", myRequest.Resquest.ToString());
+
+            if (PuMain.Setting.IsDebug)
+            {
+                BaseRequest rq = (BaseRequest)myRequest.Resquest;
+                Logger.Log("Sending request: {0}{1}", myRequest.Resquest.ToString(), rq.Message.Content.GetDump());
+            }
         }
 
         public void Close()
@@ -99,9 +104,14 @@ namespace Puppet.Core.Network.Socket
 
         void ListenerDelegate(BaseEvent evt)
         {
-            Logger.Log("SFServer: {0}: {1}", evt.Type, MiniJSON.Json.Serialize(evt.Params));
+            Logger.Log("SFServer: {0}: {1}", evt.Type, JsonUtil.Serialize(evt.Params));
+            ISocketResponse response = new SFSocketResponse(evt);
+
+            if(evt.Type == SFSEvent.ROOM_JOIN)
+                RoomHandler.Instance.SetCurrentRoom(response);
+
             if (onResponse != null)
-                onResponse(evt.Type, new SFSocketResponse(evt));
+                onResponse(evt.Type, response);
         }
         
         private void OnDebugMessage(BaseEvent evt)
