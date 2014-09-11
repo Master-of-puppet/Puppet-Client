@@ -79,10 +79,17 @@ namespace Puppet
             {
                 API.Client.APILobby.GetAllChannel((bool getStatus, string getMessage, List<DataChannel> listChannel) =>
                 {
-                    foreach(DataChannel channel in listChannel)
+                    if(listChannel.Count > 0)
                     {
-                        Logger.Log(channel.ToSFSObject().GetDump());
+                        API.Client.APILobby.GetGroupChildren(listChannel[0].groupName, (bool gStatus, string gMessage, List<DataChannel> data) =>
+                        {
+
+                        });
                     }
+                    //foreach(DataChannel channel in listChannel)
+                    //{
+                    //    Logger.Log(channel.ToSFSObject().GetDump());
+                    //}
                 });
             }
         }

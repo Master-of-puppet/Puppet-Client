@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Puppet.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -12,7 +13,6 @@ namespace Puppet.Core.Network.Http
         Action<IHttpRequest, IHttpResponse> _onResponse;
         IServerMode serverMode;
         WWWResponse dataResponse;
-        MonoBehaviour gameObject;
 
         float timeOut;
         HttpMethod method = HttpMethod.Get;
@@ -26,9 +26,8 @@ namespace Puppet.Core.Network.Http
         public float WaitForProgress = 0.01f;
         public bool EnableTimeOut;
 
-        public WWWRequest(MonoBehaviour gameObject, string _path, float _timeOut, int _retryCount)
+        public WWWRequest(string _path, float _timeOut, int _retryCount)
         {
-            this.gameObject = gameObject;
             this.Path = _path;
             this.TimeOut = _timeOut;
             this.originTimeOut = _timeOut;
@@ -40,7 +39,7 @@ namespace Puppet.Core.Network.Http
         {
             dataResponse = new WWWResponse();
             this.serverMode = server;
-            gameObject.StartCoroutine(DownloadData());
+            Utility.StartCoroutine(DownloadData());
         }
 
         IEnumerator DownloadData()
@@ -128,13 +127,13 @@ namespace Puppet.Core.Network.Http
             set { _onResponse = value; }
         }
 
-        void Dispose(WWW www)
+        public void Dispose(WWW www)
         {
             if (--RetryCount > 0)
             {
                 //If you still need to download again
                 ResetDownload();
-                gameObject.StartCoroutine(DownloadData());
+                Utility.StartCoroutine(DownloadData());
             }
             else
             {
@@ -144,7 +143,10 @@ namespace Puppet.Core.Network.Http
 
                 //When complete download, Whether success or failure
                 if (_onResponse != null)
+                {
                     _onResponse(this, dataResponse);
+                    _onResponse = null;
+                }
             }
             www.Dispose();
             www = null;

@@ -23,8 +23,7 @@ namespace Puppet.API.Client
                 return;
             }
 
-            APIAuthentication.Login(token, onLoginCallback);
-            
+            SceneLogin.Instance.Login(token, onLoginCallback);
         }
 
         public static void SocialLogin(string socialType, string accessToken, Action<bool, string> onLoginCallback)
@@ -67,7 +66,22 @@ namespace Puppet.API.Client
                 return;
             }
 
-            APIAuthentication.GetAccessToken(userName, password, onGetTokenCallback);
+            SimpleHttpRequest request = new SimpleHttpRequest(Commands.GET_ACCESS_TOKEN, Fields.USERNAME, userName, Fields.PASSWORD, password);
+            request.onResponse = (IHttpRequest myRequest, IHttpResponse response) =>
+            {
+                bool status = false;
+                string token = string.Empty;
+                if (string.IsNullOrEmpty(response.Error))
+                {
+                    Dictionary<string, object> dict = JsonUtil.Deserialize(response.Data);
+                    if (dict.ContainsKey(Fields.SUCCESS))
+                        status = (bool)dict[Fields.SUCCESS];
+                    if (dict.ContainsKey(Fields.TOKEN))
+                        token = dict[Fields.TOKEN].ToString();
+                }
+                onGetTokenCallback(response, status, token);
+            };
+            PuMain.WWWHandler.Request(request);
         }
     }
 }

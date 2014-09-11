@@ -18,6 +18,7 @@ namespace Puppet
         public const string CMD                 = "cmd";
 
         public const string COMMAND_GET_CHIDREN  = "getChildren";
+        public const string COMMAND_GET_GROUP_CHILDREN = "getGroupChildren";
 
         public const string REQUEST_JOIN_ROOM = "joinRoomRequest";
         public const string REQUEST_PLUGIN = "pluginRequest";

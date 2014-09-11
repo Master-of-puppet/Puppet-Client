@@ -14,6 +14,7 @@ namespace Puppet.Core.Flow
         ResponseListChannel responseChannel;
 
         Action<bool, string, List<DataChannel>> onGetListChannel;
+        Action<bool, string, List<DataChannel>> onGetGroupCallback;
 
         #region DEFAULT NOT MODIFY
         public string SceneName
@@ -71,11 +72,24 @@ namespace Puppet.Core.Flow
             PuMain.Socket.Request(RequestPool.GetRequestGetChidren());
         }
 
+        internal void GetGroupChildren(string groupName, Action<bool, string, List<DataChannel>> onGetGroupCallback)
+        {
+            this.onGetGroupCallback = onGetGroupCallback;
+            PuMain.Socket.Request(RequestPool.GetRequestGetGroupChildren(groupName));
+        }
+
         void DispathGetListChannel(bool status, string message)
         {
             if (onGetListChannel != null)
                 onGetListChannel(status, message, new List<DataChannel>(responseChannel.children));
             onGetListChannel = null;
+        }
+
+        void DispathGetGroup(bool status, string message, List<DataChannel> data)
+        {
+            if (onGetGroupCallback != null)
+                onGetGroupCallback(status, message, data);
+            onGetGroupCallback = null;
         }
     }
 }
