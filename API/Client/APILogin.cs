@@ -15,7 +15,7 @@ namespace Puppet.API.Client
         /// </summary>
         /// <param name="token">Với accessToken đã có</param>
         /// <param name="onLoginCallback">Callback khi kết thúc đăng nhập</param>
-        public static void Login(string token, Action<bool, string> onLoginCallback)
+        public static void Login(string token, DelegateAPICallback onLoginCallback)
         {
             if(SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
             {
@@ -26,7 +26,7 @@ namespace Puppet.API.Client
             SceneLogin.Instance.Login(token, onLoginCallback);
         }
 
-        public static void SocialLogin(string socialType, string accessToken, Action<bool, string> onLoginCallback)
+        public static void SocialLogin(string socialType, string accessToken, DelegateAPICallback onLoginCallback)
         {
             if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
             {
@@ -37,7 +37,7 @@ namespace Puppet.API.Client
             onLoginCallback(false, "AccessToken đã hết hạn.");
         }
 
-        public static void Register(Dictionary<string, string> registerInformation, Action<bool, string> onRegisterCallback)
+        public static void Register(Dictionary<string, string> registerInformation, DelegateAPICallback onRegisterCallback)
         {
             if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
             {
@@ -58,11 +58,11 @@ namespace Puppet.API.Client
         /// bool: Kết quả thành công hay thất bại.
         /// string: Token lấy được nếu thành công.
         /// </param>
-        public static void GetAccessToken(string userName, string password, Action<IHttpResponse, bool, string> onGetTokenCallback)
+        public static void GetAccessToken(string userName, string password, DelegateAPICallbackHttpRequest onGetTokenCallback)
         {
             if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
             {
-                onGetTokenCallback(null, false, "API chỉ được thực thi khi ở màn Login");
+                onGetTokenCallback(false, "API chỉ được thực thi khi ở màn Login", null);
                 return;
             }
 
@@ -79,7 +79,7 @@ namespace Puppet.API.Client
                     if (dict.ContainsKey(Fields.TOKEN))
                         token = dict[Fields.TOKEN].ToString();
                 }
-                onGetTokenCallback(response, status, token);
+                onGetTokenCallback(status, token, response);
             };
             PuMain.WWWHandler.Request(request);
         }

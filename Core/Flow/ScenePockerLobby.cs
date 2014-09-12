@@ -1,6 +1,7 @@
 ﻿using Puppet.Core.Model;
 using Puppet;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Puppet.Core.Network.Socket;
 using Sfs2X.Entities.Data;
@@ -11,10 +12,12 @@ namespace Puppet.Core.Flow
 {
     internal class ScenePockerLobby : BaseSingleton<ScenePockerLobby>, IScene
     {
-        ResponseListChannel responseChannel;
+        string selectedGroupName = string.Empty;
+        Dictionary<int, DataLobby> currentAllLobby;
+        Dictionary<string, List<DataLobby>> currentAllChannel;
 
-        Action<bool, string, List<DataChannel>> onGetListChannel;
-        Action<bool, string, List<DataChannel>> onGetGroupCallback;
+        DelegateAPICallbackDataLobby onGetAllLobby;
+        DelegateAPICallbackDataLobby onGetGroupChildrenCallback;
 
         #region DEFAULT NOT MODIFY
         public string SceneName
@@ -40,6 +43,8 @@ namespace Puppet.Core.Flow
 
         public void BeginScene()
         {
+            currentAllLobby = new Dictionary<int, DataLobby>();
+            currentAllChannel = new Dictionary<string, List<DataLobby>>();
         }
 
         public void EndScene()
@@ -58,38 +63,72 @@ namespace Puppet.Core.Flow
                 if (cmd == Fields.RESPONSE_CMD_PLUGIN_MESSAGE)
                 {
                     SFSObject data = (SFSObject)onEventResponse.Params[Fields.PARAMS];
-                    Logger.Log(data.GetDump(true));
+                    Logger.Log(data.GetDump());
                     ISFSObject obj = data.GetSFSObject(Fields.MESSAGE);
-                    responseChannel = Puppet.Core.Model.Factory.SFSDataModelFactory.CreateDataModel<ResponseListChannel>(obj);
-                    DispathGetListChannel(true, string.Empty);
+
+                    ResponseListLobby responseLobby = Puppet.Core.Model.Factory.SFSDataModelFactory.CreateDataModel<ResponseListLobby>(obj);
+                    if (responseLobby.command == "updateChildren")
+                        DispathGetAllLobby(true, string.Empty, new List<DataLobby>(responseLobby.children));
+                    else if (responseLobby.command == "updateGroupChildren")
+                        DispathGetGroupChildren(true, string.Empty, new List<DataLobby>(responseLobby.children));
                 }
             }
         }
 
-        internal void GetListChannel(Action<bool, string, List<DataChannel>> onGetListChannel)
+        internal void GetAllLobby(DelegateAPICallbackDataLobby onGetAllLobby)
         {
-            this.onGetListChannel = onGetListChannel;
+            this.onGetAllLobby = onGetAllLobby;
             PuMain.Socket.Request(RequestPool.GetRequestGetChidren());
         }
 
-        internal void GetGroupChildren(string groupName, Action<bool, string, List<DataChannel>> onGetGroupCallback)
+        internal void SetSelectGroup(string groupName, DelegateAPICallbackDataLobby onGetGroupChildrenCallback)
         {
-            this.onGetGroupCallback = onGetGroupCallback;
+            selectedGroupName = groupName;
+            this.onGetGroupChildrenCallback = onGetGroupChildrenCallback;
             PuMain.Socket.Request(RequestPool.GetRequestGetGroupChildren(groupName));
         }
 
-        void DispathGetListChannel(bool status, string message)
+        internal void GetAllGroupName(DelegateAPICallbackObject onGetGroupNameCallback)
         {
-            if (onGetListChannel != null)
-                onGetListChannel(status, message, new List<DataChannel>(responseChannel.children));
-            onGetListChannel = null;
+            if(currentAllChannel.Count > 0)
+            {
+                onGetGroupNameCallback(true, string.Empty, (object)currentAllChannel.Keys.ToList<string>());
+            }
+            else
+            {
+                onGetGroupNameCallback(false, "Chưa có thông tin về các kênh", null);
+            }
         }
 
-        void DispathGetGroup(bool status, string message, List<DataChannel> data)
+        void DispathGetAllLobby(bool status, string message, List<DataLobby> data)
         {
-            if (onGetGroupCallback != null)
-                onGetGroupCallback(status, message, data);
-            onGetGroupCallback = null;
+            if (status)
+            {
+                currentAllLobby.Clear();
+                currentAllChannel.Clear();
+                foreach (DataLobby lobby in data)
+                {
+                    currentAllLobby[lobby.roomId] = lobby;
+                    List<DataLobby> list = (currentAllChannel.ContainsKey(lobby.groupName)) ? list = currentAllChannel[lobby.groupName] : new List<DataLobby>();
+                    list.Add(lobby);
+                    currentAllChannel[lobby.groupName] = list;
+                }
+
+            }
+            else
+                Logger.LogWarning("Can't get lobby information");
+
+
+            if (onGetAllLobby != null)
+                onGetAllLobby(status, message, data);
+            onGetAllLobby = null;
+        }
+
+        void DispathGetGroupChildren(bool status, string message, List<DataLobby> data)
+        {
+            if (onGetGroupChildrenCallback != null)
+                onGetGroupChildrenCallback(status, message, data);
+            onGetGroupChildrenCallback = null;
         }
     }
 }

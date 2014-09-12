@@ -9,31 +9,36 @@ namespace Puppet.API.Client
 {
     public sealed class APILobby
     {
-        public static void GetAllChannel(Action<bool, string, List<DataChannel>> onGetListChannel)
+        public static void GetAllLobby(DelegateAPICallbackDataLobby onGetAllLobby)
         {
-            ScenePockerLobby.Instance.GetListChannel(onGetListChannel);
+            ScenePockerLobby.Instance.GetAllLobby(onGetAllLobby);
         }
 
-        public static void GetGroupChildren(string groupName, Action<bool, string, List<DataChannel>> onGetCallback)
+        public static void GetAllGroupName(DelegateAPICallbackObject onGetGroupNameCallback)
         {
-            ScenePockerLobby.Instance.GetGroupChildren(groupName, onGetCallback);
+            ScenePockerLobby.Instance.GetAllGroupName(onGetGroupNameCallback);
         }
 
-        public static void CreateLobby(Action<bool, string, DataChannel> onCreateLobbyCallback)
+        public static void SetSelectGroup(string groupName, DelegateAPICallbackDataLobby onGetCallback)
         {
-
+            ScenePockerLobby.Instance.SetSelectGroup(groupName, onGetCallback);
         }
 
-        public static void AddListener(Action<List<DataChannel>> onCreateCallback, Action<List<DataChannel>> onUpdateCallback, Action<List<DataChannel>> onDeleteCallback)
-        {
-
-        }
-        public static void RemoveListener(Action<List<DataChannel>> onCreateCallback, Action<List<DataChannel>> onUpdateCallback, Action<List<DataChannel>> onDeleteCallback)
+        public static void CreateLobby(DelegateAPICallbackDataLobby onCreateLobbyCallback)
         {
 
         }
 
-        public static void GoToChannel(IGameType channel)
+        public static void AddListener(Action<List<DataLobby>> onCreateCallback, Action<List<DataLobby>> onUpdateCallback, Action<List<DataLobby>> onDeleteCallback)
+        {
+
+        }
+        public static void RemoveListener(Action<List<DataLobby>> onCreateCallback, Action<List<DataLobby>> onUpdateCallback, Action<List<DataLobby>> onDeleteCallback)
+        {
+
+        }
+
+        public static void GoToLobby(IGameType Lobby)
         {
 
         }

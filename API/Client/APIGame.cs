@@ -17,7 +17,7 @@ namespace Puppet.API.Client
         /// - TLMN
         /// - ....
         /// </summary>
-        public static void GetListGame(Action<bool, string, List<DataGame>> onGetListGame)
+        public static void GetListGame(DelegateAPICallbackDataGame onGetListGame)
         {
             if (SceneHandler.Instance.Current.SceneType != EScene.World_Game)
             {
@@ -28,7 +28,7 @@ namespace Puppet.API.Client
             SceneWorldGame.Instance.GetListGame(onGetListGame);
         }
 
-        public static void JoinRoom(DataGame game, Action<bool, string> onJoinRoomCallback)
+        public static void JoinRoom(DataGame game, DelegateAPICallback onJoinRoomCallback)
         {
             SceneWorldGame.Instance.JoinGame(game, onJoinRoomCallback);
         }

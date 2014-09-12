@@ -14,7 +14,7 @@ namespace Puppet.Core.Flow
     internal class SceneLogin : BaseSingleton<SceneLogin>, IScene
     {
         string token;
-        Action<bool, string> onLoginCallback;
+        DelegateAPICallback onLoginCallback;
 
         #region DEFAULT NOT MODIFY
         public string SceneName
@@ -56,7 +56,7 @@ namespace Puppet.Core.Flow
         {
         }
 
-        public void Login(string token, Action<bool, string> onLoginCallback)
+        public void Login(string token, DelegateAPICallback onLoginCallback)
         {
             this.token = token;
             this.onLoginCallback = onLoginCallback;

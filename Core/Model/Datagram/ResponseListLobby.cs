@@ -6,17 +6,17 @@ using System.Text;
 
 namespace Puppet.Core.Model.Datagram
 {
-    internal class ResponseListChannel : DataModel
+    internal class ResponseListLobby : DataModel
     {
         public string command { get; set; }
-        public DataChannel[] children { get; set; }
+        public DataLobby[] children { get; set; }
 
-        public ResponseListChannel()
+        public ResponseListLobby()
             : base()
         {
         }
 
-        public ResponseListChannel(SerializationInfo info, StreamingContext ctxt)
+        public ResponseListLobby(SerializationInfo info, StreamingContext ctxt)
             : base(info, ctxt)
         {
         }

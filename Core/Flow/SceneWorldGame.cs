@@ -16,8 +16,8 @@ namespace Puppet.Core.Flow
     {
         ResponseListGame responseGame;
 
-        Action<bool, string, List<DataGame>> onGetListGame;
-        Action<bool, string> onJoinRoomCallback;
+        DelegateAPICallbackDataGame onGetListGame;
+        DelegateAPICallback onJoinRoomCallback;
 
         #region DEFAULT NOT MODIFY
         public string SceneName
@@ -78,7 +78,7 @@ namespace Puppet.Core.Flow
             }
         }
 
-        internal void GetListGame(Action<bool, string, List<DataGame>> onGetListGame)
+        internal void GetListGame(DelegateAPICallbackDataGame onGetListGame)
         {
             this.onGetListGame = onGetListGame;
             PuMain.Socket.Request(RequestPool.GetRequestGetChidren());
@@ -91,7 +91,7 @@ namespace Puppet.Core.Flow
             onGetListGame = null;
         }
 
-        internal void JoinGame(DataGame game, Action<bool, string> onJoinRoomCallback)
+        internal void JoinGame(DataGame game, DelegateAPICallback onJoinRoomCallback)
         {
             this.onJoinRoomCallback = onJoinRoomCallback;
             PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(new RoomInfo(game.roomId)));

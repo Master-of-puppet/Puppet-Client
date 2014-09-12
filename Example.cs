@@ -52,7 +52,7 @@ namespace Puppet
 
         static void TestGetToken()
         {
-            API.Client.APILogin.GetAccessToken("dungnv", "puppet#89", (IHttpResponse response, bool status, string token) =>
+            API.Client.APILogin.GetAccessToken("dungnv", "puppet#89", (bool status, string token, IHttpResponse response) =>
             {
                 if(status)
                     API.Client.APILogin.Login(token, LoginCallback);
@@ -77,19 +77,28 @@ namespace Puppet
         {
             if(status)
             {
-                API.Client.APILobby.GetAllChannel((bool getStatus, string getMessage, List<DataChannel> listChannel) =>
+                API.Client.APILobby.GetAllLobby((bool getStatus, string getMessage, List<DataLobby> listLobby) =>
                 {
-                    if(listChannel.Count > 0)
+                    if (listLobby.Count > 0)
                     {
-                        API.Client.APILobby.GetGroupChildren(listChannel[0].groupName, (bool gStatus, string gMessage, List<DataChannel> data) =>
+                        API.Client.APILobby.SetSelectGroup(listLobby[0].groupName, (bool gStatus, string gMessage, List<DataLobby> listChildren) =>
                         {
-
+                            foreach (DataLobby Lobby in listChildren)
+                            {
+                                Logger.Log("Lobby: " + Lobby.ToSFSObject().GetDump());
+                            }
                         });
                     }
-                    //foreach(DataChannel channel in listChannel)
-                    //{
-                    //    Logger.Log(channel.ToSFSObject().GetDump());
-                    //}
+
+                    API.Client.APILobby.GetAllGroupName((bool getGStatus, string getGMessage, object data) =>
+                    {
+                        List<string> groups = (List<string>)data;
+                        foreach (string groupName in groups)
+                        {
+                            Logger.Log("GroupName: " + groupName);
+                        }
+                    });
+
                 });
             }
         }

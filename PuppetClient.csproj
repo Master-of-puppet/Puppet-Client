@@ -92,15 +92,14 @@
     <Compile Include="Core\Manager\RoomHandler.cs" />
     <Compile Include="Core\Model\Base\AbstractData.cs" />
     <Compile Include="Core\Model\DataCard.cs" />
-    <Compile Include="Core\Model\DataChannel.cs" />
+    <Compile Include="Core\Model\DataLobby.cs" />
     <Compile Include="Core\Model\DataClientDetails.cs" />
     <Compile Include="Core\Model\DataGame.cs" />
     <Compile Include="Core\Model\Datagram\RequestGetGroupName.cs" />
     <Compile Include="Core\Model\Datagram\RequestCommand.cs" />
     <Compile Include="Core\Model\Datagram\RequestNodePlugin.cs" />
-    <Compile Include="Core\Model\Datagram\ResponseListChannel.cs" />
+    <Compile Include="Core\Model\Datagram\ResponseListLobby.cs" />
     <Compile Include="Core\Model\Datagram\ResponseListGame.cs" />
-    <Compile Include="Core\Model\DataLobby.cs" />
     <Compile Include="Core\Model\DataMessage.cs" />
     <Compile Include="Core\Model\DataGameplay.cs" />
     <Compile Include="Core\Model\DataPlayerController.cs" />
@@ -135,6 +134,7 @@
     <Compile Include="Core\Network\Socket\ISocket.cs" />
     <Compile Include="Core\Network\IServerMode.cs" />
     <Compile Include="Core\Config\DefaultSetting.cs" />
+    <Compile Include="Core\Patterns\Delegate.cs" />
     <Compile Include="Utils\Logger\PuLogger.cs" />
     <Compile Include="Utils\Unity3D\Patterns\Singleton.cs" />
     <Compile Include="Utils\Unity3D\Utility\ExtensionMethods.cs" />
