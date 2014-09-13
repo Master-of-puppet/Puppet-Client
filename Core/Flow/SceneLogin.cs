@@ -8,11 +8,14 @@ using Sfs2X.Entities.Data;
 using Puppet.Utils;
 using Puppet.Core.Model.Datagram;
 using Sfs2X.Requests;
+using Sfs2X.Entities;
 
 namespace Puppet.Core.Flow
 {
     internal class SceneLogin : BaseSingleton<SceneLogin>, IScene
     {
+        public RoomInfo firtRoomToJoin;
+
         string token;
         DelegateAPICallback onLoginCallback;
 
@@ -82,8 +85,8 @@ namespace Puppet.Core.Flow
             else if (eventType.Equals(SFSEvent.LOGIN))
             {
                 SFSObject obj = (SFSObject)response.Params[Fields.DATA];
-                RoomInfo room = Utility.GetDataFromResponse<RoomInfo>(response, Fields.DATA, Fields.RESPONSE_FIRST_ROOM_TO_JOIN);
-                PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(room));
+                firtRoomToJoin = Utility.GetDataFromResponse<RoomInfo>(response, Fields.DATA, Fields.RESPONSE_FIRST_ROOM_TO_JOIN);
+                PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(firtRoomToJoin));
             }
             else if (eventType.Equals(SFSEvent.LOGIN_ERROR))
             {

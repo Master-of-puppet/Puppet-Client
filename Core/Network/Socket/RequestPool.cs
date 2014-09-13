@@ -7,6 +7,7 @@ using System.Text;
 using Puppet.Core.Model;
 using Puppet.Core.Model.Datagram;
 using Puppet.Utils;
+using Puppet.Core.Flow;
 
 namespace Puppet.Core.Network.Socket
 {
@@ -37,9 +38,12 @@ namespace Puppet.Core.Network.Socket
 
         public static ISocketRequest GetRequestGetGroupChildren(string groupName)
         {
-            return GetRequestNodePlugin(new RequestGetGroupName(Fields.COMMAND_GET_GROUP_CHILDREN, groupName));
+            return GetRequestNodePlugin(new RequestGetGroups(Fields.COMMAND_GET_GROUP_CHILDREN, groupName));
         }
 
-        
+        public static ISocketRequest GetRequestCreateLobby()
+        {
+            return GetRequestNodePlugin(new RequestGetGroups(Fields.COMMAND_CREATE_GAME, ScenePockerLobby.Instance.selectedChannel.name, SceneWorldGame.Instance.selectedGame.roomName));
+        }
     }
 }

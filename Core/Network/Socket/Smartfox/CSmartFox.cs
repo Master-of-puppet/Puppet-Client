@@ -112,8 +112,18 @@ namespace Puppet.Core.Network.Socket
 
             if (onResponse != null)
                 onResponse(evt.Type, response);
+
+            //if (evt.Type == SFSEvent.LOGIN)
+            //{
+            //    SFSUser user = (SFSUser)smartFox.MySelf;
+            //    Logger.Log(user.Name);
+
+            //    Logger.Log("Count Variables: " + user.GetVariables().Count);
+            //    foreach (Sfs2X.Entities.Variables.UserVariable u in user.GetVariables())
+            //        Logger.Log(u.Name + " - " + u.GetSFSObjectValue().GetDump());
+            //}
         }
-        
+
         private void OnDebugMessage(BaseEvent evt)
         {
             Logger.Log("{0}: {1}", evt.Type, evt.Params["message"]);

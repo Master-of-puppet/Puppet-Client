@@ -6,22 +6,13 @@ namespace Puppet.Core.Model
 {
     public class DataUser : DataModel
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string MiddleName { get; set; }
-        public string LastName { get; set; }
-        public string FullAddress { get; set; }
-        public string Avatar { get; set; }
-        public string Role { get; set; }
-        public string CreateTime { get; set; }
-        public int Level { get; set; }
-        public int Experience { get; set; }
-        public int ExpMinCurrentLevel { get; set; }
-        public int ExpMinNextLevel { get; set; }
-
+        public int id { get; set; }
+        public string userName { get; set; }
+        public string avatar { get; set; }
+        public string firstName { get; set; }
+        public string middleName { get; set; }
+        public string lastName { get; set; }
+        
         public DataUser()
             : base()
         {

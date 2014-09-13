@@ -14,6 +14,8 @@ namespace Puppet.Core.Flow
 {
     internal class SceneWorldGame : BaseSingleton<SceneWorldGame>, IScene
     {
+        internal DataGame selectedGame;
+
         ResponseListGame responseGame;
 
         DelegateAPICallbackDataGame onGetListGame;
@@ -74,7 +76,8 @@ namespace Puppet.Core.Flow
             }
             else if(eventType.Equals(SFSEvent.ROOM_JOIN_ERROR))
             {
-                DispathJoinRoom(false, "ROOM_JOIN_ERROR");
+                #warning Note: Need to localization content
+                DispathJoinRoom(false, "Không thể tham vào trò chơi " + selectedGame.roomName + "!!!!!");
             }
         }
 
@@ -93,6 +96,7 @@ namespace Puppet.Core.Flow
 
         internal void JoinGame(DataGame game, DelegateAPICallback onJoinRoomCallback)
         {
+            selectedGame = game;
             this.onJoinRoomCallback = onJoinRoomCallback;
             PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(new RoomInfo(game.roomId)));
         }

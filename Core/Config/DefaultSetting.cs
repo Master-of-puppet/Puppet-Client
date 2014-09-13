@@ -16,6 +16,7 @@ namespace Puppet
 {
     internal class DefaultSetting : IPuSettings
     {
+        internal static string domain;
         DataClientDetails _clientDetails;
         IServerMode server, serverWeb, serverBundle;
         EPlatform _platform;
@@ -42,9 +43,9 @@ namespace Puppet
 
         public void Init()
         {
-            server = new ServerMode();
-            serverWeb = new WebServerMode();
-            serverBundle = new WebServerMode();
+            server = new ServerMode(domain);
+            serverWeb = new WebServerMode(domain);
+            serverBundle = new WebServerMode(domain);
             
             _socket = new CSmartFox(null);
             _clientDetails = new DataClientDetails();
@@ -172,26 +173,40 @@ namespace Puppet
 
     class ServerMode : IServerMode
     {
+        string domain;
+        public ServerMode(string domain)
+        {
+            if (!string.IsNullOrEmpty(domain))
+                this.domain = domain;
+            else
+                this.domain = "127.0.0.1";
+        }
+
         public string GetBaseUrl() { return string.Format("https://{0}:{1}", Domain, Port); }
 
         public int Port { get { return 9933; } }
 
-        public string Domain { get { return
-            "127.0.0.1";
-        } }
+        public string Domain { get { return domain; } }
 
         public string GetPath(string path) { return string.Format("{0}/{1}", GetBaseUrl(), path); }
     }
 
     class WebServerMode : IServerMode
     {
+        string domain;
+        public WebServerMode(string domain)
+        {
+            if (!string.IsNullOrEmpty(domain))
+                this.domain = domain;
+            else
+                this.domain = "127.0.0.1";
+        }
+
         public string GetBaseUrl() { return string.Format("http://{0}:{1}", Domain, Port); }
 
         public int Port { get { return 1990; } }
 
-        public string Domain { get { return 
-            "127.0.0.1";
-        } }
+        public string Domain { get { return domain; } }
 
         public string GetPath(string path) { return string.Format("{0}/puppet/{1}", GetBaseUrl(), path); }
     }

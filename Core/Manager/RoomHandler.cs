@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Puppet.Utils;
+using Puppet.Core.Model;
+using Puppet.Core.Model.Factory;
 
 namespace Puppet.Core
 {
@@ -15,32 +18,66 @@ namespace Puppet.Core
 
         protected override void Init() {}
 
-        public Room Current
+        internal Room Current
         {
             get { return _sfsCurrentRoom; }
         }
-        public void SetCurrentRoom(ISocketResponse response)
+        internal void SetCurrentRoom(ISocketResponse response)
         {
             if (response.Params.Contains("room"))
             {
                 _sfsCurrentRoom = (Room)response.Params["room"];
                 Logger.Log("Changed room!");
+
+                ////For debug show log RoomVariable
+                //foreach (RoomVariable r in _sfsCurrentRoom.GetVariables())
+                //    Logger.Log("{0} - {1}", r.Name, ((SFSObject)r.Value).GetDump());
             }
         }
 
-        public string GetSceneNameFromCurrentRoom
+        internal string GetSceneNameFromCurrentRoom
         {
             get
             {
-                if (_sfsCurrentRoom.ContainsVariable("info"))
-                {
-                    RoomVariable roomVar = _sfsCurrentRoom.GetVariable("info");
-                    SFSObject obj = (SFSObject)roomVar.Value;
-                    if (obj.ContainsKey("scene"))
-                        return obj.GetUtfString("scene");
-                }
-                return string.Empty;
+                SFSObject obj = GetValueRoomVariable("info");
+                return obj != null && obj.ContainsKey("scene") ? obj.GetUtfString("scene") : string.Empty;
             }
+        }
+
+        internal RoomInfo GetParentRoom
+        {
+            get
+            {
+                SFSObject obj = GetValueRoomVariable("parent");
+                return obj == null ? null : SFSDataModelFactory.CreateDataModel<RoomInfo>(obj);
+            }
+        }
+
+        internal void LoadGroupLobby(out List<DataChannel> GroupsLobby)
+        {
+            GroupsLobby = new List<DataChannel>();
+            SFSObject obj = GetValueRoomVariable("groups");
+            if (obj != null && obj.ContainsKey("content"))
+            {
+                ISFSArray array = obj.GetSFSArray("content");
+                for (int i = 0; i < array.Size(); i++)
+                    GroupsLobby.Add(SFSDataModelFactory.CreateDataModel<DataChannel>(array.GetSFSObject(i)));
+            }
+        }
+
+        internal SFSObject GetValueInfoRoomVariable
+        {
+            get { return GetValueRoomVariable("info"); }
+        }
+
+        SFSObject GetValueRoomVariable(string field)
+        {
+            if (_sfsCurrentRoom.ContainsVariable(field))
+            {
+                RoomVariable roomVar = _sfsCurrentRoom.GetVariable(field);
+                return (SFSObject)roomVar.Value;
+            }
+            return null;
         }
         
     }

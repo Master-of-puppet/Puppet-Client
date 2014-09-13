@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Puppet.API.Client
 {
-    public sealed class APIGame
+    public sealed class APIWorldGame
     {
         /// <summary>
         /// Lấy danh sách các trò chơi tại thế giới trò chơi

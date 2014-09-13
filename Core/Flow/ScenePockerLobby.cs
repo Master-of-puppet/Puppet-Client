@@ -12,12 +12,15 @@ namespace Puppet.Core.Flow
 {
     internal class ScenePockerLobby : BaseSingleton<ScenePockerLobby>, IScene
     {
-        string selectedGroupName = string.Empty;
+        internal List<DataChannel> GroupsLobby;
+        internal DataChannel selectedChannel;
+
         Dictionary<int, DataLobby> currentAllLobby;
         Dictionary<string, List<DataLobby>> currentAllChannel;
 
         DelegateAPICallbackDataLobby onGetAllLobby;
         DelegateAPICallbackDataLobby onGetGroupChildrenCallback;
+        DelegateAPICallbackDataLobby onCreateLobbyCallback;
 
         #region DEFAULT NOT MODIFY
         public string SceneName
@@ -45,6 +48,7 @@ namespace Puppet.Core.Flow
         {
             currentAllLobby = new Dictionary<int, DataLobby>();
             currentAllChannel = new Dictionary<string, List<DataLobby>>();
+            RoomHandler.Instance.LoadGroupLobby(out GroupsLobby);
         }
 
         public void EndScene()
@@ -73,6 +77,16 @@ namespace Puppet.Core.Flow
                         DispathGetGroupChildren(true, string.Empty, new List<DataLobby>(responseLobby.children));
                 }
             }
+            else if (eventType.Equals(SFSEvent.ROOM_JOIN))
+            {
+                SceneHandler.Instance.Scene_Next(RoomHandler.Instance.GetSceneNameFromCurrentRoom);
+                DispathCreateGame(true, string.Empty);
+            }
+            else if (eventType.Equals(SFSEvent.ROOM_JOIN_ERROR))
+            {
+                #warning Note: Need to localization content
+                DispathCreateGame(false, "Không thể tạo bàn chơi.!!!!");
+            }
         }
 
         internal void GetAllLobby(DelegateAPICallbackDataLobby onGetAllLobby)
@@ -81,23 +95,22 @@ namespace Puppet.Core.Flow
             PuMain.Socket.Request(RequestPool.GetRequestGetChidren());
         }
 
-        internal void SetSelectGroup(string groupName, DelegateAPICallbackDataLobby onGetGroupChildrenCallback)
+        internal void SetSelectChannel(DataChannel channel, DelegateAPICallbackDataLobby onGetGroupChildrenCallback)
         {
-            selectedGroupName = groupName;
+            selectedChannel = channel;
             this.onGetGroupChildrenCallback = onGetGroupChildrenCallback;
-            PuMain.Socket.Request(RequestPool.GetRequestGetGroupChildren(groupName));
+            PuMain.Socket.Request(RequestPool.GetRequestGetGroupChildren(selectedChannel.name));
         }
 
-        internal void GetAllGroupName(DelegateAPICallbackObject onGetGroupNameCallback)
+        internal void GetGroupsLobby(DelegateAPICallbackDataChannel onGetGroupsLobbyCallback)
         {
-            if(currentAllChannel.Count > 0)
-            {
-                onGetGroupNameCallback(true, string.Empty, (object)currentAllChannel.Keys.ToList<string>());
-            }
-            else
-            {
-                onGetGroupNameCallback(false, "Chưa có thông tin về các kênh", null);
-            }
+            onGetGroupsLobbyCallback(true, string.Empty, GroupsLobby);   
+        }
+
+        internal void CreateLobby(DelegateAPICallbackDataLobby onCreateLobbyCallback)
+        {
+            this.onCreateLobbyCallback = onCreateLobbyCallback;
+            PuMain.Socket.Request(RequestPool.GetRequestCreateLobby());
         }
 
         void DispathGetAllLobby(bool status, string message, List<DataLobby> data)
@@ -113,11 +126,9 @@ namespace Puppet.Core.Flow
                     list.Add(lobby);
                     currentAllChannel[lobby.groupName] = list;
                 }
-
             }
             else
                 Logger.LogWarning("Can't get lobby information");
-
 
             if (onGetAllLobby != null)
                 onGetAllLobby(status, message, data);
@@ -129,6 +140,13 @@ namespace Puppet.Core.Flow
             if (onGetGroupChildrenCallback != null)
                 onGetGroupChildrenCallback(status, message, data);
             onGetGroupChildrenCallback = null;
+        }
+
+        void DispathCreateGame(bool status, string message)
+        {
+            if (onCreateLobbyCallback != null)
+                onCreateLobbyCallback(status, message, null);
+            onCreateLobbyCallback = null;
         }
     }
 }

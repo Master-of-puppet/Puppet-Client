@@ -10,6 +10,9 @@ namespace Puppet.Core.Model
     {
         public int roomId { get; set; }
         public int zoneId { get; set; }
+        public string roomName { get; set; }
+        public string zoneName { get; set; }
+        public string groupName { get; set; }
 
         public RoomInfo() : base()
         {

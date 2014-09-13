@@ -6,18 +6,19 @@ using System.Text;
 
 namespace Puppet.Core.Model
 {
-    public class DataLobby : RoomInfo
+    public class DataChannel : RoomInfo
     {
-        public string description { get; set; }
-        public string icon { get; set; }
+        public string name { get; set; }
         public string displayName { get; set; }
+        public int childCount { get; set; }
 
-        public DataLobby() 
+
+        public DataChannel() 
             : base()
         {
         }
 
-        public DataLobby(SerializationInfo info, StreamingContext ctxt)
+        public DataChannel(SerializationInfo info, StreamingContext ctxt)
             : base(info, ctxt)
     	{				
    	 	}

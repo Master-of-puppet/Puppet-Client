@@ -14,19 +14,19 @@ namespace Puppet.API.Client
             ScenePockerLobby.Instance.GetAllLobby(onGetAllLobby);
         }
 
-        public static void GetAllGroupName(DelegateAPICallbackObject onGetGroupNameCallback)
+        public static void GetGroupsLobby(DelegateAPICallbackDataChannel onGetGroupNameCallback)
         {
-            ScenePockerLobby.Instance.GetAllGroupName(onGetGroupNameCallback);
+            ScenePockerLobby.Instance.GetGroupsLobby(onGetGroupNameCallback);
         }
 
-        public static void SetSelectGroup(string groupName, DelegateAPICallbackDataLobby onGetCallback)
+        public static void SetSelectChannel(DataChannel channel, DelegateAPICallbackDataLobby onGetCallback)
         {
-            ScenePockerLobby.Instance.SetSelectGroup(groupName, onGetCallback);
+            ScenePockerLobby.Instance.SetSelectChannel(channel, onGetCallback);
         }
 
         public static void CreateLobby(DelegateAPICallbackDataLobby onCreateLobbyCallback)
         {
-
+            ScenePockerLobby.Instance.CreateLobby(onCreateLobbyCallback);
         }
 
         public static void AddListener(Action<List<DataLobby>> onCreateCallback, Action<List<DataLobby>> onUpdateCallback, Action<List<DataLobby>> onDeleteCallback)

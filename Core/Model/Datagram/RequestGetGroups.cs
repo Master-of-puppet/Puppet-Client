@@ -6,15 +6,22 @@ using System.Text;
 
 namespace Puppet.Core.Model.Datagram
 {
-    internal class RequestGetGroupName : AbstractData
+    internal class RequestGetGroups : AbstractData
     {
         public string command { get; set; }
         public string groupName { get; set; }
+        public string gameType { get; set; }
 
-        internal RequestGetGroupName(string command, string groupName)
+        internal RequestGetGroups(string command, string groupName)
         {
             this.command = command;
             this.groupName = groupName;
+        }
+
+        internal RequestGetGroups(string command, string groupName, string gameType)
+            : this(command, groupName)
+        {
+            this.gameType = gameType;
         }
     }
     

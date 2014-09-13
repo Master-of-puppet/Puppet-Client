@@ -6,14 +6,11 @@ using System.Text;
 
 namespace Puppet.Core.Model
 {
-    public class DataGame : DataModel
+    public class DataGame : RoomInfo
     {
-        public int roomId { get; set; }
         public string description { get; set; }
         public string icon { get; set; }
-        public string roomName { get; set; }
         public string displayName { get; set; }
-        public string groupName { get; set; }
 
         public DataGame()
             : base()

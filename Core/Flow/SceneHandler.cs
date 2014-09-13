@@ -16,6 +16,7 @@ namespace Puppet.Core.Flow
 
         protected override void Init()
         {
+            SceneGeneric.Instance.Start();
             Current = SceneLogin.Instance;
 
             IScene temp = _currentScene;
