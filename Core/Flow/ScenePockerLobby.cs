@@ -12,9 +12,6 @@ namespace Puppet.Core.Flow
 {
     internal class ScenePockerLobby : BaseSingleton<ScenePockerLobby>, IScene
     {
-        internal List<DataChannel> GroupsLobby;
-        internal DataChannel selectedChannel;
-
         Dictionary<int, DataLobby> currentAllLobby;
         Dictionary<string, List<DataLobby>> currentAllChannel;
 
@@ -48,7 +45,7 @@ namespace Puppet.Core.Flow
         {
             currentAllLobby = new Dictionary<int, DataLobby>();
             currentAllChannel = new Dictionary<string, List<DataLobby>>();
-            RoomHandler.Instance.LoadGroupLobby(out GroupsLobby);
+            RoomHandler.Instance.LoadGroupLobby(out PuGlobal.Instance.GroupsLobby);
         }
 
         public void EndScene()
@@ -97,14 +94,14 @@ namespace Puppet.Core.Flow
 
         internal void SetSelectChannel(DataChannel channel, DelegateAPICallbackDataLobby onGetGroupChildrenCallback)
         {
-            selectedChannel = channel;
+            PuGlobal.Instance.SelectedChannel = channel;
             this.onGetGroupChildrenCallback = onGetGroupChildrenCallback;
-            PuMain.Socket.Request(RequestPool.GetRequestGetGroupChildren(selectedChannel.name));
+            PuMain.Socket.Request(RequestPool.GetRequestGetGroupChildren(channel.name));
         }
 
         internal void GetGroupsLobby(DelegateAPICallbackDataChannel onGetGroupsLobbyCallback)
         {
-            onGetGroupsLobbyCallback(true, string.Empty, GroupsLobby);   
+            onGetGroupsLobbyCallback(true, string.Empty, PuGlobal.Instance.GroupsLobby);   
         }
 
         internal void CreateLobby(DelegateAPICallbackDataLobby onCreateLobbyCallback)

@@ -21,7 +21,6 @@ namespace Puppet
 
         static int GetEnterInteger(int min, int max)
         {
-            Console.Clear();
             int id = -1;
             do
             {
@@ -35,28 +34,14 @@ namespace Puppet
 
         public static void Main()
         {
-            Console.Write("Please enter server: ");
-            DefaultSetting.domain = Console.ReadLine();
-            Console.Write("Enter your Username: ");
-            userName = Console.ReadLine();
-            Console.Write("Enter your Password: ");
-            password = Console.ReadLine();
-            userName = string.IsNullOrEmpty(userName) ? "dungnv" : userName;
-            password = string.IsNullOrEmpty(password) ? "puppet#89" : password;
+            InputSetting();
 
             AppDomain.CurrentDomain.AssemblyResolve += RegisterAssembly;
 
             //Required called before using
             PuMain.Instance.Load();
-            
-            #region TYPE TEST SCRIPTS IN HERE
 
-            TestGetToken();
-
-            #endregion
-
-            //Wait for Enter to close console.
-            Console.ReadLine();
+            GetAccessToken();
         }
 
         /// <summary>
@@ -65,6 +50,27 @@ namespace Puppet
         static Assembly RegisterAssembly(object sender, ResolveEventArgs args)
         {
             return Assembly.LoadFrom(AppDomain.CurrentDomain.BaseDirectory + @"\lib\SmartFox2X.dll");
+        }
+
+        static void InputSetting()
+        {
+            Console.WriteLine("1. test.esimo.vn");
+            Console.WriteLine("2. localhost");
+            Console.WriteLine("Or enter you server address");
+            Console.Write("Please enter server: ");
+            string enter = Console.ReadLine();
+            if (enter.EndsWith("1"))
+                enter = "test.esimo.vn";
+            else if (enter.EndsWith("2"))
+                enter = "127.0.0.1";
+            DefaultSetting.domain = enter;
+            Console.Write("Enter your Username: ");
+            userName = Console.ReadLine();
+            Console.Write("Enter your Password: ");
+            password = Console.ReadLine();
+            userName = string.IsNullOrEmpty(userName) ? "dungnv" : userName;
+            password = string.IsNullOrEmpty(password) ? "puppet#89" : password;
+            Console.WriteLine(string.Format("Server: {0} - Username: {1}", enter, userName));
         }
 
         static void TestCaching()
@@ -76,7 +82,7 @@ namespace Puppet
             });
         }
 
-        static void TestGetToken()
+        static void GetAccessToken()
         {
             API.Client.APILogin.GetAccessToken(userName, password, (bool status, string token, IHttpResponse response) =>
             {
@@ -109,33 +115,29 @@ namespace Puppet
         {
             if (status)
             {
-                //API.Client.APILobby.GetAllLobby((bool getStatus, string getMessage, List<DataLobby> listLobby) =>
+                API.Client.APILobby.GetGroupsLobby((bool getGStatus, string getGMessage, List<DataChannel> data) =>
                 {
-                    API.Client.APILobby.GetGroupsLobby((bool getGStatus, string getGMessage, List<DataChannel> data) =>
+                    for (int i = 0; i < data.Count; i++)
+                        Console.WriteLine(i + ". To choose channel " + data[i].name);
+                    int choose = GetEnterInteger(0, data.Count - 1);
+
+                    API.Client.APILobby.SetSelectChannel(data[choose], (bool gStatus, string gMessage, List<DataLobby> listChildren) =>
                     {
-                        for (int i = 0; i < data.Count; i++)
-                            Console.WriteLine(i + ". To choose channel " + data[i].name);
-                        int choose = GetEnterInteger(0, data.Count - 1);
+                        Console.WriteLine("0. Create new game");
+                        Console.WriteLine("1. Back");
+                        choose = GetEnterInteger(0, 1);
 
-                        API.Client.APILobby.SetSelectChannel(data[choose], (bool gStatus, string gMessage, List<DataLobby> listChildren) =>
+                        switch (choose)
                         {
-                            Console.WriteLine("0. Create new game");
-                            Console.WriteLine("1. Back");
-                            choose = GetEnterInteger(0, 1);
-
-                            switch (choose)
-                            {
-                                case 0:
-                                    API.Client.APILobby.CreateLobby(null);
-                                    break;
-                                case 1:
-                                    API.Client.APIGeneric.BackScene(null);
-                                    break;
-                            }
-                        });
+                            case 0:
+                                API.Client.APILobby.CreateLobby(null);
+                                break;
+                            case 1:
+                                API.Client.APIGeneric.BackScene(null);
+                                break;
+                        }
                     });
-                }
-                //);
+                });
             }
         }
     }

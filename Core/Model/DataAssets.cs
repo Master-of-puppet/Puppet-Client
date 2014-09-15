@@ -20,7 +20,7 @@ namespace Puppet.Core.Model
     public class DataAssetItem : DataModel
     {
         public DataAssetType assetType { get; set; }
-        public int value { get; set; }
+        public long value { get; set; }
 
         public DataAssetItem()
             : base() { }

@@ -43,7 +43,7 @@ namespace Puppet.Core.Network.Socket
 
         public static ISocketRequest GetRequestCreateLobby()
         {
-            return GetRequestNodePlugin(new RequestGetGroups(Fields.COMMAND_CREATE_GAME, ScenePockerLobby.Instance.selectedChannel.name, SceneWorldGame.Instance.selectedGame.roomName));
+            return GetRequestNodePlugin(new RequestGetGroups(Fields.COMMAND_CREATE_GAME, PuGlobal.Instance.SelectedChannel.name, PuGlobal.Instance.SelectedGame.roomName));
         }
     }
 }

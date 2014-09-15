@@ -14,8 +14,6 @@ namespace Puppet.Core.Flow
 {
     internal class SceneLogin : BaseSingleton<SceneLogin>, IScene
     {
-        public RoomInfo firtRoomToJoin;
-
         string token;
         DelegateAPICallback onLoginCallback;
 
@@ -85,7 +83,8 @@ namespace Puppet.Core.Flow
             else if (eventType.Equals(SFSEvent.LOGIN))
             {
                 SFSObject obj = (SFSObject)response.Params[Fields.DATA];
-                firtRoomToJoin = Utility.GetDataFromResponse<RoomInfo>(response, Fields.DATA, Fields.RESPONSE_FIRST_ROOM_TO_JOIN);
+                RoomInfo firtRoomToJoin = Utility.GetDataFromResponse<RoomInfo>(response, Fields.DATA, Fields.RESPONSE_FIRST_ROOM_TO_JOIN);
+                PuGlobal.Instance.FirtRoomToJoin = firtRoomToJoin;
                 PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(firtRoomToJoin));
             }
             else if (eventType.Equals(SFSEvent.LOGIN_ERROR))
