@@ -15,11 +15,16 @@ namespace Puppet.Core.Flow
         Dictionary<int, DataLobby> currentAllLobby;
         Dictionary<string, List<DataLobby>> currentAllChannel;
 
+        internal DelegateAPICallback onCreateLobbyCallback;
         DelegateAPICallbackDataLobby onGetAllLobby;
         DelegateAPICallbackDataLobby onGetGroupChildrenCallback;
-        DelegateAPICallbackDataLobby onCreateLobbyCallback;
 
         #region DEFAULT NOT MODIFY
+        public string ServerScene
+        {
+            get { return "lobby"; }
+        }
+
         public string SceneName
         {
             get { return "PockerLobby"; }
@@ -74,16 +79,6 @@ namespace Puppet.Core.Flow
                         DispathGetGroupChildren(true, string.Empty, new List<DataLobby>(responseLobby.children));
                 }
             }
-            else if (eventType.Equals(SFSEvent.ROOM_JOIN))
-            {
-                SceneHandler.Instance.Scene_Next(RoomHandler.Instance.GetSceneNameFromCurrentRoom);
-                DispathCreateGame(true, string.Empty);
-            }
-            else if (eventType.Equals(SFSEvent.ROOM_JOIN_ERROR))
-            {
-                #warning Note: Need to localization content
-                DispathCreateGame(false, "Không thể tạo bàn chơi.!!!!");
-            }
         }
 
         internal void GetAllLobby(DelegateAPICallbackDataLobby onGetAllLobby)
@@ -104,7 +99,7 @@ namespace Puppet.Core.Flow
             onGetGroupsLobbyCallback(true, string.Empty, PuGlobal.Instance.GroupsLobby);   
         }
 
-        internal void CreateLobby(DelegateAPICallbackDataLobby onCreateLobbyCallback)
+        internal void CreateLobby(DelegateAPICallback onCreateLobbyCallback)
         {
             this.onCreateLobbyCallback = onCreateLobbyCallback;
             PuMain.Socket.Request(RequestPool.GetRequestCreateLobby());
@@ -137,13 +132,6 @@ namespace Puppet.Core.Flow
             if (onGetGroupChildrenCallback != null)
                 onGetGroupChildrenCallback(status, message, data);
             onGetGroupChildrenCallback = null;
-        }
-
-        void DispathCreateGame(bool status, string message)
-        {
-            if (onCreateLobbyCallback != null)
-                onCreateLobbyCallback(status, message, null);
-            onCreateLobbyCallback = null;
         }
     }
 }

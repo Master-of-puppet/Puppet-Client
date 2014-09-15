@@ -26,7 +26,7 @@ namespace Puppet.Core
 
                 //For debug show log RoomVariable
                 foreach (UserVariable r in _mySelf.GetVariables())
-                    Logger.Log("{0} - {1}", r.Name, ((SFSObject)r.Value).GetDump());
+                    Logger.Log("UserVariable: {0} - {1}", r.Name, ((SFSObject)r.Value).GetDump());
             }
         }
 

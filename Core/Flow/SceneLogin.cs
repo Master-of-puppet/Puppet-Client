@@ -15,9 +15,14 @@ namespace Puppet.Core.Flow
     internal class SceneLogin : BaseSingleton<SceneLogin>, IScene
     {
         string token;
-        DelegateAPICallback onLoginCallback;
+        internal DelegateAPICallback onLoginCallback;
 
         #region DEFAULT NOT MODIFY
+        public string ServerScene
+        {
+            get { return string.Empty; }
+        }
+
         public string SceneName
         {
             get { return "LoginScreen"; }
@@ -57,7 +62,7 @@ namespace Puppet.Core.Flow
         {
         }
 
-        public void Login(string token, DelegateAPICallback onLoginCallback)
+        internal void Login(string token, DelegateAPICallback onLoginCallback)
         {
             this.token = token;
             this.onLoginCallback = onLoginCallback;
@@ -91,16 +96,6 @@ namespace Puppet.Core.Flow
             {
                 #warning Note: Need to localization content
                 DispathEventLogin(false, "Thông tin đăng nhập không hợp lệ");
-            }
-            else if (eventType.Equals(SFSEvent.ROOM_JOIN_ERROR))
-            {
-                #warning Note: Need to localization content
-                DispathEventLogin(false, "Đăng nhập thành công, nhưng không thể tham gia vào phòng chơi.");
-            }
-            else if(eventType.Equals(SFSEvent.ROOM_JOIN))
-            {
-                SceneHandler.Instance.Scene_Next(RoomHandler.Instance.GetSceneNameFromCurrentRoom);
-                DispathEventLogin(true, string.Empty);
             }
         }
 

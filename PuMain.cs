@@ -1,4 +1,5 @@
-﻿using Puppet.Core.Network.Http;
+﻿using Puppet.Core.Manager;
+using Puppet.Core.Network.Http;
 using Puppet.Core.Network.Socket;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,19 @@ namespace Puppet
                 if (_socket == null)
                     _socket = SocketHandler.Instance;
                 return _socket;
+            }
+        }
+        #endregion
+
+        #region Event
+        EventDispatcher _eventDispatcher;
+        public EventDispatcher Dispatcher
+        {
+            get
+            {
+                if (_eventDispatcher == null)
+                    _eventDispatcher = new EventDispatcher();
+                return _eventDispatcher;
             }
         }
         #endregion

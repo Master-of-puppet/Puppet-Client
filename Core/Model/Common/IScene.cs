@@ -5,6 +5,7 @@ namespace Puppet.Core.Model
 {
     public interface IScene
     {
+        string ServerScene { get; }
         string SceneName { get; }
         EScene SceneType { get; }
         IScene NextScene { get; }

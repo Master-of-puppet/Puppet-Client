@@ -41,7 +41,19 @@ namespace Puppet
             //Required called before using
             PuMain.Instance.Load();
 
-            GetAccessToken();
+            PuMain.Instance.Dispatcher.onChangeScene += Instance_onChangeScene;
+
+            AtLoginScreen();
+        }
+
+        static void Instance_onChangeScene(EScene fromScene, EScene toScene)
+        {
+            if (toScene == EScene.World_Game)
+                AtWorldScene();
+            else if (toScene == EScene.Pocker_Lobby)
+                AtLobbyScene();
+            else if (toScene == EScene.Pocker_Gameplay)
+                AtGameplay();
         }
 
         /// <summary>
@@ -73,54 +85,49 @@ namespace Puppet
             Console.WriteLine(string.Format("Server: {0} - Username: {1}", enter, userName));
         }
 
-        static void TestCaching()
-        {
-            Logger.Log(PuMain.Setting.PathCache);
-
-            CacheHandler.Instance.SaveFile((bool status) => {
-                Logger.Log("Save cache file {0}: {1}", PuMain.Setting.PathCache, status);
-            });
-        }
-
-        static void GetAccessToken()
+        static void AtLoginScreen()
         {
             API.Client.APILogin.GetAccessToken(userName, password, (bool status, string token, IHttpResponse response) =>
             {
                 if(status)
-                    API.Client.APILogin.Login(token, LoginCallback);
+                    API.Client.APILogin.Login(token, null);
             });
         }
 
-        static void LoginCallback(bool status, string message)
+        static void AtWorldScene()
         {
-            if(status)
+            API.Client.APIWorldGame.GetListGame((bool getStatus, string getMessage, List<DataGame> listGame) =>
             {
-                API.Client.APIWorldGame.GetListGame((bool getStatus, string getMessage, List<DataGame> listGame) =>
+                if (getStatus && listGame.Count > 0)
                 {
-                    if (getStatus && listGame.Count > 0)
-                    {
-                        for (int i = 0; i < listGame.Count; i++)
-                            Console.WriteLine(i + ". To choose game " + listGame[i].roomName);
-                        int choose = GetEnterInteger(0, listGame.Count - 1);
-
-                        API.Client.APIWorldGame.JoinRoom(listGame[choose], JoinGameCallback);
-                    }
+                    int i = 0;
+                    for (; i < listGame.Count; i++)
+                        Console.WriteLine(i + ". To choose game " + listGame[i].roomName);
+                    Console.WriteLine(i + ". To Logout");
+                    int choose = GetEnterInteger(0, listGame.Count);
+                    if (choose == i)
+                        API.Client.APIGeneric.BackScene(null);
                     else
-                        Logger.Log("Hiện chưa có trò chơi nào.");
-                });
-            }
+                        API.Client.APIWorldGame.JoinRoom(listGame[choose], null);
+                }
+                else
+                    Logger.Log("Hiện chưa có trò chơi nào.");
+            });
         }
 
-        static void JoinGameCallback(bool status, string message)
+        static void AtLobbyScene()
         {
-            if (status)
+            API.Client.APILobby.GetGroupsLobby((bool getGStatus, string getGMessage, List<DataChannel> data) =>
             {
-                API.Client.APILobby.GetGroupsLobby((bool getGStatus, string getGMessage, List<DataChannel> data) =>
+                int i = 0;
+                for (; i < data.Count; i++)
+                    Console.WriteLine(i + ". To choose channel " + data[i].name);
+                Console.WriteLine(i + ". Back");
+                int choose = GetEnterInteger(0, data.Count);
+                if (choose == i)
+                    API.Client.APIGeneric.BackScene(null);
+                else
                 {
-                    for (int i = 0; i < data.Count; i++)
-                        Console.WriteLine(i + ". To choose channel " + data[i].name);
-                    int choose = GetEnterInteger(0, data.Count - 1);
-
                     API.Client.APILobby.SetSelectChannel(data[choose], (bool gStatus, string gMessage, List<DataLobby> listChildren) =>
                     {
                         Console.WriteLine("0. Create new game");
@@ -137,8 +144,15 @@ namespace Puppet
                                 break;
                         }
                     });
-                });
-            }
+                }
+            });
+        }
+
+        static void AtGameplay()
+        {
+            Console.WriteLine("0. Back");
+            GetEnterInteger(0, 0);
+            API.Client.APIGeneric.BackScene(null);
         }
     }
 }

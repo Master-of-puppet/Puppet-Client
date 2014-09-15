@@ -24,7 +24,7 @@ namespace Puppet.API.Client
             ScenePockerLobby.Instance.SetSelectChannel(channel, onGetCallback);
         }
 
-        public static void CreateLobby(DelegateAPICallbackDataLobby onCreateLobbyCallback)
+        public static void CreateLobby(DelegateAPICallback onCreateLobbyCallback)
         {
             ScenePockerLobby.Instance.CreateLobby(onCreateLobbyCallback);
         }

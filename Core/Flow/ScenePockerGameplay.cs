@@ -10,6 +10,11 @@ namespace Puppet.Core.Flow
     internal class ScenePockerGameplay : BaseSingleton<ScenePockerGameplay>, IScene
     {
         #region DEFAULT NOT MODIFY
+        public string ServerScene
+        {
+            get { return "poker"; }
+        }
+
         public string SceneName
         {
             get { return "PockerGameplay"; }

@@ -10,6 +10,11 @@ namespace Puppet.Core.Flow
     internal class ScenePockerPlaza : BaseSingleton<ScenePockerPlaza>, IScene
     {
         #region DEFAULT NOT MODIFY
+        public string ServerScene
+        {
+            get { return string.Empty; }
+        }
+
         public string SceneName
         {
             get { return "PockerPlaza"; }
@@ -33,7 +38,6 @@ namespace Puppet.Core.Flow
 
         public void BeginScene()
         {
-            SceneHandler.Instance.Scene_Next(string.Empty);
         }
 
         public void EndScene()

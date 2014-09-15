@@ -29,9 +29,9 @@ namespace Puppet.Core
                 _sfsCurrentRoom = (Room)response.Params["room"];
                 Logger.Log("Changed room!");
 
-                ////For debug show log RoomVariable
-                //foreach (RoomVariable r in _sfsCurrentRoom.GetVariables())
-                //    Logger.Log("{0} - {1}", r.Name, ((SFSObject)r.Value).GetDump());
+                //For debug show log RoomVariable
+                foreach (RoomVariable r in _sfsCurrentRoom.GetVariables())
+                    Logger.Log("RoomVariable: {0} - {1}", r.Name, ((SFSObject)r.Value).GetDump());
             }
         }
 

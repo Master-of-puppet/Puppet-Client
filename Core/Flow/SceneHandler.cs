@@ -8,7 +8,7 @@ using Sfs2X.Core;
 
 namespace Puppet.Core.Flow
 {
-    public class SceneHandler : BaseSingleton<SceneHandler>
+    internal class SceneHandler : BaseSingleton<SceneHandler>
     {
         IScene _currentScene;
         EScene _lastScene = EScene.LoginScreen;
@@ -16,7 +16,7 @@ namespace Puppet.Core.Flow
 
         protected override void Init()
         {
-            SceneGeneric.Instance.Start();
+            SceneGeneric.Instance.StartListenerEvent();
             Current = SceneLogin.Instance;
 
             IScene temp = _currentScene;
@@ -27,7 +27,7 @@ namespace Puppet.Core.Flow
             }
         }
 
-        public IScene Current
+        internal IScene Current
         {
             get { return _currentScene; }
             set
@@ -44,50 +44,62 @@ namespace Puppet.Core.Flow
             }
         }
 
-        public EScene LastScene
+        internal EScene LastScene
         {
             get { return _lastScene; }
         }
 
-        public void Scene_Back(string serverSceneName)
+        internal void Scene_Back(string serverSceneName)
         {
             if(_currentScene.PrevScene != null)
             {
-                ChangeScene(_currentScene.PrevScene, serverSceneName);
                 Current = _currentScene.PrevScene;
+                ChangeScene(_currentScene.PrevScene, serverSceneName);
             }
         }
 
-        public void Scene_Next(string serverSceneName)
+        internal void Scene_Next(string serverSceneName)
         {
             if(_currentScene.NextScene != null)
             {
-                ChangeScene(_currentScene.NextScene, serverSceneName);
                 Current = _currentScene.NextScene;
+                ChangeScene(_currentScene.NextScene, serverSceneName);
             }
         }
 
-        public void Scene_GoTo(EScene sceneType, string serverSceneName)
+        internal void Scene_GoTo(string serverSceneName)
         {
-            IScene scene = allSceneInGame.Find(s =>s.SceneType == sceneType);
+            IScene scene = allSceneInGame.Find(s => s.ServerScene == serverSceneName);
             if (scene != null)
             {
-                ChangeScene(scene, serverSceneName);
                 Current = scene;
+                ChangeScene(scene, serverSceneName);
             }
             else
-                Logger.LogError("Did not find scene fit");
+                Logger.LogError("Did not find scene fit :1");
+        }
+
+        internal void Scene_GoTo(EScene sceneType, string serverSceneName)
+        {
+            IScene scene = allSceneInGame.Find(s => s.SceneType == sceneType);
+            if (scene != null)
+            {
+                Current = scene;
+                ChangeScene(scene, serverSceneName);
+            }
+            else
+                Logger.LogError("Did not find scene fit :2");
         }
 
         void ChangeScene(IScene scene, string serverSceneName)
         {
             if (string.IsNullOrEmpty(serverSceneName))
-                PuMain.Setting.ActionChangeScene(Current.SceneName, scene.SceneName);
+                Logger.Log("Server don't want going to anywhere - So client change to: " + scene.SceneName);
             else
-            {
                 Logger.Log("Server want going to scene: " + serverSceneName);
-                PuMain.Setting.ActionChangeScene(Current.SceneName, serverSceneName);
-            }
+
+            PuMain.Setting.ActionChangeScene(Current.SceneName, scene.SceneName);
+            PuMain.Instance.Dispatcher.SetChangeScene(Current.SceneType, scene.SceneType);
         }
     }
 }
