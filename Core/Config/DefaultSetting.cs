@@ -100,13 +100,6 @@ namespace Puppet
         public IServerMode ServerModeSocket { get { return server; } set { server = value; } }
         public ISocket Socket { get { return _socket;  } set { _socket = value; } }
 
-        public void ActionChangeScene(string fromScene, string toScene)
-        {
-#if USE_UNITY
-            UnityEngine.Application.LoadLevel(toScene);
-#endif
-        }
-
         public void ActionPrintLog(ELogType type, object message)
         {
             if (!PuMain.Setting.IsDebug)

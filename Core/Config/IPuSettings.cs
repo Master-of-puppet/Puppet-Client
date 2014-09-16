@@ -24,7 +24,6 @@ namespace Puppet
         IThread Threading { get; }
         string PathCache { get; }
         
-        void ActionChangeScene(string fromScene, string toScene);
         void ActionPrintLog(ELogType type, object message);
         void Init();
     }
