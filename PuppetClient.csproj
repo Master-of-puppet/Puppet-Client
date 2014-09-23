@@ -52,7 +52,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Puppet.Example</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -92,6 +93,7 @@
     <Compile Include="Core\Flow\SceneGeneric.cs" />
     <Compile Include="Core\Flow\SceneWorldGame.cs" />
     <Compile Include="Core\Manager\EventDispatcher.cs" />
+    <Compile Include="Core\Manager\LoadConfig.cs" />
     <Compile Include="Core\Manager\PuGlobal.cs" />
     <Compile Include="Core\Manager\RoomHandler.cs" />
     <Compile Include="Core\Manager\UserHandler.cs" />

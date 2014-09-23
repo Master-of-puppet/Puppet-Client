@@ -81,7 +81,7 @@ namespace Puppet.API.Client
                 }
                 onGetTokenCallback(status, token, response);
             };
-            PuMain.WWWHandler.Request(request);
+            PuMain.WWWHandler.Request(request, PuMain.Setting.ServerModeService);
         }
     }
 }

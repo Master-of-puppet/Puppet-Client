@@ -18,5 +18,11 @@ namespace Puppet.Core.Network.Http
         {
             _http.Request(request);
         }
+
+        public void Request(IHttpRequest request, IServerMode serverMode)
+        {
+            IHttp http = new BaseHttp(serverMode);
+            http.Request(request);
+        }
     }
 }

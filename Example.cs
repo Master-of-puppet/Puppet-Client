@@ -67,13 +67,16 @@ namespace Puppet
         static void InputSetting()
         {
             Console.WriteLine("1. test.esimo.vn");
-            Console.WriteLine("2. localhost");
+            Console.WriteLine("2. puppet.esimo.vn");
+            Console.WriteLine("3. localhost");
             Console.WriteLine("Or enter you server address");
             Console.Write("Please enter server: ");
             string enter = Console.ReadLine();
             if (enter.EndsWith("1"))
                 enter = "test.esimo.vn";
             else if (enter.EndsWith("2"))
+                enter = "puppet.esimo.vn";
+            else if (enter.EndsWith("3"))
                 enter = "127.0.0.1";
             DefaultSetting.domain = enter;
             Console.Write("Enter your Username: ");
@@ -121,7 +124,7 @@ namespace Puppet
             {
                 int i = 0;
                 for (; i < data.Count; i++)
-                    Console.WriteLine(i + ". To choose channel " + data[i].name);
+                    Console.WriteLine(i + ". To choose channel " + data[i].displayName);
                 Console.WriteLine(i + ". Back");
                 int choose = GetEnterInteger(0, data.Count);
                 if (choose == i)
@@ -154,5 +157,17 @@ namespace Puppet
             GetEnterInteger(0, 0);
             API.Client.APIGeneric.BackScene(null);
         }
+
+        //void LoadImageFromUrl(string url)
+        //{
+        //    WWWRequest request = new WWWRequest(url, 30f, 0);
+        //    request.onResponse += (IHttpRequest currentRequest, IHttpResponse currentResponse) =>
+        //    {
+        //        WWWResponse response = (WWWResponse)currentResponse;
+        //        if(response.State == System.Net.HttpStatusCode.OK)
+        //            UnityEngine.Texture2D texture = response.www.texture;
+        //    };
+        //    PuMain.WWWHandler.Request(request);
+        //}
     }
 }

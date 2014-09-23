@@ -17,5 +17,10 @@ namespace Puppet.Core.Network.Http
         {
             request.Start(serverMode);
         }
+
+        public void Request(IHttpRequest request, IServerMode serverMode)
+        {
+            request.Start(serverMode);
+        }
     }
 }

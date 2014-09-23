@@ -62,8 +62,16 @@ namespace Puppet.Core.Network.Http
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
                 string postData = string.Empty;
+
+                int i = 0;
                 foreach (string key in PostData.Keys)
-                    postData += string.Format("&{0}={1}", key, PostData[key].ToString());
+                {
+                    string format = "&{0}={1}";
+                    if (i == 0 && _path.EndsWith("?"))
+                        format = "{0}={1}";
+                    postData += string.Format(format, key, PostData[key].ToString());
+                    i++;
+                }
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
 
                 try

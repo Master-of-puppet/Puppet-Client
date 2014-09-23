@@ -10,6 +10,7 @@ namespace Puppet.Core.Network.Http
     public interface IHttp
     {
         void Request(IHttpRequest request);
+        void Request(IHttpRequest request, IServerMode serverMode);
     }
 
     public interface IHttpRequest

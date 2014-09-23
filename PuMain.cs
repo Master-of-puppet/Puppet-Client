@@ -80,7 +80,7 @@ namespace Puppet
         /// </summary>
         public void Load()
         {
-            
+            new LoadConfig();
         }
     }
 }

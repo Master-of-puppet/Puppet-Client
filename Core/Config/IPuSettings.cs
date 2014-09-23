@@ -15,6 +15,7 @@ namespace Puppet
         EPlatform Platform { get; set; }
         ServerEnvironment Environment { get; set; }
         IServerMode ServerModeHttp { get; set; }
+        IServerMode ServerModeService { get; set; }
         IServerMode ServerModeBundle { get; set; }
         IServerMode ServerModeSocket { get; set; }
         ISocket Socket { get; set; }

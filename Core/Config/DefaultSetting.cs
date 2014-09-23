@@ -18,7 +18,7 @@ namespace Puppet
     {
         internal static string domain;
         DataClientDetails _clientDetails;
-        IServerMode server, serverWeb, serverBundle;
+        IServerMode server, serverWebHttp, serverWebService, serverBundle;
         EPlatform _platform;
         ServerEnvironment _env;
         ISocket _socket;
@@ -44,8 +44,9 @@ namespace Puppet
         public void Init()
         {
             server = new ServerMode(domain);
-            serverWeb = new WebServerMode(domain);
+            serverWebService = new WebServiceServerMode(domain);
             serverBundle = new WebServerMode(domain);
+            serverWebHttp = new WebServerMode(domain);
             
             _socket = new CSmartFox(null);
             _clientDetails = new DataClientDetails();
@@ -95,7 +96,8 @@ namespace Puppet
         }
 
         public ServerEnvironment Environment { get { return _env; } set { _env = value; } }
-        public IServerMode ServerModeHttp { get { return serverWeb; } set { serverWeb = value; } }
+        public IServerMode ServerModeHttp { get { return serverWebHttp; } set { serverWebHttp = value; } }
+        public IServerMode ServerModeService { get { return serverWebService; } set { serverWebService = value; } }
         public IServerMode ServerModeBundle { get { return serverBundle; } set { serverBundle = value; } }
         public IServerMode ServerModeSocket { get { return server; } set { server = value; } }
         public ISocket Socket { get { return _socket;  } set { _socket = value; } }
@@ -184,10 +186,10 @@ namespace Puppet
         public string GetPath(string path) { return string.Format("{0}/{1}", GetBaseUrl(), path); }
     }
 
-    class WebServerMode : IServerMode
+    class WebServiceServerMode : IServerMode
     {
         string domain;
-        public WebServerMode(string domain)
+        public WebServiceServerMode(string domain)
         {
             if (!string.IsNullOrEmpty(domain))
                 this.domain = domain;
@@ -202,5 +204,25 @@ namespace Puppet
         public string Domain { get { return domain; } }
 
         public string GetPath(string path) { return string.Format("{0}/puppet/{1}", GetBaseUrl(), path); }
+    }
+
+    class WebServerMode : IServerMode
+    {
+        string domain;
+        public WebServerMode(string domain)
+        {
+            if (!string.IsNullOrEmpty(domain))
+                this.domain = domain;
+            else
+                this.domain = "127.0.0.1";
+        }
+
+        public string GetBaseUrl() { return string.Format("http://{0}:{1}", Domain, Port); }
+
+        public int Port { get { return 80; } }
+
+        public string Domain { get { return domain; } }
+
+        public string GetPath(string path) { return string.Format("{0}/api/{1}", GetBaseUrl(), path); }
     }
 }
