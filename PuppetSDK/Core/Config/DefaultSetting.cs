@@ -28,16 +28,7 @@ namespace Puppet
 
         internal DefaultSetting()
         {
-#if UNITY_ANDROID
-            _platform = EPlatform.Android;
-#elif UNITY_IPHONE
-            _platform = EPlatform.iOS;
-#elif UNITY_WEBPLAYER
-            _platform = EPlatform.WebPlayer;
-#else
             _platform = EPlatform.Editor;
-#endif
-
             _env = ServerEnvironment.Dev;
         }
 
@@ -104,37 +95,37 @@ namespace Puppet
 
         public void ActionPrintLog(ELogType type, object message)
         {
-            if (!PuMain.Setting.IsDebug)
-                return;
+//            if (!PuMain.Setting.IsDebug)
+//                return;
 
-#if USE_UNITY
-            switch(type)
-            {
-                case ELogType.Info:
-                    UnityEngine.Debug.Log(message);
-                    break;
-                case ELogType.Warning:
-                    UnityEngine.Debug.LogWarning(message);
-                    break;
-                case ELogType.Error:
-                    UnityEngine.Debug.LogError(message);
-                    break;
-                case ELogType.Exception:
-                    UnityEngine.Debug.LogException((Exception)message);
-                    break;
-            }
-#else
-            Console.WriteLine(string.Format("{0}: {1}", type.ToString(), message.ToString()));
-            #if USE_DEBUG_CONSOLE
-            System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
-            for (int i = 3; i < stackTrace.FrameCount; i++)
-            {
-                System.Diagnostics.StackFrame frame = stackTrace.GetFrame(i);
-                Console.WriteLine("- {0}", frame.ToString());
-            }
-            #endif
-            Console.WriteLine();
-#endif
+//#if USE_UNITY
+//            switch(type)
+//            {
+//                case ELogType.Info:
+//                    UnityEngine.Debug.Log(message);
+//                    break;
+//                case ELogType.Warning:
+//                    UnityEngine.Debug.LogWarning(message);
+//                    break;
+//                case ELogType.Error:
+//                    UnityEngine.Debug.LogError(message);
+//                    break;
+//                case ELogType.Exception:
+//                    UnityEngine.Debug.LogException((Exception)message);
+//                    break;
+//            }
+//#else
+//            Console.WriteLine(string.Format("{0}: {1}", type.ToString(), message.ToString()));
+//            #if USE_DEBUG_CONSOLE
+//            System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+//            for (int i = 3; i < stackTrace.FrameCount; i++)
+//            {
+//                System.Diagnostics.StackFrame frame = stackTrace.GetFrame(i);
+//                Console.WriteLine("- {0}", frame.ToString());
+//            }
+//            #endif
+//            Console.WriteLine();
+//#endif
         }
 
         public IStorage PlayerPref

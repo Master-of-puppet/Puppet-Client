@@ -19,6 +19,7 @@ namespace Puppet.Core.Network.Http
         string _path = string.Empty;
         Dictionary<string, object> PostData;
         SimpleHttpResponse simpleResponse;
+        public bool isFullUrl;
 
         public SimpleHttpRequest(string path)
         {
@@ -53,7 +54,7 @@ namespace Puppet.Core.Network.Http
 
         void StartWebRequest()
         {
-            string url = server.GetPath(_path);
+            string url = isFullUrl ? _path : server.GetPath(_path);
             Logger.Log("Url: " + url);
             WebRequest request = HttpWebRequest.Create(url);
 

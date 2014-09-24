@@ -41,5 +41,7 @@ namespace Puppet
         {
             Instance._logger.LogException(exception);
         }
+
+
     }
 }

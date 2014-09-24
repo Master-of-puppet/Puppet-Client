@@ -25,9 +25,12 @@ namespace Puppet.Core.Network.Http
         public int RetryCount;
         public float WaitForProgress = 0.01f;
         public bool EnableTimeOut;
+        public bool isFullUrl;
+        MonoBehaviour monoBehaviour;
 
-        public WWWRequest(string _path, float _timeOut, int _retryCount)
+        public WWWRequest(MonoBehaviour monoBehaviour, string _path, float _timeOut, int _retryCount)
         {
+            this.monoBehaviour = monoBehaviour;
             this.Path = _path;
             this.TimeOut = _timeOut;
             this.originTimeOut = _timeOut;
@@ -39,13 +42,13 @@ namespace Puppet.Core.Network.Http
         {
             dataResponse = new WWWResponse();
             this.serverMode = server;
-            Utility.StartCoroutine(DownloadData());
+            monoBehaviour.StartCoroutine(DownloadData());
         }
 
         IEnumerator DownloadData()
         {
-            string url = serverMode.GetPath(Path);
-            Logger.Log("Url: " + url);
+            string url = isFullUrl ? Path : serverMode.GetPath(Path);
+            Logger.Log("WWW Download: " + url);
             WWW www;
             if (Method == HttpMethod.Get)
                 www = new WWW(url);
@@ -80,6 +83,7 @@ namespace Puppet.Core.Network.Http
                 }
 
                 yield return new WaitForSeconds(WaitForProgress);
+
                 TimeOut -= WaitForProgress;
             }
 
