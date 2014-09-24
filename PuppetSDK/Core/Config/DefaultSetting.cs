@@ -14,9 +14,9 @@ using System.Threading;
 
 namespace Puppet
 {
-    internal class DefaultSetting : IPuSettings
+    public class DefaultSetting : IPuSettings
     {
-        internal static string domain;
+        public static string domain;
         DataClientDetails _clientDetails;
         IServerMode server, serverWebHttp, serverWebService, serverBundle;
         EPlatform _platform;
