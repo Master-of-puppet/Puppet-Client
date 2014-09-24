@@ -26,14 +26,11 @@ namespace Puppet
         Action _actionUpdate;
         bool isDebug = true;
 
-        internal DefaultSetting()
+        public void Init()
         {
             _platform = EPlatform.Editor;
             _env = ServerEnvironment.Dev;
-        }
 
-        public void Init()
-        {
             server = new ServerMode(domain);
             serverWebService = new WebServiceServerMode(domain);
             serverBundle = new WebServerMode(domain);
@@ -42,15 +39,23 @@ namespace Puppet
             _socket = new CSmartFox(null);
             _clientDetails = new DataClientDetails();
 
-#if !USE_UNITY
+            AfterInit();
+        }
+
+        protected virtual void AfterInit()
+        {
             Thread thread = new Thread(new ThreadStart(() =>
             {
                 Thread.Sleep(TimeSpan.FromSeconds(0.1f));
-                if(ActionUpdate != null)
+                if (ActionUpdate != null)
                     ActionUpdate();
             }));
             thread.Start();
-#endif
+        }
+
+        public virtual bool UseUnity
+        {
+            get { return false; }
         }
 
         public bool IsDebug
@@ -71,19 +76,9 @@ namespace Puppet
             set { _platform = value; } 
         }
 
-        public string PathCache 
+        public virtual string PathCache 
         { 
-            get 
-            {
-                string fileName = "Caching.save";
-                string directory = string.Empty;
-#if USE_UNITY
-                directory = UnityEngine.Application.dataPath;
-#else
-                directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-#endif
-                return Path.Combine(directory, fileName);
-            }
+            get  { return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Caching.save"); }
         }
 
         public ServerEnvironment Environment { get { return _env; } set { _env = value; } }
@@ -93,55 +88,30 @@ namespace Puppet
         public IServerMode ServerModeSocket { get { return server; } set { server = value; } }
         public ISocket Socket { get { return _socket;  } set { _socket = value; } }
 
-        public void ActionPrintLog(ELogType type, object message)
+        public virtual void ActionPrintLog(ELogType type, object message)
         {
-//            if (!PuMain.Setting.IsDebug)
-//                return;
+            if (!IsDebug) return;
 
-//#if USE_UNITY
-//            switch(type)
-//            {
-//                case ELogType.Info:
-//                    UnityEngine.Debug.Log(message);
-//                    break;
-//                case ELogType.Warning:
-//                    UnityEngine.Debug.LogWarning(message);
-//                    break;
-//                case ELogType.Error:
-//                    UnityEngine.Debug.LogError(message);
-//                    break;
-//                case ELogType.Exception:
-//                    UnityEngine.Debug.LogException((Exception)message);
-//                    break;
-//            }
-//#else
-//            Console.WriteLine(string.Format("{0}: {1}", type.ToString(), message.ToString()));
-//            #if USE_DEBUG_CONSOLE
-//            System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
-//            for (int i = 3; i < stackTrace.FrameCount; i++)
-//            {
-//                System.Diagnostics.StackFrame frame = stackTrace.GetFrame(i);
-//                Console.WriteLine("- {0}", frame.ToString());
-//            }
-//            #endif
-//            Console.WriteLine();
-//#endif
-        }
-
-        public IStorage PlayerPref
-        {
-            get { return UnityPlayerPrefab.Instance; }
-        }
-
-        public IThread Threading
-        {
-            get { 
-#if USE_UNITY
-                return UnityThread.Instance;
-#else
-                return SimpleThread.Instance;
-#endif
+            Console.WriteLine(string.Format("{0}: {1}", type.ToString(), message.ToString()));
+            #if USE_DEBUG_CONSOLE
+            System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
+            for (int i = 3; i < stackTrace.FrameCount; i++)
+            {
+                System.Diagnostics.StackFrame frame = stackTrace.GetFrame(i);
+                Console.WriteLine("- {0}", frame.ToString());
             }
+            #endif
+            Console.WriteLine();
+        }
+
+        public virtual IStorage PlayerPref
+        {
+            get { return null; }
+        }
+
+        public virtual IThread Threading
+        {
+            get { return SimpleThread.Instance; }
         }
 
         public DataClientDetails ClientDetails

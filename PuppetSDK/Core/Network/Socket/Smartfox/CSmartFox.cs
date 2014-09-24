@@ -24,20 +24,15 @@ namespace Puppet.Core.Network.Socket
         public CSmartFox(Action<string, ISocketResponse> onEventResponse)
         {
             smartFox = new SmartFox(true);
-#if USE_UNITY
-            smartFox.ThreadSafeMode = true;
-#else
-            smartFox.ThreadSafeMode = false;
-#endif
+
+            smartFox.ThreadSafeMode = PuMain.Setting.UseUnity;
 
             foreach(FieldInfo info in Utility.GetFieldInfo(typeof(SFSEvent), BindingFlags.Public | BindingFlags.Static))
                 smartFox.AddEventListener(info.GetValue(null).ToString(), ListenerDelegate);
 
-#if USE_UNITY
-            if(PuMain.Setting.IsDebug)
+            if(PuMain.Setting.UseUnity && PuMain.Setting.IsDebug)
                 foreach (LogLevel log in Enum.GetValues(typeof(LogLevel)))
                     smartFox.AddLogListener(log, OnDebugMessage);
-#endif
 
             if (onEventResponse != null)
                 AddListener(onEventResponse);

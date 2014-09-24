@@ -9,6 +9,7 @@ namespace Puppet
 {
     public interface IPuSettings
     {
+        bool UseUnity { get; }
         bool IsDebug { get; set; }
         DataClientDetails ClientDetails { get; set; }
         string ZoneName { get; set; }

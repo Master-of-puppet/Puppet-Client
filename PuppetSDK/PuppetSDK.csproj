@@ -16,7 +16,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;USE_UNITY</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
@@ -35,7 +35,6 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="libs\SmartFox2X.dll" />
-    <Content Include="libs\UnityEngine.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Client\APIGeneric.cs" />
@@ -127,13 +126,6 @@
     <Compile Include="Utils\Thread\IThread.cs" />
     <Compile Include="Utils\Thread\SimpleThread.cs" />
     <Compile Include="Utils\Thread\ThreadHandler.cs" />
-    <Compile Include="Utils\Unity3D\Http\WWWRequest.cs" />
-    <Compile Include="Utils\Unity3D\Http\WWWResponse.cs" />
-    <Compile Include="Utils\Unity3D\Patterns\Singleton.cs" />
-    <Compile Include="Utils\Unity3D\Storage\UnityPlayerPrefab.cs" />
-    <Compile Include="Utils\Unity3D\Thread\Loom.cs" />
-    <Compile Include="Utils\Unity3D\Thread\UnityThread.cs" />
-    <Compile Include="Utils\Unity3D\Utility\ExtensionMethods.cs" />
     <Compile Include="Utils\Utility\AOTSafe.cs" />
     <Compile Include="Utils\Utility\Utility.cs" />
   </ItemGroup>
@@ -141,10 +133,6 @@
     <Reference Include="System" />
     <Reference Include="SmartFox2X">
       <HintPath>libs\SmartFox2X.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>libs\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

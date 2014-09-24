@@ -12,7 +12,7 @@ namespace Puppet.Utils
 {
     public class Utility
     {
-        public static void StartCoroutine(IEnumerator ienumerator)
+        public static void SimpleCoroutine(IEnumerator ienumerator)
         {
             try { while (!ienumerator.MoveNext()) break; }
             finally
