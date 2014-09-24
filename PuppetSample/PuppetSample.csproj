@@ -35,9 +35,6 @@
     <StartupObject>Puppet.Example</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Example.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -46,5 +43,10 @@
       <Project>{3925B9AA-CA95-4B17-AC8B-CAABDBB4A348}</Project>
       <Name>PuppetSDK</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SmartFox2X">
+      <HintPath>libs\SmartFox2X.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
