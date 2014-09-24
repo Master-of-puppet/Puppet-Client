@@ -11,7 +11,7 @@ namespace Puppet.Core.Manager
         internal LoadConfig()
         {
             GetAppConfig();
-            ChangeUseInformation();
+            //ChangeUseInformation();
         }
 
 
@@ -27,6 +27,14 @@ namespace Puppet.Core.Manager
             dict.Add("distributor", "foxpocker");
 
             Request(Commands.GET_APPLICATION_CONFIG, dict, null);
+
+            Request(Commands.CHECK_VERSION, dict, (bool status, string message) => {
+                if(status)
+                {
+                    Dictionary<string, object> currentDict = JsonUtil.Deserialize(message);
+                    PuMain.Instance.Dispatcher.SetNoticeMessage(EMessage.Critical, currentDict["message"].ToString());
+                }
+            });
         }
 
         void ChangeUseInformation()
@@ -38,6 +46,17 @@ namespace Puppet.Core.Manager
             dict.Add("renewPassword", "cnttbkhn89");
 
             Request(Commands.CHANGE_USER_INFORMATION, dict, null, "type", "changePassword");
+        }
+
+        void CheckVersion()
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("code_application", "foxpocker");
+            dict.Add("code_platform", "thanhnd");
+            dict.Add("newPassword", "cnttbkhn");
+            dict.Add("renewPassword", "cnttbkhn89");
+
+            Request(Commands.CHANGE_USER_INFORMATION, dict, null);
         }
 
         void Request(string command, Dictionary<string, string> dict, Action<bool, string> callback, params object[] postData)

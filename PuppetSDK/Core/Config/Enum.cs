@@ -23,4 +23,10 @@ namespace Puppet
         Pocker_Lobby = 5,
         Pocker_Gameplay = 6,
     }
+
+    public enum EMessage
+    {
+        Critical,
+        Notify,
+    }
 }
