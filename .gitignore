@@ -4,6 +4,10 @@
 ExportedObj/
 bin/**
 obj/**
+PuppetSample/bin/**
+PuppetSample/obj/**
+PuppetSDK/bin/**
+PuppetSDK/obj/**
 *.svd
 *.userprefs
 *.pidb

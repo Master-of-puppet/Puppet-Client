@@ -1,5 +1,0 @@
-E:\Projects\Puppet\PuppetClient\PuppetSDK\obj\x86\Debug\PuppetSDK.csprojResolveAssemblyReference.cache
-E:\Projects\Puppet\PuppetClient\PuppetSDK\bin\Debug\PuppetSDK.dll
-E:\Projects\Puppet\PuppetClient\PuppetSDK\bin\Debug\PuppetSDK.pdb
-E:\Projects\Puppet\PuppetClient\PuppetSDK\obj\x86\Debug\PuppetSDK.dll
-E:\Projects\Puppet\PuppetClient\PuppetSDK\obj\x86\Debug\PuppetSDK.pdb

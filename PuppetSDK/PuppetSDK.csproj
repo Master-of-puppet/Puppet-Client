@@ -152,7 +152,7 @@
     </Reference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy /y $(TargetPath) $(SolutionDir)$(TargetFileName)
-copy /y $(TargetPath) $(SolutionDir)..\FoxPoker\Assets\Plugins\$(TargetFileName)$(TargetPath)</PostBuildEvent>
+    <PostBuildEvent>copy /y $(ProjectDir)$(OutDir)$(TargetFileName) $(SolutionDir)$(TargetFileName)
+copy /y $(ProjectDir)$(OutDir)$(TargetFileName) $(SolutionDir)..\FoxPoker\Assets\Plugins\$(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
 </Project>
