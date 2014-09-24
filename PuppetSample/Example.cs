@@ -61,7 +61,6 @@ namespace Puppet
         /// </summary>
         static Assembly RegisterAssembly(object sender, ResolveEventArgs args)
         {
-            Console.WriteLine(AppDomain.CurrentDomain.BaseDirectory);
             return Assembly.LoadFrom(AppDomain.CurrentDomain.BaseDirectory + @"\SmartFox2X.dll");
         }
 
