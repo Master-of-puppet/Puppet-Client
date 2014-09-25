@@ -11,7 +11,7 @@ using Puppet.Core.Flow;
 
 namespace Puppet.Core.Network.Socket
 {
-    public class RequestPool
+    public sealed class RequestPool
     {
         public static ISocketRequest GetLoginRequest(string token)
         {

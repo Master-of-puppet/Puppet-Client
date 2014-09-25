@@ -44,8 +44,19 @@ namespace Puppet.API.Client
                 onRegisterCallback(false, "API chỉ được thực thi khi ở màn Login");
                 return;
             }
-
+            
             onRegisterCallback(false, "Địa chỉ email đã tồn tại trong hệ thống.");
+        }
+
+        public static void QuickRegister(string username, string password, DelegateAPICallback callback)
+        {
+            if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
+            {
+                callback(false, "API chỉ được thực thi khi ở màn Login");
+                return;
+            }
+
+            HttpPool.QuickRegister(username, password, callback);
         }
 
         /// <summary>

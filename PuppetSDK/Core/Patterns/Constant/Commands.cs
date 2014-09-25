@@ -12,5 +12,6 @@ namespace Puppet
         public const string GET_APPLICATION_CONFIG      = "getApplicationConfig?";
         public const string CHANGE_USER_INFORMATION     = "ChangeUserInformation?";
         public const string CHECK_VERSION               = "checkVersion?";
+        public const string QUICK_REGISTER              = "quickRegister?";
     }
 }

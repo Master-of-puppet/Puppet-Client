@@ -9,6 +9,7 @@ namespace Puppet.Core.Manager
     {
         public event Action<EScene, EScene> onChangeScene;
         public event Action<EMessage, string> onNoticeMessage;
+        public event Action<EUpgrade, string, string> onWarningUpgrade;
 
         internal void SetChangeScene(EScene fromScene, EScene toScene)
         {
@@ -20,6 +21,12 @@ namespace Puppet.Core.Manager
         {
             if (onNoticeMessage != null)
                 onNoticeMessage(messageType, message);
+        }
+
+        internal void SetWarningUpgrade(EUpgrade type, string message, string url)
+        {
+            if (onWarningUpgrade != null)
+                onWarningUpgrade(type, message, url);
         }
     }
 }

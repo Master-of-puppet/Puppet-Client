@@ -29,4 +29,12 @@ namespace Puppet
         Critical,
         Notify,
     }
+
+    public enum EUpgrade
+    {
+        None,
+        ForceUpdate = 100,
+        MaybeUpdate = 200,
+        NotUpdate = 300,
+    }
 }

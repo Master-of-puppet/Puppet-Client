@@ -88,6 +88,7 @@
     <Compile Include="Core\Model\UserInfo.cs" />
     <Compile Include="Core\Network\Http\BaseHttp.cs" />
     <Compile Include="Core\Network\Http\HttpHandler.cs" />
+    <Compile Include="Core\Network\Http\HttpPool.cs" />
     <Compile Include="Core\Network\Http\IHttp.cs" />
     <Compile Include="Core\Network\Http\SimpleHttpRequest.cs" />
     <Compile Include="Core\Network\IServerMode.cs" />
