@@ -55,8 +55,19 @@ namespace Puppet.API.Client
                 callback(false, "API chỉ được thực thi khi ở màn Login");
                 return;
             }
-
+            
             HttpPool.QuickRegister(username, password, callback);
+        }
+
+        public static void GetAccessTokenFacebook(string facebookToken, DelegateAPICallbackDictionary callback)
+        {
+            if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
+            {
+                callback(false, "API chỉ được thực thi khi ở màn Login", null);
+                return;
+            }
+            
+            HttpPool.GetAccessTokenFacebook(facebookToken, callback);
         }
 
         /// <summary>
@@ -87,8 +98,11 @@ namespace Puppet.API.Client
                     Dictionary<string, object> dict = JsonUtil.Deserialize(response.Data);
                     if (dict.ContainsKey(Fields.SUCCESS))
                         status = (bool)dict[Fields.SUCCESS];
+
                     if (dict.ContainsKey(Fields.TOKEN))
                         token = dict[Fields.TOKEN].ToString();
+                    else if (dict.ContainsKey(Fields.DETAILS))
+                        token = dict[Fields.DETAILS].ToString();
                 }
                 onGetTokenCallback(status, token, response);
             };

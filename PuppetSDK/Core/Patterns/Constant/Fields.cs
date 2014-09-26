@@ -10,6 +10,7 @@ namespace Puppet
         public const string USERNAME            = "userName";
         public const string PASSWORD            = "password";
 
+        public const string DETAILS             = "details";
         public const string SUCCESS             = "success";
         public const string TOKEN               = "token";
         public const string DATA                = "data";

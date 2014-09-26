@@ -9,6 +9,7 @@ namespace Puppet
 {
     public delegate void DelegateAPICallback(bool status, string message);
     public delegate void DelegateAPICallbackObject(bool status, string message, object data);
+    public delegate void DelegateAPICallbackDictionary(bool status, string message, Dictionary<string, object> data);
     public delegate void DelegateAPICallbackHttpRequest(bool status, string message, IHttpResponse data);
     public delegate void DelegateAPICallbackDataGame(bool status, string message, List<DataGame> data);
     public delegate void DelegateAPICallbackDataChannel(bool status, string message, List<DataChannel> data);

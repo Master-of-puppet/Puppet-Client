@@ -26,7 +26,7 @@ namespace Puppet.Core.Network.Http
             });
         }
 
-        public static void ChangeUseInformation(string username, string password, string newpass)
+        public static void ChangeUseInformation(string username, string password, string newpass, DelegateAPICallback callback)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict.Add("username", username);
@@ -34,16 +34,43 @@ namespace Puppet.Core.Network.Http
             dict.Add("newPassword", newpass);
             dict.Add("renewPassword", newpass);
 
-            Request(Commands.CHANGE_USER_INFORMATION, dict, null, "type", "changePassword");
+            Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "type", "changePassword");
         }
 
         public static void QuickRegister(string username, string password, DelegateAPICallback callback)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            dict.Add("username", username);
-            dict.Add("password", password);
+            Request(Commands.QUICK_REGISTER, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "username", username, "password", password);
+        }
 
-            Request(Commands.QUICK_REGISTER, dict, (bool status, string data) => HandleCallback(status, data, ref callback));
+        public static void GetAccessTokenFacebook(string facebookToken, DelegateAPICallbackDictionary callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            Dictionary<string, object> responseDict = new Dictionary<string, object>();
+
+            Request(Commands.QUICK_REGISTER, dict, (bool status, string data) => 
+            {
+                bool responseStatus = false;
+                string message = string.Empty;
+                if (status)
+                {
+                    Dictionary<string, object> currentDict = JsonUtil.Deserialize(data);
+                    int code = int.Parse(currentDict["code"].ToString());
+                    responseStatus = code == 0;
+                    message = currentDict["message"].ToString();
+
+                    if(responseStatus)
+                    {
+                        responseDict.Add("accessToken", currentDict["accessToken"].ToString());
+                        responseDict.Add("username", currentDict["username"].ToString());
+                    }
+                }
+                else
+                    message = data;
+
+                if (callback != null)
+                    callback(responseStatus, message, responseDict);
+            }, "type", "facebook", "accessToken", facebookToken);
         }
 
         static Dictionary<string, string> GetVersion()
@@ -63,7 +90,7 @@ namespace Puppet.Core.Network.Http
         {
             bool responseStatus = false;
             string message = string.Empty;
-            
+
             if (status)
             {
                 Dictionary<string, object> currentDict = JsonUtil.Deserialize(data);
