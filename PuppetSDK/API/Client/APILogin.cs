@@ -23,10 +23,20 @@ namespace Puppet.API.Client
                 return;
             }
 
+            if(string.IsNullOrEmpty(token))
+            {
+                onLoginCallback(false, "Token không hợp lệ, vui lòng thử lại.");
+                return;
+            }
+
             SceneLogin.Instance.Login(token, onLoginCallback);
         }
 
-        public static void SocialLogin(string socialType, string accessToken, DelegateAPICallback onLoginCallback)
+        /// <summary>
+        /// Yêu cầu đăng nhập kiểu chơi thử
+        /// </summary>
+        /// <param name="onLoginCallback">Callback khi xử lý xong đăng nhập</param>
+        public static void LoginTrial(DelegateAPICallback onLoginCallback)
         {
             if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
             {
@@ -34,20 +44,15 @@ namespace Puppet.API.Client
                 return;
             }
 
-            onLoginCallback(false, "AccessToken đã hết hạn.");
+            SceneLogin.Instance.Login(string.Empty, onLoginCallback);
         }
 
-        public static void Register(Dictionary<string, string> registerInformation, DelegateAPICallback onRegisterCallback)
-        {
-            if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
-            {
-                onRegisterCallback(false, "API chỉ được thực thi khi ở màn Login");
-                return;
-            }
-            
-            onRegisterCallback(false, "Địa chỉ email đã tồn tại trong hệ thống.");
-        }
-
+        /// <summary>
+        /// API hỗ trợ việc đăng ký nhanh
+        /// </summary>
+        /// <param name="username">Tên truy cập</param>
+        /// <param name="password">Mật khẩu</param>
+        /// <param name="callback">Hành động trả về</param>
         public static void QuickRegister(string username, string password, DelegateAPICallback callback)
         {
             if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
@@ -59,6 +64,11 @@ namespace Puppet.API.Client
             HttpPool.QuickRegister(username, password, callback);
         }
 
+        /// <summary>
+        /// API yêu câu lấy accsessToken để đăng nhập cho hệ thống từ Facebook
+        /// </summary>
+        /// <param name="facebookToken">Facebook Token</param>
+        /// <param name="callback">Hành động trả về</param>
         public static void GetAccessTokenFacebook(string facebookToken, DelegateAPICallbackDictionary callback)
         {
             if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
@@ -71,7 +81,24 @@ namespace Puppet.API.Client
         }
 
         /// <summary>
-        /// Lấy thông tin về AccessToken.
+        /// API giúp đăng ký tài khoản vào hệ thống khi lần đầu đăng nhập bằng Facebook
+        /// </summary>
+        /// <param name="username">Tên truy cập</param>
+        /// <param name="password">Mật khẩu</param>
+        /// <param name="callback">Hàm thực thi khi có kết quả</param>
+        public static void RegisterWithFacebook(string username, string password, DelegateAPICallback callback)
+        {
+            if (SceneHandler.Instance.Current.SceneType != EScene.LoginScreen)
+            {
+                callback(false, "API chỉ được thực thi khi ở màn Login");
+                return;
+            }
+
+            HttpPool.RegisterWithFacebook(username, password, callback);
+        }
+
+        /// <summary>
+        /// Lấy thông tin về AccessToken để đăng nhập vào hệ thống.
         /// </summary>
         /// <param name="userName">Tên truy cập</param>
         /// <param name="password">Mật khẩu</param>
@@ -88,7 +115,7 @@ namespace Puppet.API.Client
                 return;
             }
 
-            SimpleHttpRequest request = new SimpleHttpRequest(Commands.GET_ACCESS_TOKEN, Fields.USERNAME, userName, Fields.PASSWORD, password);
+            SimpleHttpRequest request = new SimpleHttpRequest(Commands.COMMAND_GET_ACCESS_TOKEN, Fields.USERNAME, userName, Fields.PASSWORD, password);
             request.onResponse = (IHttpRequest myRequest, IHttpResponse response) =>
             {
                 bool status = false;

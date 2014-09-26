@@ -11,6 +11,7 @@ namespace Puppet.Core.Model
         public Version version { get; set; }
         public string platform { get; set; }
         public string bundleId { get; set; }
+        public string uniqueId { get; set; }
 
         public DataClientDetails()
             : base()
@@ -28,6 +29,7 @@ namespace Puppet.Core.Model
             version = new Version();
             platform = "web-html5";
             bundleId = "com.puppet.game.foxpoker";
+            uniqueId = PuMain.Setting.UniqueDeviceIdentification;
         }
     }
 

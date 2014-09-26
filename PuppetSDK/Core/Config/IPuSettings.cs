@@ -11,7 +11,6 @@ namespace Puppet
     {
         bool UseUnity { get; }
         bool IsDebug { get; set; }
-        DataClientDetails ClientDetails { get; set; }
         string ZoneName { get; set; }
         EPlatform Platform { get; set; }
         ServerEnvironment Environment { get; set; }
@@ -21,7 +20,8 @@ namespace Puppet
         IServerMode ServerModeSocket { get; set; }
         ISocket Socket { get; set; }
         Action ActionUpdate { get; set; }
-
+        DataClientDetails ClientDetails { get; }
+        string UniqueDeviceIdentification { get; }
         IStorage PlayerPref { get; }
         IThread Threading { get; }
         string PathCache { get; }

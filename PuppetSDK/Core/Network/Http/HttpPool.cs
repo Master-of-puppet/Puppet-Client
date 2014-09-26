@@ -4,21 +4,21 @@ using System.Collections.Generic;
 
 namespace Puppet.Core.Network.Http
 {
-    public sealed class HttpPool
+    internal sealed class HttpPool
     {
-        public static void GetAppConfig()
+        internal static void GetAppConfig()
         {
             Request(Commands.GET_APPLICATION_CONFIG, GetVersion(), null);
         }
 
-        public static void CheckVersion()
+        internal static void CheckVersion()
         {
             Request(Commands.CHECK_VERSION, GetVersion(), (bool status, string message) =>
             {
                 if (status)
                 {
                     Dictionary<string, object> currentDict = JsonUtil.Deserialize(message);
-                    int code = (int)currentDict["code"];
+                    int code = int.Parse(currentDict["code"].ToString());
                     EUpgrade type = (EUpgrade)code;
                     string url = currentDict.ContainsKey("market") ? currentDict["market"].ToString() : string.Empty;
                     PuMain.Instance.Dispatcher.SetWarningUpgrade(type, currentDict["message"].ToString(), url);
@@ -26,7 +26,7 @@ namespace Puppet.Core.Network.Http
             });
         }
 
-        public static void ChangeUseInformation(string username, string password, string newpass, DelegateAPICallback callback)
+        internal static void ChangeUseInformation(string username, string password, string newpass, DelegateAPICallback callback)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict.Add("username", username);
@@ -37,18 +37,18 @@ namespace Puppet.Core.Network.Http
             Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "type", "changePassword");
         }
 
-        public static void QuickRegister(string username, string password, DelegateAPICallback callback)
+        internal static void QuickRegister(string username, string password, DelegateAPICallback callback)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             Request(Commands.QUICK_REGISTER, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "username", username, "password", password);
         }
 
-        public static void GetAccessTokenFacebook(string facebookToken, DelegateAPICallbackDictionary callback)
+        internal static void GetAccessTokenFacebook(string facebookToken, DelegateAPICallbackDictionary callback)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             Dictionary<string, object> responseDict = new Dictionary<string, object>();
 
-            Request(Commands.QUICK_REGISTER, dict, (bool status, string data) => 
+            Request(Commands.GET_ACCESS_TOKEN, dict, (bool status, string data) => 
             {
                 bool responseStatus = false;
                 string message = string.Empty;
@@ -71,6 +71,12 @@ namespace Puppet.Core.Network.Http
                 if (callback != null)
                     callback(responseStatus, message, responseDict);
             }, "type", "facebook", "accessToken", facebookToken);
+        }
+
+        internal static void RegisterWithFacebook(string username, string password, DelegateAPICallback callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            Request(Commands.GET_ACCESS_TOKEN, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "username", username, "password", password, "type", "register");
         }
 
         static Dictionary<string, string> GetVersion()

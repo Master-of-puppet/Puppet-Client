@@ -16,6 +16,7 @@ namespace Puppet.Core.Flow
     {
         string token;
         internal DelegateAPICallback onLoginCallback;
+        internal DelegateAPICallback onLoginTrialCallback;
 
         #region DEFAULT NOT MODIFY
         public string ServerScene

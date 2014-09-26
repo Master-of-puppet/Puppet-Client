@@ -92,7 +92,7 @@ namespace Puppet
         {
             API.Client.APILogin.GetAccessToken(userName, password, (bool status, string token, IHttpResponse response) =>
             {
-                if(status)
+                if (status)
                     API.Client.APILogin.Login(token, null);
             });
         }

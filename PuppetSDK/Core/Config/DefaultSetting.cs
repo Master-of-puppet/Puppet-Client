@@ -17,7 +17,6 @@ namespace Puppet
     public class DefaultSetting : IPuSettings
     {
         public static string domain;
-        DataClientDetails _clientDetails;
         IServerMode server, serverWebHttp, serverWebService, serverBundle;
         EPlatform _platform;
         ServerEnvironment _env;
@@ -37,7 +36,6 @@ namespace Puppet
             serverWebHttp = new WebServerMode(domain);
             
             _socket = new CSmartFox(null);
-            _clientDetails = new DataClientDetails();
 
             AfterInit();
         }
@@ -114,10 +112,14 @@ namespace Puppet
             get { return SimpleThread.Instance; }
         }
 
-        public DataClientDetails ClientDetails
+        public virtual string UniqueDeviceIdentification
         {
-            get { return _clientDetails; }
-            set { _clientDetails = value; }
+            get { return Guid.NewGuid().ToString(); }
+        }
+
+        public virtual DataClientDetails ClientDetails
+        {
+            get { return new DataClientDetails(); }
         }
 
         public Action ActionUpdate
