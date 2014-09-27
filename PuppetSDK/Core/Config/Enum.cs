@@ -37,4 +37,14 @@ namespace Puppet
         MaybeUpdate = 200,
         NotUpdate = 300,
     }
+
+    public enum EAssets
+    {
+        [AttributeAsset("chip")]
+        Chip,
+        [AttributeAsset("gold")]
+        Gold,
+    }
+
+    
 }

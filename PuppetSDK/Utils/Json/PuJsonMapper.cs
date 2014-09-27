@@ -6,12 +6,12 @@ namespace Puppet.Utils
 {
     public class PuJsonMapper : JsonMapper
     {
-        public static object ToObject(string type, string json)
-        {
-            JsonReader reader = new JsonReader(json);
-            Logger.Log("Type name: {0}", type);
-            return ReadValue(GetType(type), reader);
-        }
+        //public static object ToObject(string type, string json)
+        //{
+        //    JsonReader reader = new JsonReader(json);
+        //    Logger.Log("Type name: {0}", type);
+        //    return ReadValue(GetType(type), reader);
+        //}
 
         public static Type GetType(string typeName)
         {

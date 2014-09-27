@@ -43,6 +43,7 @@
     <Compile Include="API\Client\APILogin.cs" />
     <Compile Include="API\Client\APIPlaza.cs" />
     <Compile Include="API\Client\APIWorldGame.cs" />
+    <Compile Include="Core\Config\CustomAttribute.cs" />
     <Compile Include="Core\Config\DefaultSetting.cs" />
     <Compile Include="Core\Config\Enum.cs" />
     <Compile Include="Core\Config\IPuSettings.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="libs\LitJson\JsonData.cs" />
     <Compile Include="libs\LitJson\JsonException.cs" />
     <Compile Include="libs\LitJson\JsonMapper.cs" />
+    <Compile Include="libs\LitJson\JsonMockWrapper.cs" />
     <Compile Include="libs\LitJson\JsonReader.cs" />
     <Compile Include="libs\LitJson\JsonWriter.cs" />
     <Compile Include="libs\LitJson\Lexer.cs" />

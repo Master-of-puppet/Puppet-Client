@@ -99,6 +99,10 @@ namespace Puppet
 
         static void AtWorldScene()
         {
+            UserInfo uerInfo = API.Client.APIUser.GetUserInformation();
+            Console.WriteLine("Username: " + uerInfo.info.userName);
+            Console.WriteLine("Chip: " + uerInfo.assets.GetAsset(EAssets.Chip).value);
+
             API.Client.APIWorldGame.GetListGame((bool getStatus, string getMessage, List<DataGame> listGame) =>
             {
                 if (getStatus && listGame.Count > 0)

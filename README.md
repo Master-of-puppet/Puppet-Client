@@ -46,5 +46,5 @@ Unity
 -----
 - Loom, http://unitygems.com/threads/
 - MiniJSON, https://gist.github.com/darktable/1411710
-- LitJson, http://lbv.github.io/litjson/
+- LitJson, http://lbv.github.io/litjson/ (LitJSON 0.9.0)
 - SmartFox2X, http://www.smartfoxserver.com/download/sfs2x#p=client

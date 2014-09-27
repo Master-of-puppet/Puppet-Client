@@ -15,12 +15,19 @@ namespace Puppet.Core.Model
 
         public DataAssets(SerializationInfo info, StreamingContext ctxt)
             : base(info, ctxt) {}
+
+        public DataAssetItem GetAsset(EAssets asset)
+        {
+            return Array.Find<DataAssetItem>(content, item => 
+                item.assetType.name == CustomAttribute.GetCustomAttribute<AttributeAsset>(asset).Name
+            );
+        }
     }
 
     public class DataAssetItem : DataModel
     {
         public DataAssetType assetType { get; set; }
-        public long value { get; set; }
+        public int value { get; set; }
 
         public DataAssetItem()
             : base() { }
