@@ -54,16 +54,10 @@ namespace Puppet.Core.Network.Http
                 string message = string.Empty;
                 if (status)
                 {
-                    Dictionary<string, object> currentDict = JsonUtil.Deserialize(data);
-                    int code = int.Parse(currentDict["code"].ToString());
+                    responseDict = JsonUtil.Deserialize(data);
+                    int code = int.Parse(responseDict["code"].ToString());
                     responseStatus = code == 0;
-                    message = currentDict["message"].ToString();
-
-                    if(responseStatus)
-                    {
-                        responseDict.Add("accessToken", currentDict["accessToken"].ToString());
-                        responseDict.Add("username", currentDict["username"].ToString());
-                    }
+                    message = responseDict["message"].ToString();
                 }
                 else
                     message = data;
