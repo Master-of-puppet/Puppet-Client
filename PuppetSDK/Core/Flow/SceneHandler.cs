@@ -35,11 +35,11 @@ namespace Puppet.Core.Flow
                 if (_currentScene != null)
                 {
                     _lastScene = _currentScene.SceneType;
-                    Logger.Log("EndScene - {0}", _currentScene.SceneName);
+                    Logger.Log(ELogColor.GREEN, "EndScene - {0}", _currentScene.SceneName);
                     _currentScene.EndScene();
                 }
                 _currentScene = value;
-                Logger.Log("BeginScene - {0}", _currentScene.SceneName);
+                Logger.Log(ELogColor.GREEN, "BeginScene - {0}", _currentScene.SceneName);
                 _currentScene.BeginScene();
             }
         }
@@ -94,11 +94,11 @@ namespace Puppet.Core.Flow
         void ChangeScene(IScene scene, string serverSceneName)
         {
             if (string.IsNullOrEmpty(serverSceneName))
-                Logger.Log("Server don't want going to anywhere - So client change to: " + scene.SceneName);
+                Logger.Log(ELogColor.GREEN, "Server don't want going to anywhere - So client change to: " + scene.SceneName);
             else
-                Logger.Log("Server want going to scene: " + serverSceneName);
+                Logger.Log(ELogColor.GREEN, "Server want going to scene: " + serverSceneName);
 
-            PuMain.Instance.Dispatcher.SetChangeScene(Current.SceneType, scene.SceneType);
+            PuMain.Instance.Dispatcher.SetChangeScene(_lastScene, scene.SceneType);
         }
     }
 }

@@ -27,11 +27,15 @@ namespace Puppet.Core
             if (response.Params.Contains("room"))
             {
                 _sfsCurrentRoom = (Room)response.Params["room"];
-                Logger.Log("Changed room!");
+                Logger.Log(ELogColor.GREEN, "Changed room!");
 
                 //For debug show log RoomVariable
                 foreach (RoomVariable r in _sfsCurrentRoom.GetVariables())
-                    Logger.Log("RoomVariable: {0} - {1}", r.Name, ((SFSObject)r.Value).GetDump());
+                    Logger.Log("{0}RoomVariable: {1}{2} - {3}", 
+                        Logger.StartColor(ELogColor.GREEN),
+                        r.Name, 
+                        Logger.EndColor(),
+                        ((SFSObject)r.Value).GetDump());
             }
         }
 

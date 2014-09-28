@@ -25,14 +25,15 @@ namespace Puppet.Core.Network.Socket
         {
             smartFox = new SmartFox(true);
 
+            smartFox.SetReconnectionSeconds(90);
             smartFox.ThreadSafeMode = PuMain.Setting.UseUnity;
 
             foreach(FieldInfo info in Utility.GetFieldInfo(typeof(SFSEvent), BindingFlags.Public | BindingFlags.Static))
                 smartFox.AddEventListener(info.GetValue(null).ToString(), ListenerDelegate);
 
-            if(PuMain.Setting.UseUnity && PuMain.Setting.IsDebug)
-                foreach (LogLevel log in Enum.GetValues(typeof(LogLevel)))
-                    smartFox.AddLogListener(log, OnDebugMessage);
+            //if(PuMain.Setting.UseUnity && PuMain.Setting.IsDebug)
+            //    foreach (LogLevel log in Enum.GetValues(typeof(LogLevel)))
+            //        smartFox.AddLogListener(log, OnDebugMessage);
 
             if (onEventResponse != null)
                 AddListener(onEventResponse);
@@ -63,7 +64,7 @@ namespace Puppet.Core.Network.Socket
                 cfg.Zone = PuMain.Setting.ZoneName;
 
                 smartFox.Connect(cfg);
-                Logger.Log("Connecting...");
+                Logger.Log(ELogColor.GREEN, "Connecting...");
 
                 //After connect: Start get event in queue
                 PuMain.Setting.ActionUpdate = ProcessEvents;
@@ -88,7 +89,11 @@ namespace Puppet.Core.Network.Socket
             if (PuMain.Setting.IsDebug)
             {
                 BaseRequest rq = (BaseRequest)myRequest.Resquest;
-                Logger.Log("Sending request: {0}{1}", myRequest.Resquest.ToString(), rq.Message.Content.GetDump());
+                Logger.Log("{0}Sending request: {1}{2}{3}", 
+                    Logger.StartColor(ELogColor.MAGENTA), 
+                    myRequest.Resquest.ToString(), 
+                    Logger.EndColor(), 
+                    rq.Message.Content.GetDump());
             }
         }
 
@@ -99,7 +104,11 @@ namespace Puppet.Core.Network.Socket
 
         void ListenerDelegate(BaseEvent evt)
         {
-            Logger.Log("SFServer: {0}: {1}", evt.Type, JsonUtil.Serialize(evt.Params));
+            Logger.Log("{0}SFServer: {1}:{2} {3}",
+                Logger.StartColor(ELogColor.CYAN), 
+                evt.Type,
+                Logger.EndColor(), 
+                JsonUtil.Serialize(evt.Params));
             ISocketResponse response = new SFSocketResponse(evt);
 
             if(evt.Type == SFSEvent.ROOM_JOIN)
@@ -107,16 +116,6 @@ namespace Puppet.Core.Network.Socket
 
             if (onResponse != null)
                 onResponse(evt.Type, response);
-
-            //if (evt.Type == SFSEvent.LOGIN)
-            //{
-            //    SFSUser user = (SFSUser)smartFox.MySelf;
-            //    Logger.Log(user.Name);
-
-            //    Logger.Log("Count Variables: " + user.GetVariables().Count);
-            //    foreach (Sfs2X.Entities.Variables.UserVariable u in user.GetVariables())
-            //        Logger.Log(u.Name + " - " + u.GetSFSObjectValue().GetDump());
-            //}
         }
 
         private void OnDebugMessage(BaseEvent evt)

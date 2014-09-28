@@ -27,6 +27,16 @@ namespace Puppet
             Instance._logger.Log(message, list);
         }
 
+        public static void Log(ELogColor color, string message)
+        {
+            Instance._logger.Log(color, message);
+        }
+
+        public static void Log(ELogColor color, string message, params object[] list)
+        {
+            Instance._logger.Log(color, message, list);
+        }
+
         public static void LogError(string message, params object[] list)
         {
             Instance._logger.LogError(message, list);
@@ -42,6 +52,26 @@ namespace Puppet
             Instance._logger.LogException(exception);
         }
 
+        public static string StartColor(ELogColor color)
+        {
+            return "<color=" + color.ToString().ToLower() + ">";
+        }
+        public static string EndColor()
+        {
+            return "</color>";
+        }
+    }
 
+    public enum ELogColor
+    {
+        NONE,
+        YELLOW,
+        GREEN,
+        BLUE,
+        CYAN,
+        LIME,
+        LIGHTBLUE,
+        GREY,
+        MAGENTA
     }
 }

@@ -55,7 +55,11 @@ namespace Puppet.Core.Network.Http
         void StartWebRequest()
         {
             string url = isFullUrl ? _path : server.GetPath(_path);
-            Logger.Log("Url: " + url);
+            Logger.Log("{0}SimpleHttp Request Url:{1}{2}",
+                Logger.StartColor(ELogColor.LIME),
+                Logger.EndColor(),
+                url
+            );
             WebRequest request = HttpWebRequest.Create(url);
 
             if (Method == HttpMethod.Post)
@@ -142,9 +146,15 @@ namespace Puppet.Core.Network.Http
         void DispatchEventResponse()
         {
             if (string.IsNullOrEmpty(simpleResponse.Error))
-                Logger.Log("Request Response: {0}", simpleResponse.Data);
+                Logger.Log("{0}SimpleHttp Response:{1} {2}",
+                    Logger.StartColor(ELogColor.LIME),
+                    Logger.EndColor(),
+                    simpleResponse.Data);
             else
-                Logger.LogError("Request Error: {0}", simpleResponse.Error);
+                Logger.LogError("{0}SimpleHttp Error:{1} {2}",
+                    Logger.StartColor(ELogColor.LIME),
+                    Logger.EndColor(),
+                    simpleResponse.Error);
 
             if (onResponse != null)
                 onResponse(this, simpleResponse);

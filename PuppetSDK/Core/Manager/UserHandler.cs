@@ -22,11 +22,15 @@ namespace Puppet.Core
             if (response.Params.Contains("user"))
             {
                 _mySelf = (User)response.Params["user"];
-                Logger.Log("Updated User Infomations!!!");
+                Logger.Log(ELogColor.GREEN, "Updated User Infomations!!!");
 
                 //For debug show log RoomVariable
                 foreach (UserVariable r in _mySelf.GetVariables())
-                    Logger.Log("UserVariable: {0} - {1}", r.Name, ((SFSObject)r.Value).GetDump());
+                    Logger.Log("{0}UserVariable: {1}{2} - {3}",
+                        Logger.StartColor(ELogColor.GREEN),
+                        r.Name, 
+                        Logger.EndColor(),
+                        ((SFSObject)r.Value).GetDump());
             }
         }
 

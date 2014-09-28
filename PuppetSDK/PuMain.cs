@@ -23,7 +23,7 @@ namespace Puppet
                 {
                     _settings = new DefaultSetting();
                     _settings.Init();
-                    Logger.Log("you did not initialized the Settings for application. Used the default configuration!");
+                    Logger.Log(ELogColor.GREEN, "you did not initialized the Settings for application. Used the default configuration!");
                 }
                 return _settings;
             }
@@ -72,7 +72,7 @@ namespace Puppet
 
         protected override void Init()
         {
-            Logger.Log("PuppetMain has been initialized");
+            Logger.Log(ELogColor.GREEN, "PuppetMain has been initialized");
         }
 
         /// <summary>
