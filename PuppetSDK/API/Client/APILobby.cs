@@ -37,10 +37,5 @@ namespace Puppet.API.Client
         {
 
         }
-
-        public static void GoToLobby(IGameType Lobby)
-        {
-
-        }
     }
 }

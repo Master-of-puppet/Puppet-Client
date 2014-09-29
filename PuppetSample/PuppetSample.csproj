@@ -39,6 +39,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\PuppetPoker\PuppetPoker.csproj">
+      <Project>{8deb5322-0e8c-47db-9589-be79cadd2d36}</Project>
+      <Name>PuppetPoker</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PuppetSDK\PuppetSDK.csproj">
       <Project>{3925B9AA-CA95-4B17-AC8B-CAABDBB4A348}</Project>
       <Name>PuppetSDK</Name>

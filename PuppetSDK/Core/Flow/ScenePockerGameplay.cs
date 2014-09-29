@@ -38,10 +38,12 @@ namespace Puppet.Core.Flow
 
         public void BeginScene()
         {
+            PuMain.GameLogic.EnterGameplay();
         }
 
         public void EndScene()
         {
+            PuMain.GameLogic.ExitGameplay();
         }
 
         protected override void Init()
@@ -51,6 +53,7 @@ namespace Puppet.Core.Flow
 
         public void ProcessEvents(string eventType, Network.Socket.ISocketResponse onEventResponse)
         {
+            PuMain.GameLogic.ProcessEvents(eventType, onEventResponse);
         }
     }
 }

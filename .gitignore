@@ -8,6 +8,8 @@ PuppetSample/bin/**
 PuppetSample/obj/**
 PuppetSDK/bin/**
 PuppetSDK/obj/**
+PuppetPoker/bin/**
+PuppetPoker/obj/**
 *.svd
 *.userprefs
 *.pidb

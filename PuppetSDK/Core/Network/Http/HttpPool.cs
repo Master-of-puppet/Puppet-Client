@@ -21,7 +21,7 @@ namespace Puppet.Core.Network.Http
                     int code = int.Parse(currentDict["code"].ToString());
                     EUpgrade type = (EUpgrade)code;
                     string url = currentDict.ContainsKey("market") ? currentDict["market"].ToString() : string.Empty;
-                    PuMain.Instance.Dispatcher.SetWarningUpgrade(type, currentDict["message"].ToString(), url);
+                    PuMain.Dispatcher.SetWarningUpgrade(type, currentDict["message"].ToString(), url);
                 }
             });
         }

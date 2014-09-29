@@ -41,7 +41,7 @@ namespace Puppet
             //Required called before using
             PuMain.Instance.Load();
 
-            PuMain.Instance.Dispatcher.onChangeScene += Instance_onChangeScene;
+            PuMain.Dispatcher.onChangeScene += Instance_onChangeScene;
 
             AtLoginScreen();
         }

@@ -98,7 +98,7 @@ namespace Puppet.Core.Flow
             else
                 Logger.Log(ELogColor.GREEN, "Server want going to scene: " + serverSceneName);
 
-            PuMain.Instance.Dispatcher.SetChangeScene(_lastScene, scene.SceneType);
+            PuMain.Dispatcher.SetChangeScene(_lastScene, scene.SceneType);
         }
     }
 }

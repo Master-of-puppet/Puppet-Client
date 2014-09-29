@@ -1,4 +1,5 @@
 ﻿using Puppet.Core.Manager;
+using Puppet.Core.Model;
 using Puppet.Core.Network.Http;
 using Puppet.Core.Network.Socket;
 using System;
@@ -13,6 +14,7 @@ namespace Puppet
     /// </summary>
     public class PuMain : BaseSingleton<PuMain>
     {
+
         #region PuSetting
         static IPuSettings _settings = null;
         public static IPuSettings Setting 
@@ -58,8 +60,8 @@ namespace Puppet
         #endregion
 
         #region Event
-        EventDispatcher _eventDispatcher;
-        public EventDispatcher Dispatcher
+        static EventDispatcher _eventDispatcher;
+        public static EventDispatcher Dispatcher
         {
             get
             {
@@ -67,6 +69,15 @@ namespace Puppet
                     _eventDispatcher = new EventDispatcher();
                 return _eventDispatcher;
             }
+        }
+        #endregion
+
+        #region GameLogic
+        static IGameplay _handleGameLogic;
+        public static IGameplay GameLogic
+        {
+            get { return _handleGameLogic; }
+            set { _handleGameLogic = value; }
         }
         #endregion
 

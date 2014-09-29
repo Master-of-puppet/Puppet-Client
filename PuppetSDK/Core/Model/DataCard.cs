@@ -8,8 +8,9 @@ namespace Puppet.Core.Model
 {
     public class DataCard : DataModel
     {
-        public int CardId { get; set; }
-
+        public int cardId { get; set; }
+        public int slotId { get; set; }
+        
         public DataCard() 
             : base()
         {
@@ -19,5 +20,11 @@ namespace Puppet.Core.Model
             : base(info, ctxt)
     	{				
    	 	}
+
+        public virtual int CompareTo(DataCard card)
+        {
+            return cardId - card.cardId;
+        }
     }
+
 }
