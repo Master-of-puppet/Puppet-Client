@@ -46,11 +46,12 @@
     <ProjectReference Include="..\PuppetSDK\PuppetSDK.csproj">
       <Project>{3925B9AA-CA95-4B17-AC8B-CAABDBB4A348}</Project>
       <Name>PuppetSDK</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="SmartFox2X">
-      <HintPath>libs\SmartFox2X.dll</HintPath>
+      <HintPath>..\SmartFox2X.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

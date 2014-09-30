@@ -1,5 +1,8 @@
 ﻿using Puppet.Core.Model;
 using Puppet.Core.Network.Socket;
+using Puppet.Utils;
+using Sfs2X.Core;
+using Sfs2X.Entities.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +26,15 @@ namespace Puppet.Poker
 
         public override void ProcessEvents(string eventType, ISocketResponse onEventResponse)
         {
+            //"params":"Sfs2X.Entities.Data.SFSObject","cmd":"pluginMessage","sourceRoom":14
+            if(eventType == SFSEvent.EXTENSION_RESPONSE)
+            {
+                if(onEventResponse.Params["cmd"].ToString() == "pluginMessage")
+                {
+                    SFSObject obj = (SFSObject)onEventResponse.Params["params"];
+                    Logger.Log(obj.GetDump());
+                }
+            }
 
         }
 

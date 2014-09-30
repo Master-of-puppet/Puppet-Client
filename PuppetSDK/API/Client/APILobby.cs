@@ -29,6 +29,11 @@ namespace Puppet.API.Client
             ScenePockerLobby.Instance.CreateLobby(onCreateLobbyCallback);
         }
 
+        public static void JoinLobby(DataLobby lobby, DelegateAPICallback onJoinLobby)
+        {
+            ScenePockerLobby.Instance.JoinLobby(lobby, onJoinLobby);
+        }
+
         public static void AddListener(Action<List<DataLobby>> onCreateCallback, Action<List<DataLobby>> onUpdateCallback, Action<List<DataLobby>> onDeleteCallback)
         {
 

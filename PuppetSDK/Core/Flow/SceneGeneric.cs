@@ -33,6 +33,7 @@ namespace Puppet.Core.Flow
                 DispathAPICallback(ref SceneLogin.Instance.onLoginCallback, true, string.Empty);
                 DispathAPICallback(ref SceneWorldGame.Instance.onJoinGameCallback, true, string.Empty);
                 DispathAPICallback(ref ScenePockerLobby.Instance.onCreateLobbyCallback, true, string.Empty);
+                DispathAPICallback(ref ScenePockerLobby.Instance.onJoinLobbyCallback, true, string.Empty);
             }
             else if (eventType.Equals(SFSEvent.ROOM_JOIN_ERROR))
             {
@@ -41,6 +42,7 @@ namespace Puppet.Core.Flow
                 DispathAPICallback(ref SceneLogin.Instance.onLoginCallback, false, "Đăng nhập thành công, nhưng không thể tham gia vào phòng chơi.");
                 DispathAPICallback(ref SceneWorldGame.Instance.onJoinGameCallback, false, "Không thể tham vào trò chơi!!!");
                 DispathAPICallback(ref ScenePockerLobby.Instance.onCreateLobbyCallback, false, "Không thể tạo bàn chơi.!!!!");
+                DispathAPICallback(ref ScenePockerLobby.Instance.onJoinLobbyCallback, false, "Không thể tham gia vào bàn chơi.!!!!");
             }
             else if (eventType.Equals(SFSEvent.USER_VARIABLES_UPDATE))
             {

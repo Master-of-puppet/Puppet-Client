@@ -90,7 +90,18 @@ namespace Puppet
         {
             if (!IsDebug) return;
 
-            Console.WriteLine(string.Format("{0}: {1}", type.ToString(), message.ToString()));
+            string str = message.ToString();
+            str = str.Replace(Logger.StartColor(ELogColor.BLUE), "");
+            str = str.Replace(Logger.StartColor(ELogColor.CYAN), "");
+            str = str.Replace(Logger.StartColor(ELogColor.GREEN), "");
+            str = str.Replace(Logger.StartColor(ELogColor.GREY), "");
+            str = str.Replace(Logger.StartColor(ELogColor.LIGHTBLUE), "");
+            str = str.Replace(Logger.StartColor(ELogColor.LIME), "");
+            str = str.Replace(Logger.StartColor(ELogColor.MAGENTA), "");
+            str = str.Replace(Logger.StartColor(ELogColor.YELLOW), "");
+            str = str.Replace(Logger.EndColor(), "");
+
+            Console.WriteLine(string.Format("{0}: {1}", type.ToString(), str));
             #if USE_DEBUG_CONSOLE
             System.Diagnostics.StackTrace stackTrace = new System.Diagnostics.StackTrace();
             for (int i = 3; i < stackTrace.FrameCount; i++)

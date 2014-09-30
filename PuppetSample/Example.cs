@@ -124,6 +124,7 @@ namespace Puppet
 
         static void AtLobbyScene()
         {
+            Puppet.Poker.PokerMain.Instance.EnterPoker();
             API.Client.APILobby.GetGroupsLobby((bool getGStatus, string getGMessage, List<DataChannel> data) =>
             {
                 int i = 0;
@@ -137,19 +138,23 @@ namespace Puppet
                 {
                     API.Client.APILobby.SetSelectChannel(data[choose], (bool gStatus, string gMessage, List<DataLobby> listChildren) =>
                     {
+                        Console.WriteLine("ListChildren Count: " + listChildren.Count);
                         Console.WriteLine("0. Create new game");
-                        Console.WriteLine("1. Back");
-                        choose = GetEnterInteger(0, 1);
-
-                        switch (choose)
+                        int j = 1;
+                        if (listChildren.Count > 0)
                         {
-                            case 0:
-                                API.Client.APILobby.CreateLobby(null);
-                                break;
-                            case 1:
-                                API.Client.APIGeneric.BackScene(null);
-                                break;
+                            for (; j <= listChildren.Count; j++)
+                                Console.WriteLine(j + ". To choose game " + listChildren[j-1].displayName);
                         }
+                        Console.WriteLine(j + ". Back");
+                        choose = GetEnterInteger(0, j);
+
+                        if (choose == 0)
+                            API.Client.APILobby.CreateLobby(null);
+                        else if (choose == j)
+                            API.Client.APIGeneric.BackScene(null);
+                        else
+                            API.Client.APILobby.JoinLobby(listChildren[choose - 1], null);
                     });
                 }
             });
@@ -161,17 +166,5 @@ namespace Puppet
             GetEnterInteger(0, 0);
             API.Client.APIGeneric.BackScene(null);
         }
-
-        //void LoadImageFromUrl(string url)
-        //{
-        //    WWWRequest request = new WWWRequest(url, 30f, 0);
-        //    request.onResponse += (IHttpRequest currentRequest, IHttpResponse currentResponse) =>
-        //    {
-        //        WWWResponse response = (WWWResponse)currentResponse;
-        //        if(response.State == System.Net.HttpStatusCode.OK)
-        //            UnityEngine.Texture2D texture = response.www.texture;
-        //    };
-        //    PuMain.WWWHandler.Request(request);
-        //}
     }
 }

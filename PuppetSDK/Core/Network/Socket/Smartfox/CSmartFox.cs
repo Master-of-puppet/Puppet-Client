@@ -25,13 +25,13 @@ namespace Puppet.Core.Network.Socket
         {
             smartFox = new SmartFox(true);
 
-            smartFox.SetReconnectionSeconds(90);
+            smartFox.SetReconnectionSeconds(15);
             smartFox.ThreadSafeMode = PuMain.Setting.UseUnity;
 
             foreach(FieldInfo info in Utility.GetFieldInfo(typeof(SFSEvent), BindingFlags.Public | BindingFlags.Static))
                 smartFox.AddEventListener(info.GetValue(null).ToString(), ListenerDelegate);
 
-            //if(PuMain.Setting.UseUnity && PuMain.Setting.IsDebug)
+            //if (PuMain.Setting.UseUnity && PuMain.Setting.IsDebug)
             //    foreach (LogLevel log in Enum.GetValues(typeof(LogLevel)))
             //        smartFox.AddLogListener(log, OnDebugMessage);
 

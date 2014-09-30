@@ -34,9 +34,6 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
   <ItemGroup>
-    <Content Include="libs\SmartFox2X.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="API\Client\APIUser.cs" />
     <Compile Include="API\Client\APIGeneric.cs" />
     <Compile Include="API\Client\APILobby.cs" />
@@ -134,11 +131,10 @@
     <Compile Include="Utils\Utility\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="SmartFox2X">
-      <HintPath>libs\SmartFox2X.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\SmartFox2X.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>copy /y $(ProjectDir)$(OutDir)$(TargetFileName) $(SolutionDir)$(TargetFileName)

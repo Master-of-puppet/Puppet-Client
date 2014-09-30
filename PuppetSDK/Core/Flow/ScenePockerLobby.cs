@@ -16,6 +16,7 @@ namespace Puppet.Core.Flow
         Dictionary<string, List<DataLobby>> currentAllChannel;
 
         internal DelegateAPICallback onCreateLobbyCallback;
+        internal DelegateAPICallback onJoinLobbyCallback;
         DelegateAPICallbackDataLobby onGetAllLobby;
         DelegateAPICallbackDataLobby onGetGroupChildrenCallback;
 
@@ -103,6 +104,13 @@ namespace Puppet.Core.Flow
         {
             this.onCreateLobbyCallback = onCreateLobbyCallback;
             PuMain.Socket.Request(RequestPool.GetRequestCreateLobby());
+        }
+
+        internal void JoinLobby(DataLobby lobby, DelegateAPICallback onJoinLobbyCallback)
+        {
+            PuGlobal.Instance.SelectedLobby = lobby;
+            this.onJoinLobbyCallback = onJoinLobbyCallback;
+            PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(new RoomInfo(lobby.roomId)));
         }
 
         void DispathGetAllLobby(bool status, string message, List<DataLobby> data)

@@ -13,6 +13,7 @@ namespace Puppet
         internal DataGame SelectedGame;
         internal DataChannel SelectedChannel;
         internal List<DataChannel> GroupsLobby;
+        internal DataLobby SelectedLobby;
 
         protected override void Init()
         {
