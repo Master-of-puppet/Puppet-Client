@@ -25,7 +25,7 @@ namespace Puppet.Core.Network.Socket
         {
             smartFox = new SmartFox(true);
 
-            smartFox.SetReconnectionSeconds(15);
+            smartFox.SetReconnectionSeconds(10);
             smartFox.ThreadSafeMode = PuMain.Setting.UseUnity;
 
             foreach(FieldInfo info in Utility.GetFieldInfo(typeof(SFSEvent), BindingFlags.Public | BindingFlags.Static))

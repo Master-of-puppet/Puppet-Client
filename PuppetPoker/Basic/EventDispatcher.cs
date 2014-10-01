@@ -5,8 +5,14 @@ using System.Text;
 
 namespace Puppet.Poker
 {
-    public class EventDispatcher
+    public static class EventDispatcher
     {
+        public static event Action<string, object> onGameEvent;
 
+        internal static void SetGameEvent(string command, object data)
+        {
+            if (onGameEvent != null)
+                onGameEvent(command, data);
+        }
     }
 }

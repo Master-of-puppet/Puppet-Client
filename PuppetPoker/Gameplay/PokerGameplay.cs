@@ -1,5 +1,8 @@
 ﻿using Puppet.Core.Model;
+using Puppet.Core.Model.Factory;
 using Puppet.Core.Network.Socket;
+using Puppet.Poker.Datagram;
+using Puppet.Poker.Models;
 using Puppet.Utils;
 using Sfs2X.Core;
 using Sfs2X.Entities.Data;
@@ -12,11 +15,15 @@ namespace Puppet.Poker
 {
     public class PokerGameplay : AbstractGameplay<PokerPlayerController>
     {
-        PokerPlayerController[] listPlayer = new PokerPlayerController[Constant.MAX_PLAYER];
+        public const PokerSide DEFAULT_SIDE_MAIN_PLAYER = PokerSide.Slot_1;
+        public int MAX_PLAYER_IN_GAME = 9;
+
+        public ResponseUpdateGame dataUpdateGame;
+        public ResponseUpdateRoomMaster dataRoomMaster;
+        public ResponseUpdateGameState dataGameState;
 
         public override void EnterGameplay()
         {
-
         }
 
         public override void ExitGameplay()
@@ -26,16 +33,34 @@ namespace Puppet.Poker
 
         public override void ProcessEvents(string eventType, ISocketResponse onEventResponse)
         {
-            //"params":"Sfs2X.Entities.Data.SFSObject","cmd":"pluginMessage","sourceRoom":14
             if(eventType == SFSEvent.EXTENSION_RESPONSE)
             {
                 if(onEventResponse.Params["cmd"].ToString() == "pluginMessage")
                 {
-                    SFSObject obj = (SFSObject)onEventResponse.Params["params"];
-                    Logger.Log(obj.GetDump());
+                    ISFSObject obj = (ISFSObject)onEventResponse.Params["params"];
+                    Logger.Log("{0}GamePlugin{1}:{2}",
+                        Logger.StartColor(ELogColor.YELLOW),
+                        Logger.EndColor(),
+                        obj.GetDump());
+                    ISFSObject messageObj = obj.GetSFSObject("message");
+                    string command = messageObj.GetUtfString("command");
+                    switch (command)
+                    {
+                        case "updateGame":
+                            dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
+                            EventDispatcher.SetGameEvent(command, dataUpdateGame);
+                            break;
+                        case "updateGameState":
+                            dataGameState = SFSDataModelFactory.CreateDataModel<ResponseUpdateGameState>(messageObj);
+                            EventDispatcher.SetGameEvent(command, dataGameState);
+                            break;
+                        case "updateRoomMaster":
+                            dataRoomMaster = SFSDataModelFactory.CreateDataModel<ResponseUpdateRoomMaster>(messageObj);
+                            EventDispatcher.SetGameEvent(command, dataRoomMaster);
+                            break;
+                    }
                 }
             }
-
         }
 
         public override void PlayerEnter(PokerPlayerController player)
@@ -56,6 +81,44 @@ namespace Puppet.Poker
 
         public override void ChangeState(string oldState, string newState)
         {
+        }
+
+
+        public List<PokerPlayerController> ListPlayer
+        {
+            get { return new List<PokerPlayerController>(dataUpdateGame.players); }
+        }
+
+        PokerPlayerController _yourController;
+        public PokerPlayerController YourController
+        {
+            get 
+            {
+                if(_yourController == null)
+                    _yourController = ListPlayer.Find(p => p.userName == Puppet.API.Client.APIUser.GetUserInformation().info.userName);
+                return _yourController;
+            }
+            set { _yourController = value; }
+        }
+
+        public PokerSide GetSide(PokerPlayerController player)
+        {
+            PokerPlayerController your = YourController;
+            if (your == null || your.slotIndex == (int)DEFAULT_SIDE_MAIN_PLAYER || your.slotIndex >= MAX_PLAYER_IN_GAME)
+                return (PokerSide)player.slotIndex;
+            
+            int slot;
+
+            if (player.slotIndex > your.slotIndex)
+                slot = player.slotIndex - your.slotIndex;
+            else
+                slot = MAX_PLAYER_IN_GAME - your.slotIndex + player.slotIndex;
+
+            slot += (int)DEFAULT_SIDE_MAIN_PLAYER;
+            if (slot >= MAX_PLAYER_IN_GAME)
+                slot -= (MAX_PLAYER_IN_GAME - 1);
+
+            return (PokerSide)slot;
         }
     }
 }

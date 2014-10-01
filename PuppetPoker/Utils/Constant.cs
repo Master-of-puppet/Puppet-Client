@@ -7,6 +7,6 @@ namespace Puppet.Poker
 {
     internal static class Constant
     {
-        internal const int MAX_PLAYER = 10;
+        
     }
 }

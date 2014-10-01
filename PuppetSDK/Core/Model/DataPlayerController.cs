@@ -8,7 +8,11 @@ namespace Puppet.Core.Model
 {
     public class DataPlayerController : DataModel
     {
-
+        public string userName { get; set; }
+        public DataAssets assets { get; set; }
+        public string gameState { get; set; }
+        public int slotIndex { get; set; }
+        public bool isMaster { get; set; }
 
         public DataPlayerController() 
             : base()

@@ -37,8 +37,12 @@
   <ItemGroup>
     <Compile Include="API\Client\APIPokerGame.cs" />
     <Compile Include="Basic\EventDispatcher.cs" />
-    <Compile Include="Basic\PokerCard.cs" />
-    <Compile Include="Basic\PokerPlayerController.cs" />
+    <Compile Include="Datagram\ResponseUpdateRoomMaster.cs" />
+    <Compile Include="Datagram\ResponseUpdateGameState.cs" />
+    <Compile Include="Datagram\ResponseUpdateGame.cs" />
+    <Compile Include="Models\PokerCard.cs" />
+    <Compile Include="Models\PokerGameDetails.cs" />
+    <Compile Include="Models\PokerPlayerController.cs" />
     <Compile Include="Gameplay\PokerGameplay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PokerMain.cs" />
@@ -51,6 +55,7 @@
       <Name>PuppetSDK</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /y $(ProjectDir)$(OutDir)$(TargetFileName) $(SolutionDir)$(TargetFileName)

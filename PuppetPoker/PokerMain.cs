@@ -6,7 +6,8 @@ namespace Puppet.Poker
 {
     public class PokerMain : BaseSingleton<PokerMain>
     {
-        public PokerGameplay game;
+        internal PokerGameplay game;
+    
         protected override void Init()
         {
             game = new PokerGameplay();

@@ -12,13 +12,5 @@ namespace Puppet.API.Client
         {
             return PokerMain.Instance.game;
         }
-
-        static EventDispatcher _eventDispatcher;
-        public static EventDispatcher GetEventDispatcher()
-        {
-            if (_eventDispatcher == null)
-                _eventDispatcher = new EventDispatcher();
-            return _eventDispatcher;
-        }
     }
 }

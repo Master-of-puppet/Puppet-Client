@@ -5,7 +5,7 @@ using Puppet;
 using Puppet.Core.Model;
 using System.Runtime.Serialization;
 
-namespace Puppet.Poker
+namespace Puppet.Poker.Models
 {
     public class PokerCard : DataCard
     {
