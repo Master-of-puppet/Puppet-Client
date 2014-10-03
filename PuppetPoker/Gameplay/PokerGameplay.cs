@@ -120,5 +120,20 @@ namespace Puppet.Poker
 
             return (PokerSide)slot;
         }
+
+        public int GetSlotServer(PokerSide side)
+        {
+            return (int)side;
+        }
+
+        internal void SendSitDown(PokerSide side)
+        {
+            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetSitRequest(GetSlotServer(side)));
+        }
+
+        internal void SendPlayRequest(RequestPlay request, long value)
+        {
+            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetPlayRequest(request, value));
+        }
     }
 }

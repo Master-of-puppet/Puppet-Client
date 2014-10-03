@@ -163,8 +163,12 @@ namespace Puppet
         static void AtGameplay()
         {
             Console.WriteLine("0. Back");
-            GetEnterInteger(0, 0);
-            API.Client.APIGeneric.BackScene(null);
+            Console.WriteLine("1. Sit Down Slot index 1");
+            int choose = GetEnterInteger(0, 1);
+            if (choose == 0)
+                API.Client.APIGeneric.BackScene(null);
+            else if (choose == 1)
+                API.Client.APIPokerGame.SitDown(Poker.PokerSide.Slot_2);
         }
     }
 }

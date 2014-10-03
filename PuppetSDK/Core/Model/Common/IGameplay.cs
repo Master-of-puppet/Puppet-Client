@@ -9,6 +9,5 @@ namespace Puppet.Core.Model
         void EnterGameplay();
         void ExitGameplay();
         void ProcessEvents(string eventType, ISocketResponse onEventResponse);
-        void SendEvents(ISocketRequest request);
     }
 }

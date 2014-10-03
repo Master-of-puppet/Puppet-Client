@@ -28,4 +28,28 @@ namespace Puppet.Poker
         Slot_8 = 7,
         Slot_9 = 8,
     }
+
+    public enum RequestPlay
+    {
+        /// <summary>
+        /// Theo
+        /// </summary>
+        CALL,
+        /// <summary>
+        /// Xem bài
+        /// </summary>
+        CHECK,
+        /// <summary>
+        /// Tăng mức cược
+        /// </summary>
+        RAISE,
+        /// <summary>
+        /// Úp bài (bỏ cuộc)
+        /// </summary>
+        FOLD,
+        /// <summary>
+        /// Đặt cược bằng số tiền mình đang có
+        /// </summary>
+        ALL,
+    }
 }

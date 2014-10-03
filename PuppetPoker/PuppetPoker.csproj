@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="API\Client\APIPokerGame.cs" />
     <Compile Include="Basic\EventDispatcher.cs" />
+    <Compile Include="Datagram\RequestPool.cs" />
     <Compile Include="Datagram\ResponseUpdateRoomMaster.cs" />
     <Compile Include="Datagram\ResponseUpdateGameState.cs" />
     <Compile Include="Datagram\ResponseUpdateGame.cs" />

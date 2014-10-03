@@ -1,4 +1,5 @@
-﻿using Puppet.Core.Manager;
+﻿using Puppet.Core;
+using Puppet.Core.Manager;
 using Puppet.Core.Model;
 using Puppet.Core.Network.Http;
 using Puppet.Core.Network.Socket;
@@ -84,6 +85,11 @@ namespace Puppet
         protected override void Init()
         {
             Logger.Log(ELogColor.GREEN, "PuppetMain has been initialized");
+        }
+
+        public Sfs2X.Entities.Room SfsRoom
+        {
+            get { return RoomHandler.Instance.Current; }
         }
 
         /// <summary>
