@@ -32,6 +32,10 @@ namespace Puppet.Poker
     public enum RequestPlay
     {
         /// <summary>
+        /// Ngoi xuong
+        /// </summary>
+        SIT,
+        /// <summary>
         /// Theo
         /// </summary>
         CALL,

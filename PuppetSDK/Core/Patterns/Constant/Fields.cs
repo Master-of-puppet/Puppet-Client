@@ -28,5 +28,6 @@ namespace Puppet
         public const string RESPONSE_FIRST_ROOM_TO_JOIN = "firstRoomToJoin";
 
         public const string RESPONSE_CMD_PLUGIN_MESSAGE = "pluginMessage";
+        public const string RESPONSE_CMD_GLOBAL_MESSAGE = "globalMessage";
     }
 }

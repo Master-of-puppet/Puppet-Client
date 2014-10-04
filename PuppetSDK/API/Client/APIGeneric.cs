@@ -18,5 +18,10 @@ namespace Puppet.API.Client
         {
             SceneGeneric.Instance.BackScene(onBackSceneCallback);
         }
+
+        public static void GetDailyGift()
+        {
+            SceneGeneric.Instance.GetDailyGift();
+        }
     }
 }

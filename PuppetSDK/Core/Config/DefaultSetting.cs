@@ -17,6 +17,8 @@ namespace Puppet
     public class DefaultSetting : IPuSettings
     {
         public static string domain;
+        public static string soketServer;
+
         IServerMode server, serverWebHttp, serverWebService, serverBundle;
         EPlatform _platform;
         ServerEnvironment _env;
@@ -30,7 +32,7 @@ namespace Puppet
             _platform = EPlatform.Editor;
             _env = ServerEnvironment.Dev;
 
-            server = new ServerMode(domain);
+            server = new ServerMode(soketServer);
             serverWebService = new WebServiceServerMode(domain);
             serverBundle = new WebServerMode(domain);
             serverWebHttp = new WebServerMode(domain);

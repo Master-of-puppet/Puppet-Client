@@ -37,6 +37,11 @@ namespace Puppet
             Instance._logger.Log(color, message, list);
         }
 
+        public static void Log(string message1, string message2, ELogColor color)
+        {
+            Instance._logger.Log("{0}{1}{2} - {3}", Logger.StartColor(color), message1, Logger.EndColor(), message2);
+        }
+
         public static void LogError(string message, params object[] list)
         {
             Instance._logger.LogError(message, list);

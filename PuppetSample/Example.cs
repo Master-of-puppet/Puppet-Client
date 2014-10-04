@@ -42,8 +42,14 @@ namespace Puppet
             PuMain.Instance.Load();
 
             PuMain.Dispatcher.onChangeScene += Instance_onChangeScene;
+            PuMain.Dispatcher.onDailyGift += Dispatcher_onDailyGift;
 
             AtLoginScreen();
+        }
+
+        static void Dispatcher_onDailyGift(DataDailyGift obj)
+        {
+            API.Client.APIGeneric.GetDailyGift();
         }
 
         static void Instance_onChangeScene(EScene fromScene, EScene toScene)
@@ -78,7 +84,9 @@ namespace Puppet
                 enter = "puppet.esimo.vn";
             else if (enter.EndsWith("3"))
                 enter = "127.0.0.1";
-            DefaultSetting.domain = enter;
+            DefaultSetting.domain = DefaultSetting.soketServer = enter;
+            //DefaultSetting.soketServer = "192.168.10.143";
+
             Console.Write("Enter your Username: ");
             userName = Console.ReadLine();
             Console.Write("Enter your Password: ");
@@ -90,11 +98,12 @@ namespace Puppet
 
         static void AtLoginScreen()
         {
-            API.Client.APILogin.GetAccessToken(userName, password, (bool status, string token, IHttpResponse response) =>
-            {
-                if (status)
-                    API.Client.APILogin.Login(token, null);
-            });
+            //API.Client.APILogin.GetAccessToken(userName, password, (bool status, string token, IHttpResponse response) =>
+            //{
+            //    if (status)
+            //        API.Client.APILogin.Login(token, null);
+            //});
+            API.Client.APILogin.LoginTrial(null);
         }
 
         static void AtWorldScene()

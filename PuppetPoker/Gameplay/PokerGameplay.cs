@@ -38,10 +38,8 @@ namespace Puppet.Poker
                 if(onEventResponse.Params["cmd"].ToString() == "pluginMessage")
                 {
                     ISFSObject obj = (ISFSObject)onEventResponse.Params["params"];
-                    Logger.Log("{0}GamePlugin{1}:{2}",
-                        Logger.StartColor(ELogColor.YELLOW),
-                        Logger.EndColor(),
-                        obj.GetDump());
+                    Logger.Log("GamePlugin", obj.GetDump(), ELogColor.YELLOW);
+                        
                     ISFSObject messageObj = obj.GetSFSObject("message");
                     string command = messageObj.GetUtfString("command");
                     switch (command)
@@ -128,7 +126,7 @@ namespace Puppet.Poker
 
         internal void SendSitDown(PokerSide side)
         {
-            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetSitRequest(GetSlotServer(side)));
+            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetSitRequest(RequestPlay.SIT, GetSlotServer(side)));
         }
 
         internal void SendPlayRequest(RequestPlay request, long value)

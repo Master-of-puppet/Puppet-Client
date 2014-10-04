@@ -117,7 +117,7 @@ namespace Puppet.Core.Network.Http
             request.onResponse = (IHttpRequest myRequest, IHttpResponse response) =>
             {
                 bool status = string.IsNullOrEmpty(response.Error);
-                Logger.Log(status ? response.Data : response.Error);
+                //Logger.Log(status ? response.Data : response.Error);
                 if (callback != null)
                     callback(status, status ? response.Data : response.Error);
             };

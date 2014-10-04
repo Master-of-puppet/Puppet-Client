@@ -31,11 +31,7 @@ namespace Puppet.Core
 
                 //For debug show log RoomVariable
                 foreach (RoomVariable r in _sfsCurrentRoom.GetVariables())
-                    Logger.Log("{0}RoomVariable: {1}{2} - {3}", 
-                        Logger.StartColor(ELogColor.GREEN),
-                        r.Name, 
-                        Logger.EndColor(),
-                        ((SFSObject)r.Value).GetDump());
+                    Logger.Log("RoomVariable: " + r.Name, ((SFSObject)r.Value).GetDump(), ELogColor.GREEN);
             }
         }
 

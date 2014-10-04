@@ -66,8 +66,10 @@
     <Compile Include="Core\Model\DataCard.cs" />
     <Compile Include="Core\Model\DataChannel.cs" />
     <Compile Include="Core\Model\DataClientDetails.cs" />
+    <Compile Include="Core\Model\DataDailyGift.cs" />
     <Compile Include="Core\Model\DataGame.cs" />
     <Compile Include="Core\Model\DataGameplay.cs" />
+    <Compile Include="Core\Model\Datagram\RequestGetGift.cs" />
     <Compile Include="Core\Model\Datagram\RequestCommand.cs" />
     <Compile Include="Core\Model\Datagram\RequestGetGroups.cs" />
     <Compile Include="Core\Model\Datagram\RequestLogin.cs" />

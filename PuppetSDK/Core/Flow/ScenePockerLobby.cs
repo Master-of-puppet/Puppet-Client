@@ -7,6 +7,8 @@ using Puppet.Core.Network.Socket;
 using Sfs2X.Entities.Data;
 using Sfs2X.Core;
 using Puppet.Core.Model.Datagram;
+using Puppet.Utils;
+using Puppet.Core.Model.Factory;
 
 namespace Puppet.Core.Flow
 {
@@ -66,14 +68,10 @@ namespace Puppet.Core.Flow
         {
             if (eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
             {
-                string cmd = onEventResponse.Params[Fields.CMD].ToString();
-                if (cmd == Fields.RESPONSE_CMD_PLUGIN_MESSAGE)
+                ISFSObject obj = Utility.GetDataExtensionResponse(onEventResponse, Fields.RESPONSE_CMD_PLUGIN_MESSAGE);
+                if (obj != null)
                 {
-                    SFSObject data = (SFSObject)onEventResponse.Params[Fields.PARAMS];
-                    Logger.Log(data.GetDump());
-                    ISFSObject obj = data.GetSFSObject(Fields.MESSAGE);
-
-                    ResponseListLobby responseLobby = Puppet.Core.Model.Factory.SFSDataModelFactory.CreateDataModel<ResponseListLobby>(obj);
+                    ResponseListLobby responseLobby = SFSDataModelFactory.CreateDataModel<ResponseListLobby>(obj);
                     if (responseLobby.command == "updateChildren")
                         DispathGetAllLobby(true, string.Empty, new List<DataLobby>(responseLobby.children));
                     else if (responseLobby.command == "updateGroupChildren")

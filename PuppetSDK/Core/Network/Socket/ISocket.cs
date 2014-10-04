@@ -13,6 +13,7 @@ namespace Puppet.Core.Network.Socket
         void RemoveListener(Action<string, ISocketResponse> onEventResponse);
         bool IsConnected { get; }
         void Connect();
+        void Reconnect();
         void Disconnect();
         void Request(ISocketRequest request);
         void Close();

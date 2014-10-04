@@ -62,12 +62,9 @@ namespace Puppet.Core.Flow
         {
             if(eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
             {
-                string cmd = onEventResponse.Params[Fields.CMD].ToString();
-                if(cmd == Fields.RESPONSE_CMD_PLUGIN_MESSAGE)
+                ISFSObject obj = Utility.GetDataExtensionResponse(onEventResponse, Fields.RESPONSE_CMD_PLUGIN_MESSAGE);
+                if(obj != null)
                 {
-                    SFSObject data = (SFSObject)onEventResponse.Params[Fields.PARAMS];
-                    Logger.Log(data.GetDump(true));
-                    ISFSObject obj = data.GetSFSObject(Fields.MESSAGE);
                     responseGame = Puppet.Core.Model.Factory.SFSDataModelFactory.CreateDataModel<ResponseListGame>(obj);
                     DispathGetListGame(true, string.Empty);
                 }

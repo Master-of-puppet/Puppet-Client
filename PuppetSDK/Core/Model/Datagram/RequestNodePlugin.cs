@@ -6,18 +6,20 @@ using System.Text;
 
 namespace Puppet.Core.Model.Datagram
 {
-    internal class RequestNodePlugin : AbstractData
+    public class RequestPlugin : AbstractData
     {
-        const string NODE_PLUGIN_VALUE = "NodePlugin";
+        public const string NODE_PLUGIN_VALUE = "NodePlugin";
+        public const string GAME_PLUGIN_VALUE = "GamePlugin";
+        public const string OBSERVER_PLUGIN_VALUE = "ObserverPlugin";
 
         public string pluginName {get;set;}
         public AbstractData data {get;set;}
 
-        internal RequestNodePlugin(AbstractData data)
+        public RequestPlugin(AbstractData data) : this(data, NODE_PLUGIN_VALUE) { }
+        public RequestPlugin(AbstractData data, string pluginName)
         {
-            this.pluginName = NODE_PLUGIN_VALUE;
             this.data = data;
+            this.pluginName = pluginName;
         }
     }
-    
 }

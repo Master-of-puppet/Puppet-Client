@@ -4,25 +4,22 @@ using Sfs2X.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Puppet.Core.Model.Datagram;
 
 namespace Puppet.Poker.Datagram
 {
     internal static class RequestPool
     {
-        public static ISocketRequest GetSitRequest(int slotIndex)
+        public static ISocketRequest GetSitRequest(RequestPlay request, int slotIndex)
         {
-            ISFSObject obj = SFSObject.NewInstance();
-            obj.PutUtfString("action", "sit");
-            obj.PutInt("slot", slotIndex);
-            return new SFSocketRequest(new ExtensionRequest("play", obj, PuMain.Instance.SfsRoom));
+            ISFSObject obj = new RequestPlugin(new RequestGameAction(request.ToString().ToLower(), slotIndex), RequestPlugin.GAME_PLUGIN_VALUE).ToSFSObject();
+            return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, PuMain.Instance.SfsRoom));
         }
 
         public static ISocketRequest GetPlayRequest(RequestPlay request, long value)
         {
-            ISFSObject obj = SFSObject.NewInstance();
-            obj.PutUtfString("action", request.ToString().ToLower());
-            obj.PutLong("value", value);
-            return new SFSocketRequest(new ExtensionRequest("play", obj, PuMain.Instance.SfsRoom));
+            ISFSObject obj = new RequestPlugin(new RequestGameAction(request.ToString().ToLower(), value), RequestPlugin.GAME_PLUGIN_VALUE).ToSFSObject();
+            return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, PuMain.Instance.SfsRoom));
         }
     }
 }

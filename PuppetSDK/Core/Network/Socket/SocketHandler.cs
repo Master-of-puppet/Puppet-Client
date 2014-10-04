@@ -50,6 +50,11 @@ namespace Puppet.Core.Network.Socket
             socket.Connect();
         }
 
+        public void Reconnect()
+        {
+            socket.Reconnect();
+        }
+
         public void Disconnect()
         {
             socket.Disconnect();

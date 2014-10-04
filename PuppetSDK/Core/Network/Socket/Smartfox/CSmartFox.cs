@@ -20,6 +20,7 @@ namespace Puppet.Core.Network.Socket
     {
         public event Action<string, ISocketResponse> onResponse;
         SmartFox smartFox;
+        ConfigData configData;
         
         public CSmartFox(Action<string, ISocketResponse> onEventResponse)
         {
@@ -58,17 +59,22 @@ namespace Puppet.Core.Network.Socket
         {
             if (!IsConnected)
             {
-                ConfigData cfg = new ConfigData();
-                cfg.Host = PuMain.Setting.ServerModeSocket.Domain;
-                cfg.Port = PuMain.Setting.ServerModeSocket.Port;
-                cfg.Zone = PuMain.Setting.ZoneName;
+                configData = new ConfigData();
+                configData.Host = PuMain.Setting.ServerModeSocket.Domain;
+                configData.Port = PuMain.Setting.ServerModeSocket.Port;
+                configData.Zone = PuMain.Setting.ZoneName;
 
-                smartFox.Connect(cfg);
+                smartFox.Connect(configData);
                 Logger.Log(ELogColor.GREEN, "Connecting...");
 
                 //After connect: Start get event in queue
                 PuMain.Setting.ActionUpdate = ProcessEvents;
             }
+        }
+
+        public void Reconnect()
+        {
+            smartFox.Connect();
         }
 
         public void Disconnect()
@@ -89,11 +95,7 @@ namespace Puppet.Core.Network.Socket
             if (PuMain.Setting.IsDebug)
             {
                 BaseRequest rq = (BaseRequest)myRequest.Resquest;
-                Logger.Log("{0}Sending request: {1}{2}{3}", 
-                    Logger.StartColor(ELogColor.MAGENTA), 
-                    myRequest.Resquest.ToString(), 
-                    Logger.EndColor(), 
-                    rq.Message.Content.GetDump());
+                Logger.Log("Sending request:", rq.Message.Content.GetDump(), ELogColor.MAGENTA);
             }
         }
 
@@ -104,11 +106,8 @@ namespace Puppet.Core.Network.Socket
 
         void ListenerDelegate(BaseEvent evt)
         {
-            Logger.Log("{0}SFServer: {1}:{2} {3}",
-                Logger.StartColor(ELogColor.CYAN), 
-                evt.Type,
-                Logger.EndColor(), 
-                JsonUtil.Serialize(evt.Params));
+            Logger.Log("SFServer:" +  evt.Type, JsonUtil.Serialize(evt.Params), ELogColor.CYAN);
+
             ISocketResponse response = new SFSocketResponse(evt);
 
             if(evt.Type == SFSEvent.ROOM_JOIN)

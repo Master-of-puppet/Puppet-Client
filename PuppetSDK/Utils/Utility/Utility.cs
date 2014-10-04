@@ -45,6 +45,18 @@ namespace Puppet.Utils
             return Puppet.Utils.JsonUtil.Serialize(dict);
         }
 
+        public static ISFSObject GetDataExtensionResponse(ISocketResponse response, string cmdName)
+        {
+            string cmd = response.Params[Fields.CMD].ToString();
+            return cmd != cmdName ? null : ((SFSObject)response.Params[Fields.PARAMS]).GetSFSObject(Fields.MESSAGE);
+        }
+
+        public static ISFSObject GetGlobalExtensionResponse(ISocketResponse response, string cmdName)
+        {
+            string cmd = response.Params[Fields.CMD].ToString();
+            return cmd != cmdName ? null : ((SFSObject)response.Params[Fields.PARAMS]);
+        }
+
         public static FieldInfo[] GetFieldInfo(Type t, BindingFlags bindingFlags)
         {
             return t.GetFields(bindingFlags);

@@ -7,6 +7,8 @@ using Puppet.Utils;
 using Sfs2X.Core;
 using Sfs2X.Entities;
 using Puppet.Core.Model;
+using Sfs2X.Entities.Data;
+using Puppet.Core.Model.Factory;
 
 namespace Puppet.Core.Flow
 {
@@ -23,7 +25,25 @@ namespace Puppet.Core.Flow
 
         void GenericProcessEvents(string eventType, ISocketResponse response)
         {
-            if (eventType.Equals(SFSEvent.ROOM_JOIN))
+            if (eventType.Equals(SFSEvent.CONNECTION_LOST))
+            {
+                PuMain.Socket.Reconnect();
+            }
+            else if (eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
+            {
+                ISFSObject obj = Utility.GetGlobalExtensionResponse(response, Fields.RESPONSE_CMD_GLOBAL_MESSAGE);
+                if(obj != null)
+                {
+                    Logger.Log("Global Message", obj.GetDump(), ELogColor.GREEN);
+                    if (obj.ContainsKey("command") && obj.GetUtfString("command") == "openDailyGift")
+                    {
+                        DataDailyGift dataGift = SFSDataModelFactory.CreateDataModel<DataDailyGift>(obj);
+                        PuGlobal.Instance.CurrentDailyGift = dataGift;
+                        PuMain.Dispatcher.SetDailyGift(dataGift);
+                    }
+                }
+            }
+            else if (eventType.Equals(SFSEvent.ROOM_JOIN))
             {
                 //if (onBackSceneCallback != null) SceneHandler.Instance.Scene_Back(RoomHandler.Instance.GetSceneNameFromCurrentRoom);
                 //else SceneHandler.Instance.Scene_Next(RoomHandler.Instance.GetSceneNameFromCurrentRoom);
@@ -48,6 +68,12 @@ namespace Puppet.Core.Flow
             {
                 UserHandler.Instance.SetCurrentUser(response);
             }
+        }
+
+        internal void GetDailyGift()
+        {
+            if (PuGlobal.Instance.CurrentDailyGift != null)
+                PuMain.Socket.Request(RequestPool.GetDailyGift(PuGlobal.Instance.CurrentDailyGift));
         }
 
         #region When Click Back UIButton

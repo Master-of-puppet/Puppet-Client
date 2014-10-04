@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Puppet.Core.Model;
 
 namespace Puppet.Core.Manager
 {
@@ -10,6 +11,7 @@ namespace Puppet.Core.Manager
         public event Action<EScene, EScene> onChangeScene;
         public event Action<EMessage, string> onNoticeMessage;
         public event Action<EUpgrade, string, string> onWarningUpgrade;
+        public event Action<DataDailyGift> onDailyGift;
 
         internal void SetChangeScene(EScene fromScene, EScene toScene)
         {
@@ -27,6 +29,12 @@ namespace Puppet.Core.Manager
         {
             if (onWarningUpgrade != null)
                 onWarningUpgrade(type, message, url);
+        }
+
+        internal void SetDailyGift(DataDailyGift data)
+        {
+            if (onDailyGift != null)
+                onDailyGift(data);
         }
     }
 }

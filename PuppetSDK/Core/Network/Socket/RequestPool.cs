@@ -25,25 +25,32 @@ namespace Puppet.Core.Network.Socket
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_JOIN_ROOM, obj));
         }
 
-        public static ISocketRequest GetRequestNodePlugin(AbstractData data)
+        public static ISocketRequest GetRequestPlugin(AbstractData data)
         {
-            ISFSObject obj = new RequestNodePlugin(data).ToSFSObject();
+            ISFSObject obj = new RequestPlugin(data).ToSFSObject();
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, RoomHandler.Instance.Current));
         }
 
         public static ISocketRequest GetRequestGetChidren()
         {
-            return GetRequestNodePlugin(new RequestCommand(Fields.COMMAND_GET_CHIDREN));
+            return GetRequestPlugin(new RequestCommand(Fields.COMMAND_GET_CHIDREN));
         }
 
         public static ISocketRequest GetRequestGetGroupChildren(string groupName)
         {
-            return GetRequestNodePlugin(new RequestGetGroups(Fields.COMMAND_GET_GROUP_CHILDREN, groupName));
+            return GetRequestPlugin(new RequestGetGroups(Fields.COMMAND_GET_GROUP_CHILDREN, groupName));
         }
 
         public static ISocketRequest GetRequestCreateLobby()
         {
-            return GetRequestNodePlugin(new RequestGetGroups(Fields.COMMAND_CREATE_GAME, PuGlobal.Instance.SelectedChannel.name, PuGlobal.Instance.SelectedGame.roomName));
+            return GetRequestPlugin(new RequestGetGroups(Fields.COMMAND_CREATE_GAME, PuGlobal.Instance.SelectedChannel.name, PuGlobal.Instance.SelectedGame.roomName));
+        }
+
+        public static ISocketRequest GetDailyGift(DataDailyGift data)
+        {
+            string pluginName = data.listenerPlugin ?? RequestPlugin.OBSERVER_PLUGIN_VALUE;
+            ISFSObject obj = new RequestPlugin(new RequestGetGift(data), pluginName).ToSFSObject();
+            return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj));
         }
     }
 }
