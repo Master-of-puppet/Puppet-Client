@@ -106,7 +106,20 @@ namespace Puppet.Core.Network.Socket
 
         void ListenerDelegate(BaseEvent evt)
         {
-            Logger.Log("SFServer:" +  evt.Type, JsonUtil.Serialize(evt.Params), ELogColor.CYAN);
+            if (evt.Type == SFSEvent.HANDSHAKE) return;
+
+            Logger.Log("SFServer: type [" +  evt.Type + "]", JsonUtil.Serialize(evt.Params), ELogColor.CYAN);
+
+            foreach(object key in evt.Params.Keys)
+            {
+                object obj = evt.Params[key];
+                if(obj is SFSObject)
+                    Logger.Log("SFServer [" + key + "]:", ((SFSObject)evt.Params[key]).GetDump(), ELogColor.CYAN);
+            }
+            //if(evt.Params.Contains("params"))
+            //    Logger.Log("SFServer [params]:", ((SFSObject)evt.Params["params"]).GetDump(), ELogColor.CYAN);
+            //if (evt.Params.Contains("data"))
+            //    Logger.Log("SFServer [data]:", ((SFSObject)evt.Params["data"]).GetDump(), ELogColor.CYAN);
 
             ISocketResponse response = new SFSocketResponse(evt);
 

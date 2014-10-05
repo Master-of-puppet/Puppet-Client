@@ -35,15 +35,13 @@ namespace Puppet.Poker
         {
             if(eventType == SFSEvent.EXTENSION_RESPONSE)
             {
-                if(onEventResponse.Params["cmd"].ToString() == "pluginMessage")
+                ISFSObject messageObj = Puppet.Utils.Utility.GetDataExtensionResponse(onEventResponse, Fields.RESPONSE_CMD_PLUGIN_MESSAGE);
+                if(messageObj != null)
                 {
-                    ISFSObject obj = (ISFSObject)onEventResponse.Params["params"];
-                    Logger.Log("GamePlugin", obj.GetDump(), ELogColor.YELLOW);
-                        
-                    ISFSObject messageObj = obj.GetSFSObject("message");
                     string command = messageObj.GetUtfString("command");
                     switch (command)
                     {
+                        case "updateGameToWaitingPlayer":
                         case "updateGame":
                             dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
                             EventDispatcher.SetGameEvent(command, dataUpdateGame);

@@ -14,7 +14,7 @@ namespace Puppet.Core.Model.Datagram
         internal RequestGetGift(DataDailyGift data)
         {
             this.token = data.token;
-            this.command = data.commandDesign ?? "getDailyGift";
+            this.command = data.desireCommand ?? "getDailyGift";
         }
     }
     
