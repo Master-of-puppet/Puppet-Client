@@ -11,11 +11,5 @@ namespace Puppet.Core.Model
         public abstract void EnterGameplay();
         public abstract void ExitGameplay();
         public abstract void ProcessEvents(string eventType, ISocketResponse onEventResponse);
-        
-        public abstract void PlayerEnter(T player);
-        public abstract void PlayerExit(T player);
-        public abstract void BeginGameRound();
-        public abstract void EndGameRound();
-        public abstract void ChangeState(string oldState, string newState);
     }
 }

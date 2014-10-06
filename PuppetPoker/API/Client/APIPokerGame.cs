@@ -9,7 +9,12 @@ namespace Puppet.API.Client
 {
     public static class APIPokerGame
     {
-        public static PokerGameplay GetGameplay()
+        public static void StartListenerEvent()
+        {
+            PokerMain.Instance.game.StartListenerEvent();
+        }
+
+        public static PokerGameplay GetPokerGameplay()
         {
             return PokerMain.Instance.game;
         }

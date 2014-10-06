@@ -24,6 +24,18 @@ namespace Puppet.Poker
         playerRemoved,
     }
 
+    public enum PokerPlayerState
+    {
+        none,
+        smallBlind,
+        bigBlind,
+        call,
+        raise,
+        allIn,
+        fold,
+        check,
+    }
+
     public enum PokerSide
     {
         Slot_1 = 0,

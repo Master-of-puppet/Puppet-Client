@@ -18,13 +18,18 @@ namespace Puppet.Poker
         public const PokerSide DEFAULT_SIDE_MAIN_PLAYER = PokerSide.Slot_1;
         public int MAX_PLAYER_IN_GAME = 9;
 
-        public ResponseUpdateGame dataUpdateGame;
-        public ResponseUpdateRoomMaster dataRoomMaster;
-        public ResponseUpdateGameState dataGameState;
-        public ResponsePlayerListChanged dataPlayerListChanged;
+        internal ResponseUpdateGame dataUpdateGame;
+        internal ResponseUpdateRoomMaster dataRoomMaster;
+        internal ResponseUpdateGameState dataGameState;
+        internal ResponsePlayerListChanged dataPlayerListChanged;
+
+        List<KeyValuePair<string, object>> queueWaitingSendClient;
+        bool isClientWasListener;
 
         public override void EnterGameplay()
         {
+            isClientWasListener = false;
+            queueWaitingSendClient = new List<KeyValuePair<string, object>>();
         }
 
         public override void ExitGameplay()
@@ -45,45 +50,41 @@ namespace Puppet.Poker
                         case "updateGameToWaitingPlayer":
                         case "updateGame":
                             dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
-                            EventDispatcher.SetGameEvent(command, dataUpdateGame);
+                            DispathToClient(command, dataUpdateGame);
                             break;
                         case "updateGameState":
                             dataGameState = SFSDataModelFactory.CreateDataModel<ResponseUpdateGameState>(messageObj);
-                            EventDispatcher.SetGameEvent(command, dataGameState);
+                            DispathToClient(command, dataGameState);
                             break;
                         case "updateRoomMaster":
                             dataRoomMaster = SFSDataModelFactory.CreateDataModel<ResponseUpdateRoomMaster>(messageObj);
-                            EventDispatcher.SetGameEvent(command, dataRoomMaster);
+                            DispathToClient(command, dataRoomMaster);
                             break;
                         case "playerListChanged" :
                             dataPlayerListChanged = SFSDataModelFactory.CreateDataModel<ResponsePlayerListChanged>(messageObj);
-                            EventDispatcher.SetGameEvent(command, dataPlayerListChanged);
+                            DispathToClient(command, dataPlayerListChanged);
                             break;
                     }
                 }
             }
         }
 
-        public override void PlayerEnter(PokerPlayerController player)
+        private void DispathToClient(string command, object data)
         {
+            if (isClientWasListener)
+                EventDispatcher.SetGameEvent(command, data);
+            else
+                queueWaitingSendClient.Add(new KeyValuePair<string, object>(command, data));
         }
 
-        public override void PlayerExit(PokerPlayerController player)
+        internal void StartListenerEvent()
         {
-        }
+            foreach (KeyValuePair<string, object> keyAndValue in queueWaitingSendClient)
+                EventDispatcher.SetGameEvent(keyAndValue.Key, keyAndValue.Value);
+            queueWaitingSendClient.Clear();
 
-        public override void BeginGameRound()
-        {
+            isClientWasListener = true;
         }
-
-        public override void EndGameRound()
-        {
-        }
-
-        public override void ChangeState(string oldState, string newState)
-        {
-        }
-
 
         public List<PokerPlayerController> ListPlayer
         {
@@ -98,7 +99,7 @@ namespace Puppet.Poker
             }
         }
 
-        public PokerSide GetSide(PokerPlayerController player)
+        internal PokerSide GetSide(PokerPlayerController player)
         {
             PokerPlayerController your = YourController;
             if (your == null || your.slotIndex == (int)DEFAULT_SIDE_MAIN_PLAYER || your.slotIndex >= MAX_PLAYER_IN_GAME)

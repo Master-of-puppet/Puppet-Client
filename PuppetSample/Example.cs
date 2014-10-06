@@ -177,7 +177,7 @@ namespace Puppet
             if (choose == 0)
                 API.Client.APIGeneric.BackScene(null);
             else if (choose == 1)
-                API.Client.APIPokerGame.SitDown(Poker.PokerSide.Slot_2);
+                API.Client.APIPokerGame.SitDown(1);
         }
     }
 }
