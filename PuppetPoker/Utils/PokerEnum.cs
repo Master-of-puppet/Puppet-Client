@@ -5,15 +5,23 @@ using System.Text;
 
 namespace Puppet.Poker
 {
-    public enum GameState
+    public enum PokerGameState
     {
-        none = 0,
-        waiting = 1,
-        ready = 2,
-        waitingForTurn = 3,
-        inTurn = 4,
-        outTurn = 5,
-        finish = 8
+        none,
+        waitingForPlayer,
+        waitingDealing,
+        dealing,
+        playing,
+        finalizing,
+    }
+
+    public enum PokerPlayerChangeAction
+    {
+        none,
+        waitingPlayerAdded,
+        waitingPlayerRemoved,
+        playerAdded,
+        playerRemoved,
     }
 
     public enum PokerSide
@@ -29,7 +37,7 @@ namespace Puppet.Poker
         Slot_9 = 8,
     }
 
-    public enum RequestPlay
+    public enum PokerRequestPlay
     {
         /// <summary>
         /// Ngoi xuong

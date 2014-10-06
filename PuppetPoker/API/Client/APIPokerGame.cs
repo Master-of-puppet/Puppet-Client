@@ -14,13 +14,12 @@ namespace Puppet.API.Client
             return PokerMain.Instance.game;
         }
 
-
-        public static void SitDown(PokerSide side)
+        public static void SitDown(int slotIndex)
         {
-            PokerMain.Instance.game.SendSitDown(side);
+            PokerMain.Instance.game.SendSitDown(slotIndex);
         }
 
-        public static void PlayRequest(RequestPlay request, long value)
+        public static void PlayRequest(PokerRequestPlay request, long value)
         {
             PokerMain.Instance.game.SendPlayRequest(request, value);
         }

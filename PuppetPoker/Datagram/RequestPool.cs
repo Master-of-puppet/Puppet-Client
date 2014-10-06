@@ -10,13 +10,13 @@ namespace Puppet.Poker.Datagram
 {
     internal static class RequestPool
     {
-        public static ISocketRequest GetSitRequest(RequestPlay request, int slotIndex)
+        public static ISocketRequest GetSitRequest(PokerRequestPlay request, int slotIndex)
         {
             ISFSObject obj = new RequestPlugin(new RequestGameAction(request.ToString().ToLower(), slotIndex), RequestPlugin.GAME_PLUGIN_VALUE).ToSFSObject();
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, PuMain.Instance.SfsRoom));
         }
 
-        public static ISocketRequest GetPlayRequest(RequestPlay request, long value)
+        public static ISocketRequest GetPlayRequest(PokerRequestPlay request, long value)
         {
             ISFSObject obj = new RequestPlugin(new RequestGameAction(request.ToString().ToLower(), value), RequestPlugin.GAME_PLUGIN_VALUE).ToSFSObject();
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, PuMain.Instance.SfsRoom));

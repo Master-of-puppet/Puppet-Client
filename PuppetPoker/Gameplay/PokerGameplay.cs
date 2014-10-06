@@ -21,6 +21,7 @@ namespace Puppet.Poker
         public ResponseUpdateGame dataUpdateGame;
         public ResponseUpdateRoomMaster dataRoomMaster;
         public ResponseUpdateGameState dataGameState;
+        public ResponsePlayerListChanged dataPlayerListChanged;
 
         public override void EnterGameplay()
         {
@@ -54,6 +55,10 @@ namespace Puppet.Poker
                             dataRoomMaster = SFSDataModelFactory.CreateDataModel<ResponseUpdateRoomMaster>(messageObj);
                             EventDispatcher.SetGameEvent(command, dataRoomMaster);
                             break;
+                        case "playerListChanged" :
+                            dataPlayerListChanged = SFSDataModelFactory.CreateDataModel<ResponsePlayerListChanged>(messageObj);
+                            EventDispatcher.SetGameEvent(command, dataPlayerListChanged);
+                            break;
                     }
                 }
             }
@@ -85,16 +90,12 @@ namespace Puppet.Poker
             get { return new List<PokerPlayerController>(dataUpdateGame.players); }
         }
 
-        PokerPlayerController _yourController;
         public PokerPlayerController YourController
         {
             get 
             {
-                if(_yourController == null)
-                    _yourController = ListPlayer.Find(p => p.userName == Puppet.API.Client.APIUser.GetUserInformation().info.userName);
-                return _yourController;
+                return ListPlayer.Find(p => p.userName == Puppet.API.Client.APIUser.GetUserInformation().info.userName);
             }
-            set { _yourController = value; }
         }
 
         public PokerSide GetSide(PokerPlayerController player)
@@ -102,9 +103,11 @@ namespace Puppet.Poker
             PokerPlayerController your = YourController;
             if (your == null || your.slotIndex == (int)DEFAULT_SIDE_MAIN_PLAYER || your.slotIndex >= MAX_PLAYER_IN_GAME)
                 return (PokerSide)player.slotIndex;
-            
-            int slot;
 
+            if (your.userName == player.userName)
+                return DEFAULT_SIDE_MAIN_PLAYER;
+
+            int slot = your.slotIndex;
             if (player.slotIndex > your.slotIndex)
                 slot = player.slotIndex - your.slotIndex;
             else
@@ -117,17 +120,12 @@ namespace Puppet.Poker
             return (PokerSide)slot;
         }
 
-        public int GetSlotServer(PokerSide side)
+        internal void SendSitDown(int slotIndex)
         {
-            return (int)side;
+            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetSitRequest(PokerRequestPlay.SIT, slotIndex));
         }
 
-        internal void SendSitDown(PokerSide side)
-        {
-            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetSitRequest(RequestPlay.SIT, GetSlotServer(side)));
-        }
-
-        internal void SendPlayRequest(RequestPlay request, long value)
+        internal void SendPlayRequest(PokerRequestPlay request, long value)
         {
             PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetPlayRequest(request, value));
         }
