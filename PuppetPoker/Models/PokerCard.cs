@@ -9,9 +9,16 @@ namespace Puppet.Poker.Models
 {
     public class PokerCard : DataCard
     {
+        public PokerCard(int id)
+            : base()
+        {
+            cardId = id;
+        }
+
         public PokerCard() 
             : base()
         {
+            cardId = -1;
         }
 
         public PokerCard(SerializationInfo info, StreamingContext ctxt)

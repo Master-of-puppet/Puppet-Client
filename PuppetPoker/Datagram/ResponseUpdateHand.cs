@@ -10,7 +10,7 @@ namespace Puppet.Poker.Datagram
 {
     public class ResponseUpdateHand : DataModel
     {
-        public PokerPlayerController players { get; set; }
+        public PokerPlayerController[] players { get; set; }
         public int[] hand { get; set; }
         public string command { get; set; }
         public int timeForAnimation { get; set; }

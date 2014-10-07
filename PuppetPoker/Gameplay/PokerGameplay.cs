@@ -64,6 +64,14 @@ namespace Puppet.Poker
                             dataPlayerListChanged = SFSDataModelFactory.CreateDataModel<ResponsePlayerListChanged>(messageObj);
                             DispathToClient(command, dataPlayerListChanged);
                             break;
+                        case "updateHand":
+                            ResponseUpdateHand dataUpdateHand = SFSDataModelFactory.CreateDataModel<ResponseUpdateHand>(messageObj);
+                            DispathToClient(command, dataUpdateHand);
+                            break;
+                        case "turn":
+                            ResponseUpdateTurnChange dataTurn = SFSDataModelFactory.CreateDataModel<ResponseUpdateTurnChange>(messageObj);
+                            DispathToClient(command, dataTurn);
+                            break;
                     }
                 }
             }

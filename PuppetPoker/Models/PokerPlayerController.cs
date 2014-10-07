@@ -7,7 +7,7 @@ namespace Puppet.Poker.Models
     public class PokerPlayerController : DataPlayerController
     {
         public int currentBet { get; set; }
-        public string gameState { get; set; }
+        public int handSize { get; set; }
         public string action { get; set; }
 
         public PokerPlayerController() 
