@@ -21,19 +21,19 @@ namespace Puppet.Poker.Models
             cardId = -1;
         }
 
-        public PokerCard(SerializationInfo info, StreamingContext ctxt)
-            : base(info, ctxt)
-    	{				
-   	 	}
-
         public ECardRank GetRank()
         {
-            return (ECardRank)((cardId + 1) / 4);
+            return (ECardRank)((cardId + 1 >= 4) ? ((cardId + 1) / 4) : 0);
         }
 
         public ECardSuit GetSuit()
         {
             return (ECardSuit)(cardId % 4);
+        }
+
+        public bool IsRedCard()
+        {
+            return cardId % 4 > 1;
         }
     }
 }
