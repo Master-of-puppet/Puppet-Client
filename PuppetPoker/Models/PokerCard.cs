@@ -23,7 +23,7 @@ namespace Puppet.Poker.Models
 
         public ECardRank GetRank()
         {
-            return (ECardRank)((cardId + 1 >= 4) ? ((cardId + 1) / 4) : 0);
+            return (ECardRank)(int)Math.Ceiling((cardId + 1) / 4f);
         }
 
         public ECardSuit GetSuit()
