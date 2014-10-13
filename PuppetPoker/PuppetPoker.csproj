@@ -39,7 +39,9 @@
     <Compile Include="Basic\EventDispatcher.cs" />
     <Compile Include="Datagram\RequestGameAction.cs" />
     <Compile Include="Datagram\RequestPool.cs" />
+    <Compile Include="Datagram\ResponseWaitingDealCard.cs" />
     <Compile Include="Datagram\ResponsePlayerListChanged.cs" />
+    <Compile Include="Datagram\ResponseFinishGame.cs" />
     <Compile Include="Datagram\ResponseUpdateTurnChange.cs" />
     <Compile Include="Datagram\ResponseUpdateHand.cs" />
     <Compile Include="Datagram\ResponseUpdateRoomMaster.cs" />
