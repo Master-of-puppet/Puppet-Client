@@ -20,8 +20,8 @@ namespace Puppet.Poker.Datagram
 
         public class DataPot : DataModel
         {
-            int id;
-            int value;
+            public int id { get; set; }
+            public int value { get; set; }
             public DataPot() : base() { }
         }
     }

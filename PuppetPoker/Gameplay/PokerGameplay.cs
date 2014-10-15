@@ -80,7 +80,7 @@ namespace Puppet.Poker
                             ResponseWaitingDealCard dataWaitingDealcard = SFSDataModelFactory.CreateDataModel<ResponseWaitingDealCard>(messageObj);
                             DispathToClient(command, dataWaitingDealcard);
                             break;
-                        case "updatePot" :
+                        case "udpatePot":
                             ResponseUpdatePot dataPot = SFSDataModelFactory.CreateDataModel<ResponseUpdatePot>(messageObj);
                             DispathToClient(command, dataPot);
                             break;
