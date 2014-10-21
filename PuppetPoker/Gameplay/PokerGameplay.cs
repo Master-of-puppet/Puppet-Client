@@ -88,6 +88,10 @@ namespace Puppet.Poker
                             ResponseUpdateUserInfo dataUserInfo = SFSDataModelFactory.CreateDataModel<ResponseUpdateUserInfo>(messageObj);
                             DispathToClient(command, dataUserInfo);
                             break;
+                        case "error" :
+                            ResponseError dataError = SFSDataModelFactory.CreateDataModel<ResponseError>(messageObj);
+                            DispathToClient(command, dataError);
+                            break;
                     }
                 }
             }
