@@ -62,6 +62,7 @@
     <Compile Include="Core\Model\Common\AbstractGameplay.cs" />
     <Compile Include="Core\Model\Common\IGameplay.cs" />
     <Compile Include="Core\Model\Common\IScene.cs" />
+    <Compile Include="Core\Model\DataResponseRecharge.cs" />
     <Compile Include="Core\Model\DataGameAssets.cs" />
     <Compile Include="Core\Model\DataAssets.cs" />
     <Compile Include="Core\Model\DataCard.cs" />

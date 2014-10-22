@@ -19,9 +19,20 @@ namespace Puppet.API.Client
             SceneGeneric.Instance.BackScene(onBackSceneCallback);
         }
 
+        /// <summary>
+        /// Nhận phần thưởng hàng ngày
+        /// </summary>
         public static void GetDailyGift()
         {
             SceneGeneric.Instance.GetDailyGift();
+        }
+
+        /// <summary>
+        /// Lấy thông tin về các thể loại nạp tiền
+        /// </summary>
+        public static void GetInfoRecharge(Action<DataResponseRecharge> callback)
+        {
+            HttpPool.GetInfoRecharge(callback);
         }
     }
 }

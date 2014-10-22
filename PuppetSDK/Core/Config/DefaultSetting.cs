@@ -19,7 +19,7 @@ namespace Puppet
         public static string domain;
         public static string soketServer;
 
-        IServerMode server, serverWebHttp, serverWebService, serverBundle;
+        protected IServerMode server, serverWebHttp, serverWebService, serverBundle;
         EPlatform _platform;
         ServerEnvironment _env;
         ISocket _socket;

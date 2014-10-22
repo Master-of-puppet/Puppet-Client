@@ -1,4 +1,5 @@
-﻿using Puppet.Utils;
+﻿using Puppet.Core.Model;
+using Puppet.Utils;
 using System;
 using System.Collections.Generic;
 
@@ -73,16 +74,29 @@ namespace Puppet.Core.Network.Http
             Request(Commands.GET_ACCESS_TOKEN, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "username", username, "password", password, "type", "register");
         }
 
+        internal static void GetInfoRecharge(Action<DataResponseRecharge> callback)
+        {
+            Request(Commands.GET_INFO_RECHARGE, GetVersion(), (bool status, string jsonData) => 
+            {
+                if (status)
+                {
+                    DataResponseRecharge data = Puppet.Core.Model.Factory.JsonDataModelFactory.CreateDataModel<DataResponseRecharge>(jsonData);
+                    if (callback != null && data != null)
+                        callback(data);
+                }
+            });
+        }
+
         static Dictionary<string, string> GetVersion()
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            dict.Add("code_application", "foxpocker");
-            dict.Add("code_platform", "web");
+            dict.Add("code_application", "foxpoker");
+            dict.Add("code_platform", "web-html5");
             dict.Add("major", "1");
             dict.Add("minor", "0");
             dict.Add("patch", "0");
             dict.Add("build", "100");
-            dict.Add("distributor", "foxpocker");
+            dict.Add("distributor", "foxpoker");
             return dict;
         }
 
