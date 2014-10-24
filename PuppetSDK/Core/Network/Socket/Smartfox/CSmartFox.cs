@@ -67,6 +67,8 @@ namespace Puppet.Core.Network.Socket
                 smartFox.Connect(configData);
                 Logger.Log(ELogColor.GREEN, "Connecting...");
 
+                smartFox.EnableLagMonitor(true, 4, 10);
+
                 //After connect: Start get event in queue
                 PuMain.Setting.ActionUpdate = ProcessEvents;
             }

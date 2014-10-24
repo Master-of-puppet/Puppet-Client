@@ -67,6 +67,10 @@ namespace Puppet.Core.Flow
             {
                 UserHandler.Instance.SetCurrentUser(response);
             }
+            else if (eventType.Equals(SFSEvent.PING_PONG))
+            {
+
+            }
         }
 
         internal void GetDailyGift()

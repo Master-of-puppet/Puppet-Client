@@ -137,7 +137,7 @@ namespace Puppet.Core.Flow
         {
             if (onGetGroupChildrenCallback != null)
                 onGetGroupChildrenCallback(status, message, data);
-            onGetGroupChildrenCallback = null;
+            //onGetGroupChildrenCallback = null;
         }
     }
 }

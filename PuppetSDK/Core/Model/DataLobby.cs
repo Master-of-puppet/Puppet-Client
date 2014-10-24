@@ -11,6 +11,8 @@ namespace Puppet.Core.Model
         public string description { get; set; }
         public string icon { get; set; }
         public string displayName { get; set; }
+        public string groupName { get; set; }
+        public int index { get; set; }
 
         public DataLobby() 
             : base()
