@@ -28,5 +28,10 @@ namespace Puppet.API.Client
         {
             PokerMain.Instance.game.SendPlayRequest(request, value);
         }
+
+        public static void AutoSitDown()
+        {
+            PokerMain.Instance.game.AutoSitDown();
+        }
     }
 }

@@ -158,5 +158,18 @@ namespace Puppet.Poker
         {
             PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetPlayRequest(request, value));
         }
+
+        internal void AutoSitDown()
+        {
+            List<int> listIndex = (from player in ListPlayer select player.slotIndex).ToList<int>();
+            int minValue = -1;
+            for (int i = 0; i < Puppet.API.Client.APIPokerGame.GetPokerGameplay().MAX_PLAYER_IN_GAME; i++)
+            {
+                if (listIndex.Contains(i) == false) { minValue = i; break; }
+            }
+
+            if (minValue >= 0)
+                SendSitDown(minValue);
+        }
     }
 }

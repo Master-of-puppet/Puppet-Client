@@ -13,6 +13,7 @@ namespace Puppet.Poker.Datagram
         public string command { get; set; }
         public ResponseResultSummary []pots { get; set; }
         public ResponseMoneyExchange []totalExchange { get; set; }
+        public int[] dealComminityCards { get; set; }
 
         public ResponseFinishGame()
             : base()
