@@ -98,10 +98,10 @@ namespace Puppet.Core.Flow
             onGetGroupsLobbyCallback(true, string.Empty, PuGlobal.Instance.GroupsLobby);   
         }
 
-        internal void CreateLobby(DelegateAPICallback onCreateLobbyCallback)
+        internal void CreateLobby(int maxBet, int numberPlayer, DelegateAPICallback onCreateLobbyCallback)
         {
             this.onCreateLobbyCallback = onCreateLobbyCallback;
-            PuMain.Socket.Request(RequestPool.GetRequestCreateLobby());
+            PuMain.Socket.Request(RequestPool.GetRequestCreateLobby(maxBet, numberPlayer));
         }
 
         internal void JoinLobby(DataLobby lobby, DelegateAPICallback onJoinLobbyCallback)

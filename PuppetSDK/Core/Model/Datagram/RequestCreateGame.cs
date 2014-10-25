@@ -18,30 +18,22 @@ namespace Puppet.Core.Model.Datagram
             this.command = command;
             this.groupName = groupName;
             this.gameType = gameType;
+            this.customConfiguration = config;
         }
     }
 
     public class DataConfigGame : DataModel
     {
-        public DataConfigGame() 
-            : base()
-        {
-        }
-    }
-
-    public class DataConfigGamePoker : DataConfigGame
-    {
         public int betting { get; set; }
 
-        public DataConfigGamePoker()
+        public DataConfigGame()
             : base()
         {
         }
 
-        public DataConfigGamePoker (int betting)
+        public DataConfigGame(int betting)
         {
             this.betting = betting;
         }
     }
-    
 }

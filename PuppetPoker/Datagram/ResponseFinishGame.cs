@@ -14,6 +14,8 @@ namespace Puppet.Poker.Datagram
         public ResponseResultSummary []pots { get; set; }
         public ResponseMoneyExchange []totalExchange { get; set; }
         public int[] dealComminityCards { get; set; }
+        public ResponseFinishCardPlayer[] players { get; set; }
+        public int time { get; set; }
 
         public ResponseFinishGame()
             : base()
@@ -35,10 +37,21 @@ namespace Puppet.Poker.Datagram
 
     public class ResponseResultSummary : DataModel
     {
-        public ResponseMoneyExchange []players { get; set; }
+        public ResponseMoneyExchange[] players { get; set; }
         public int potId { get; set; }
         public ResponseResultSummary()
             : base()
+        {
+        }
+    }
+
+    public class ResponseFinishCardPlayer : DataModel
+    {
+        public int[] cards { get; set; }
+        public string userName { get; set; }
+
+        public ResponseFinishCardPlayer()
+             : base ()
         {
         }
     }
