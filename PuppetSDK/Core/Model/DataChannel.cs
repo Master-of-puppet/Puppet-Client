@@ -11,7 +11,7 @@ namespace Puppet.Core.Model
         public string name { get; set; }
         public string displayName { get; set; }
         public int childCount { get; set; }
-
+		public DataChannelConfiguration configuration { get; set; }
 
         public DataChannel() 
             : base()
@@ -23,4 +23,14 @@ namespace Puppet.Core.Model
     	{				
    	 	}
     }
+
+	public class DataChannelConfiguration : DataModel
+	{
+		public int []betting { get; set; }
+
+		public DataChannelConfiguration() 
+			: base()
+		{
+		}
+	}
 }
