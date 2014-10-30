@@ -25,6 +25,7 @@ namespace Puppet.Poker.Datagram
 
     public class ResponseMoneyExchange : DataModel
     {
+        public int[] cards { get; set; }
         public string userName { get; set; }
         public int moneyExchange { get; set; }
         public bool winner { get; set; }

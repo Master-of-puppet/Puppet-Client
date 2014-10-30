@@ -25,14 +25,39 @@ namespace Puppet.Core.Flow
 
         void GenericProcessEvents(string eventType, ISocketResponse response)
         {
-            if (eventType.Equals(SFSEvent.CONNECTION_LOST))
+            if (eventType.Equals(SFSEvent.LOGIN))
             {
-                PuMain.Socket.Reconnect();
+                SFSObject obj = (SFSObject)response.Params[Fields.DATA];
+                RoomInfo firtRoomToJoin = Utility.GetDataFromResponse<RoomInfo>(response, Fields.DATA, Fields.RESPONSE_FIRST_ROOM_TO_JOIN);
+                PuGlobal.Instance.FirtRoomToJoin = firtRoomToJoin;
+                PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(firtRoomToJoin));
+            }
+            else if (eventType.Equals(SFSEvent.CONNECTION))
+            {
+                bool success = (bool)response.Params[Fields.SUCCESS];
+                if (success)
+                    PuMain.Socket.Request(RequestPool.GetLoginRequest(PuGlobal.Instance.token));
+            }
+            else if (eventType.Equals(SFSEvent.CONNECTION_LOST))
+            {
+                string reasonLostConnect = (string)response.Params["reason"];
+                Logger.Log(ELogColor.CYAN, "Lost Connection Reason: {0}", reasonLostConnect);
+                if (reasonLostConnect == "idle")
+                {
+                    PuMain.Socket.Reconnect();
+                    PuMain.Dispatcher.SetNoticeMessage(EMessage.Critical, "Đăng cố kết nối lại với máy chủ.");
+                }
+                else
+                {
+                    SceneHandler.Instance.Scene_GoTo(EScene.LoginScreen, string.Empty);
+                    PuMain.Socket.Disconnect();
+                    PuMain.Dispatcher.SetNoticeMessage(EMessage.Critical, "Mất kết nối đến máy chủ. Vui lòng đăng nhập lại.");
+                }
             }
             else if (eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
             {
                 ISFSObject obj = Utility.GetGlobalExtensionResponse(response, Fields.RESPONSE_CMD_GLOBAL_MESSAGE);
-                if(obj != null)
+                if (obj != null)
                 {
                     if (obj.ContainsKey("command") && obj.GetUtfString("command") == "openDailyGift")
                     {

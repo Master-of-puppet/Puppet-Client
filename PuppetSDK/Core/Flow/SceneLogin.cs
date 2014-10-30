@@ -14,9 +14,7 @@ namespace Puppet.Core.Flow
 {
     internal class SceneLogin : BaseSingleton<SceneLogin>, IScene
     {
-        string token;
         internal DelegateAPICallback onLoginCallback;
-        internal DelegateAPICallback onLoginTrialCallback;
 
         #region DEFAULT NOT MODIFY
         public string ServerScene
@@ -65,7 +63,7 @@ namespace Puppet.Core.Flow
 
         internal void Login(string token, DelegateAPICallback onLoginCallback)
         {
-            this.token = token;
+            PuGlobal.Instance.token = token;
             this.onLoginCallback = onLoginCallback;
 
             PuMain.Socket.Connect();
@@ -76,22 +74,11 @@ namespace Puppet.Core.Flow
             if (eventType.Equals(SFSEvent.CONNECTION))
             {
                 bool success = (bool)response.Params[Fields.SUCCESS];
-                if (success)
-                {
-                    PuMain.Socket.Request(RequestPool.GetLoginRequest(token));
-                }
-                else
+                if (!success)
                 {
                     #warning Note: Need to localization content
                     DispathEventLogin(false, "Không thể kết nối đến máy chủ");
                 }
-            }
-            else if (eventType.Equals(SFSEvent.LOGIN))
-            {
-                SFSObject obj = (SFSObject)response.Params[Fields.DATA];
-                RoomInfo firtRoomToJoin = Utility.GetDataFromResponse<RoomInfo>(response, Fields.DATA, Fields.RESPONSE_FIRST_ROOM_TO_JOIN);
-                PuGlobal.Instance.FirtRoomToJoin = firtRoomToJoin;
-                PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(firtRoomToJoin));
             }
             else if (eventType.Equals(SFSEvent.LOGIN_ERROR))
             {

@@ -28,6 +28,7 @@ namespace Puppet.Core.Network.Socket
 
             //smartFox.SetReconnectionSeconds(10);
             smartFox.ThreadSafeMode = PuMain.Setting.UseUnity;
+            //smartFox.EnableLagMonitor(true, 3, 10);
 
             foreach(FieldInfo info in Utility.GetFieldInfo(typeof(SFSEvent), BindingFlags.Public | BindingFlags.Static))
                 smartFox.AddEventListener(info.GetValue(null).ToString(), ListenerDelegate);
@@ -66,8 +67,6 @@ namespace Puppet.Core.Network.Socket
 
                 smartFox.Connect(configData);
                 Logger.Log(ELogColor.GREEN, "Connecting...");
-
-                smartFox.EnableLagMonitor(true, 4, 10);
 
                 //After connect: Start get event in queue
                 PuMain.Setting.ActionUpdate = ProcessEvents;
