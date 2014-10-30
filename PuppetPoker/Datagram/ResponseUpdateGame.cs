@@ -18,7 +18,7 @@ namespace Puppet.Poker.Datagram
         public int remainingTime { get; set; }
         public int totalTime { get; set; }
         public int[] dealComminityCards { get; set; }
-
+        
         public ResponseUpdateGame()
             : base()
         {
