@@ -17,22 +17,25 @@ namespace Puppet.Poker.Datagram
         public int[] dealComminityCards { get; set; }
         public int time { get; set; }
         public bool newRound { get; set; }
+        public bool firstTurn { get; set; }
         public int value { get; set; }
+        public PokerPlayerController bigBlind { get; set; }
+        public PokerPlayerController smallBlind { get; set; }
 
         public ResponseUpdateTurnChange()
             : base()
         {
         }
 
-        public PokerGameState GetGameState()
+        public PokerPlayerState GetActionState()
         {
-            object state = Enum.Parse(typeof(PokerGameState), command);
+            object state = Enum.Parse(typeof(PokerPlayerState), action);
             if (state != null)
-                return (PokerGameState)state;
+                return (PokerPlayerState)state;
             else
             {
-                Logger.LogWarning("Không thể chuyển đổi từ gameState: '{0}' sang enum PokerGameState", command);
-                return PokerGameState.none;
+                Logger.LogWarning("Không thể chuyển đổi từ action: '{0}' sang enum PokerGameState", action);
+                return PokerPlayerState.none;
             }
         }
     }
