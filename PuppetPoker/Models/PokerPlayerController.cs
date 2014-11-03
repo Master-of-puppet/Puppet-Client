@@ -22,6 +22,9 @@ namespace Puppet.Poker.Models
 
         public PokerPlayerState GetPlayerState()
         {
+            if (string.IsNullOrEmpty(gameState))
+                return PokerPlayerState.none;
+
             object state = Enum.Parse(typeof(PokerPlayerState), gameState);
             if (state != null)
                 return (PokerPlayerState)state;
