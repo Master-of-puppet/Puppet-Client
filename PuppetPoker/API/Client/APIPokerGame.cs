@@ -19,9 +19,9 @@ namespace Puppet.API.Client
             return PokerMain.Instance.game;
         }
 
-        public static void SitDown(int slotIndex)
+        public static void SitDown(int slotIndex, long money)
         {
-            PokerMain.Instance.game.SendSitDown(slotIndex);
+            PokerMain.Instance.game.SendSitDown(slotIndex, money);
         }
 
         public static void PlayRequest(PokerRequestPlay request, long value)
@@ -29,9 +29,19 @@ namespace Puppet.API.Client
             PokerMain.Instance.game.SendPlayRequest(request, value);
         }
 
-        public static void AutoSitDown()
+        public static void AutoSitDown(long money)
         {
-            PokerMain.Instance.game.AutoSitDown();
+            PokerMain.Instance.game.AutoSitDown(money);
+        }
+
+        public static void GetOrderHand(Dictionary<string,int[]> cardPlayers)
+        {
+            PuMain.Socket.Request(RequestPool.GetOrderHand(cardPlayers));
+        }
+
+        public static void GetOrderCommunity(int [] cards)
+        {
+            PuMain.Socket.Request(RequestPool.GetOrderCommunity(cards));
         }
     }
 }
