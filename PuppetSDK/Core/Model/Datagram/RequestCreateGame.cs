@@ -35,5 +35,14 @@ namespace Puppet.Core.Model.Datagram
         {
             this.betting = betting;
         }
+
+        public double SmallBlind
+        {
+            get { return betting / 2f; }
+        }
+        public double MaxBlind
+        {
+            get { return betting; }
+        }
     }
 }

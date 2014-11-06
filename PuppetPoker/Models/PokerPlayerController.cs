@@ -34,5 +34,10 @@ namespace Puppet.Poker.Models
                 return PokerPlayerState.none;
             }
         }
+
+        public double GetMoney()
+        {
+            return asset.GetAsset(EAssets.Chip).value;
+        }
     }
 }
