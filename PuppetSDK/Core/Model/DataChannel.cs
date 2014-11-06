@@ -26,7 +26,7 @@ namespace Puppet.Core.Model
 
 	public class DataChannelConfiguration : DataModel
 	{
-		public int []betting { get; set; }
+        public double[] betting { get; set; }
 
 		public DataChannelConfiguration() 
 			: base()

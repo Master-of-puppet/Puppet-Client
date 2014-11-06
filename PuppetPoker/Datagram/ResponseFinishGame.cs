@@ -27,7 +27,7 @@ namespace Puppet.Poker.Datagram
     {
         public int[] cards { get; set; }
         public string userName { get; set; }
-        public int moneyExchange { get; set; }
+        public double moneyExchange { get; set; }
         public bool winner { get; set; }
          
         public ResponseMoneyExchange()

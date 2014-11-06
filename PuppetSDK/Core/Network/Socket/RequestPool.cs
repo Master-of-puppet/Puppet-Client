@@ -41,7 +41,7 @@ namespace Puppet.Core.Network.Socket
             return GetRequestPlugin(new RequestGetGroups(Fields.COMMAND_GET_GROUP_CHILDREN, groupName));
         }
 
-        public static ISocketRequest GetRequestCreateLobby(int maxBet, int numberPlayer)
+        public static ISocketRequest GetRequestCreateLobby(double maxBet, int numberPlayer)
         {
             return GetRequestPlugin(new RequestCreateGame(Fields.COMMAND_CREATE_GAME, PuGlobal.Instance.SelectedChannel.name, PuGlobal.Instance.SelectedGame.roomName, new DataConfigGame(maxBet)));
         }

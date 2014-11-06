@@ -19,17 +19,17 @@ namespace Puppet.API.Client
             return PokerMain.Instance.game;
         }
 
-        public static void SitDown(int slotIndex, long money)
+        public static void SitDown(int slotIndex, double money)
         {
             PokerMain.Instance.game.SendSitDown(slotIndex, money);
         }
 
-        public static void PlayRequest(PokerRequestPlay request, long value)
+        public static void PlayRequest(PokerRequestPlay request, double value)
         {
             PokerMain.Instance.game.SendPlayRequest(request, value);
         }
 
-        public static void AutoSitDown(long money)
+        public static void AutoSitDown(double money)
         {
             PokerMain.Instance.game.AutoSitDown(money);
         }

@@ -149,17 +149,17 @@ namespace Puppet.Poker
             return (PokerSide)slot;
         }
 
-        internal void SendSitDown(int slotIndex, long money)
+        internal void SendSitDown(int slotIndex, double money)
         {
             PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetSitRequest(PokerRequestPlay.SIT, slotIndex, money));
         }
 
-        internal void SendPlayRequest(PokerRequestPlay request, long value)
+        internal void SendPlayRequest(PokerRequestPlay request, double value)
         {
             PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetPlayRequest(request, value));
         }
 
-        internal void AutoSitDown(long money)
+        internal void AutoSitDown(double money)
         {
             List<int> listIndex = (from player in ListPlayer select player.slotIndex).ToList<int>();
             int minValue = -1;

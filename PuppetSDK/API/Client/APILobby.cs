@@ -24,7 +24,7 @@ namespace Puppet.API.Client
             ScenePockerLobby.Instance.SetSelectChannel(channel, onGetCallback);
         }
 
-        public static void CreateLobby(int maxBet, int numberPlayer, DelegateAPICallback onCreateLobbyCallback)
+        public static void CreateLobby(double maxBet, int numberPlayer, DelegateAPICallback onCreateLobbyCallback)
         {
             ScenePockerLobby.Instance.CreateLobby(maxBet, numberPlayer, onCreateLobbyCallback);
         }

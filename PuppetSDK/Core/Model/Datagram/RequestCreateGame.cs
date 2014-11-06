@@ -24,14 +24,14 @@ namespace Puppet.Core.Model.Datagram
 
     public class DataConfigGame : DataModel
     {
-        public int betting { get; set; }
+        public double betting { get; set; }
 
         public DataConfigGame()
             : base()
         {
         }
 
-        public DataConfigGame(int betting)
+        public DataConfigGame(double betting)
         {
             this.betting = betting;
         }

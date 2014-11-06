@@ -10,9 +10,9 @@ namespace Puppet.Poker.Datagram
     {
         public string command { get; set; }
         public string action { get; set; }
-        public long value { get; set; }
+        public double value { get; set; }
         public int slot { get; set; }
-        public long money { get; set; }
+        public double money { get; set; }
 
         public RequestGameAction(string actionName)
         {
@@ -20,13 +20,13 @@ namespace Puppet.Poker.Datagram
             this.action = actionName;
         }
 
-        public RequestGameAction(string actionName, long value) 
+        public RequestGameAction(string actionName, double value) 
             : this(actionName)
         {
             this.value = value;
         }
 
-        public RequestGameAction(string actionName, int slot, long money)
+        public RequestGameAction(string actionName, int slot, double money)
             : this(actionName)
         {
             this.slot = slot;
