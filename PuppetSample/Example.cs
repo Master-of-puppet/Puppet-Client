@@ -72,14 +72,14 @@ namespace Puppet
 
         static void InputSetting()
         {
-            Console.WriteLine("1. test.esimo.vn");
+            Console.WriteLine("1. foxpokers.com");
             Console.WriteLine("2. puppet.esimo.vn");
             Console.WriteLine("3. localhost");
             Console.WriteLine("Or enter you server address");
             Console.Write("Please enter server: ");
             string enter = Console.ReadLine();
             if (enter.EndsWith("1"))
-                enter = "test.esimo.vn";
+                enter = "foxpokers.com";
             else if (enter.EndsWith("2"))
                 enter = "puppet.esimo.vn";
             else if (enter.EndsWith("3"))
@@ -122,7 +122,10 @@ namespace Puppet
                     Console.WriteLine(i + ". To Logout");
                     int choose = GetEnterInteger(0, listGame.Count);
                     if (choose == i)
-                        API.Client.APIGeneric.BackScene(null);
+                    {
+                        //API.Client.APIGeneric.BackScene(null);
+                        API.Client.APIGeneric.LoginOut(null);
+                    }
                     else
                         API.Client.APIWorldGame.JoinRoom(listGame[choose], null);
                 }
@@ -159,7 +162,7 @@ namespace Puppet
                         choose = GetEnterInteger(0, j);
 
                         if (choose == 0)
-                            API.Client.APILobby.CreateLobby(null);
+                            API.Client.APILobby.CreateLobby(1000, 9, null);
                         else if (choose == j)
                             API.Client.APIGeneric.BackScene(null);
                         else

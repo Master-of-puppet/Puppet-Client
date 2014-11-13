@@ -15,6 +15,7 @@ namespace Puppet.Core.Flow
     internal sealed class SceneGeneric : BaseSingleton<SceneGeneric>
     {
         DelegateAPICallback onBackSceneCallback;
+        DelegateAPICallback onLogoutCallback;
 
         protected override void Init() {}
 
@@ -92,6 +93,11 @@ namespace Puppet.Core.Flow
             {
                 UserHandler.Instance.SetCurrentUser(response);
             }
+            else if (eventType.Equals(SFSEvent.LOGOUT))
+            {
+                DispathAPICallback(ref onLogoutCallback, true, string.Empty);
+                SceneHandler.Instance.Scene_GoTo(EScene.LoginScreen, string.Empty);
+            }
             else if (eventType.Equals(SFSEvent.PING_PONG))
             {
 
@@ -112,6 +118,12 @@ namespace Puppet.Core.Flow
                 PuMain.Socket.Disconnect();
             else
                 PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(RoomHandler.Instance.GetParentRoom));
+        }
+
+        internal void LoginOut(DelegateAPICallback onLogoutCallback)
+        {
+            this.onLogoutCallback = onLogoutCallback;
+            PuMain.Socket.Request(RequestPool.GetLogout());
         }
         #endregion
 

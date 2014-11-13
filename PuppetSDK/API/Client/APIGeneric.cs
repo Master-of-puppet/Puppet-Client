@@ -19,6 +19,11 @@ namespace Puppet.API.Client
             SceneGeneric.Instance.BackScene(onBackSceneCallback);
         }
 
+        public static void LoginOut(DelegateAPICallback onLogoutCallback)
+        {
+            SceneGeneric.Instance.LoginOut(onLogoutCallback);
+        }
+
         /// <summary>
         /// Nhận phần thưởng hàng ngày
         /// </summary>

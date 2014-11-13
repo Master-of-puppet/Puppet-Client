@@ -52,5 +52,10 @@ namespace Puppet.Core.Network.Socket
             ISFSObject obj = new RequestPlugin(new RequestGetGift(data), pluginName).ToSFSObject();
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj));
         }
+
+        public static ISocketRequest GetLogout()
+        {
+            return new SFSocketRequest(new LogoutRequest());
+        }
     }
 }
