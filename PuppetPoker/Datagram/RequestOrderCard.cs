@@ -29,12 +29,12 @@ namespace Puppet.Poker.Datagram
 
         internal class RequestPlayerOrderCard : AbstractData
         {
-            public string username { get; set; }
+            public string userName { get; set; }
             public int [] cards { get; set; }
 
             public RequestPlayerOrderCard(string userName, int [] cards)
             {
-                this.username = userName;
+                this.userName = userName;
                 this.cards = cards;
             }
         }

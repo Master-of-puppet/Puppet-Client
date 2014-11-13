@@ -22,6 +22,7 @@ namespace Puppet.Poker
         waitingPlayerRemoved,
         playerAdded,
         playerRemoved,
+        playerQuitGame,
     }
 
     public enum PokerPlayerState
