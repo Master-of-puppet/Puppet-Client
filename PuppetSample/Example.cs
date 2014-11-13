@@ -60,6 +60,8 @@ namespace Puppet
                 AtLobbyScene();
             else if (toScene == EScene.Pocker_Gameplay)
                 AtGameplay();
+            else if (toScene == EScene.LoginScreen)
+                AtLoginScreen();
         }
 
         /// <summary>
@@ -103,6 +105,7 @@ namespace Puppet
             //    if (status)
             //        API.Client.APILogin.Login(token, null);
             //});
+            Logger.Log("Login.....");
             API.Client.APILogin.LoginTrial(null);
         }
 

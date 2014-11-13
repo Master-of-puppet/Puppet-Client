@@ -50,8 +50,7 @@ namespace Puppet.Core.Flow
                 }
                 else
                 {
-                    SceneHandler.Instance.Scene_GoTo(EScene.LoginScreen, string.Empty);
-                    PuMain.Socket.Disconnect();
+                    DisconnectAndLogin();
                     PuMain.Dispatcher.SetNoticeMessage(EMessage.Critical, "Mất kết nối đến máy chủ. Vui lòng đăng nhập lại.");
                 }
             }
@@ -96,12 +95,18 @@ namespace Puppet.Core.Flow
             else if (eventType.Equals(SFSEvent.LOGOUT))
             {
                 DispathAPICallback(ref onLogoutCallback, true, string.Empty);
-                SceneHandler.Instance.Scene_GoTo(EScene.LoginScreen, string.Empty);
+                DisconnectAndLogin();
             }
             else if (eventType.Equals(SFSEvent.PING_PONG))
             {
 
             }
+        }
+
+        private void DisconnectAndLogin()
+        {
+            SceneHandler.Instance.Scene_GoTo(EScene.LoginScreen, string.Empty);
+            PuMain.Socket.Disconnect();
         }
 
         internal void GetDailyGift()
