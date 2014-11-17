@@ -36,5 +36,11 @@ namespace Puppet.Poker.Datagram
             ISFSObject obj = new RequestPlugin(new RequestOrderCard(cards), RequestPlugin.GAME_PLUGIN_VALUE).ToSFSObject();
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, PuMain.Instance.SfsRoom));
         }
+
+        public static ISocketRequest SetAutoBuy(bool autoBuy)
+        {
+            ISFSObject obj = new RequestPlugin(new RequestAutoBuy(autoBuy), RequestPlugin.GAME_PLUGIN_VALUE).ToSFSObject();
+            return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, PuMain.Instance.SfsRoom));
+        }
     }
 }

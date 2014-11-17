@@ -6,37 +6,17 @@ using Puppet.Core.Model;
 
 namespace Puppet.Poker.Datagram
 {
-    internal class RequestOrderCard : AbstractData
+    internal class RequestAutoBuy : AbstractData
     {
         public string command { get; set; }
         public string action { get; set; }
-        public RequestPlayerOrderCard [] players { get; set; }
-        public int[] cards { get; set; }
+        public bool autoBuy { get; set; }
 
-        public RequestOrderCard(int [] communityCards)
+        public RequestAutoBuy(bool autoBuy)
         {
-            this.command = "orderCard";
-            this.action = "orderCommunityCard";
-            this.cards = communityCards;
-        }
-
-        public RequestOrderCard(RequestPlayerOrderCard [] players)
-        {
-            this.command = "orderCard";
-            this.action = "orderHand";
-            this.players = players;
-        }
-
-        internal class RequestPlayerOrderCard : AbstractData
-        {
-            public string userName { get; set; }
-            public int [] cards { get; set; }
-
-            public RequestPlayerOrderCard(string userName, int [] cards)
-            {
-                this.userName = userName;
-                this.cards = cards;
-            }
+            this.command = "play";
+            this.action = "autoBuy";
+            this.autoBuy = autoBuy;
         }
     }
 }

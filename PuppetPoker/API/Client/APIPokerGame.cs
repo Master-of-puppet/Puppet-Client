@@ -43,5 +43,10 @@ namespace Puppet.API.Client
         {
             PuMain.Socket.Request(RequestPool.GetOrderCommunity(cards));
         }
+
+        public static void SetAutoBuy(bool autoBuy)
+        {
+            PuMain.Socket.Request(RequestPool.SetAutoBuy(autoBuy));
+        }
     }
 }

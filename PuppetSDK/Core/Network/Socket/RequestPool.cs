@@ -43,7 +43,7 @@ namespace Puppet.Core.Network.Socket
 
         public static ISocketRequest GetRequestCreateLobby(double maxBet, int numberPlayer)
         {
-            return GetRequestPlugin(new RequestCreateGame(Fields.COMMAND_CREATE_GAME, PuGlobal.Instance.SelectedChannel.name, PuGlobal.Instance.SelectedGame.roomName, new DataConfigGame(maxBet)));
+            return GetRequestPlugin(new RequestCreateGame(Fields.COMMAND_CREATE_GAME, PuGlobal.Instance.SelectedChannel.name, PuGlobal.Instance.SelectedGame.roomName, new DataConfigGame(maxBet, numberPlayer)));
         }
 
         public static ISocketRequest GetDailyGift(DataDailyGift data)
