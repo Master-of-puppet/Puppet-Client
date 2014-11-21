@@ -21,8 +21,12 @@ namespace Puppet.Core
         {
             if (response.Params.Contains("user"))
             {
-                _mySelf = (User)response.Params["user"];
-                Logger.Log(ELogColor.GREEN, "Updated User Infomations!!!");
+                User user = (User)response.Params["user"];
+                if (_mySelf == null || (_mySelf != null && _mySelf.Id == user.Id))
+                {
+                    _mySelf = user;
+                    Logger.Log(ELogColor.GREEN, "Updated User Infomations!!!");
+                }
 
                 //For debug show log RoomVariable
                 foreach (UserVariable r in _mySelf.GetVariables())

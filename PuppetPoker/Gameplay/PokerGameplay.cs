@@ -25,6 +25,8 @@ namespace Puppet.Poker
 
         List<KeyValuePair<string, object>> queueWaitingSendClient;
         bool isClientWasListener;
+        List<PokerPlayerController> _listPlayers = new List<PokerPlayerController>();
+        List<PokerPlayerController> _listWaitingPlayers = new List<PokerPlayerController>();
 
         public override void EnterGameplay()
         {
@@ -62,6 +64,7 @@ namespace Puppet.Poker
                             break;
                         case "playerListChanged" :
                             dataPlayerListChanged = SFSDataModelFactory.CreateDataModel<ResponsePlayerListChanged>(messageObj);
+                            UpdatePlayerInRoom(dataPlayerListChanged);
                             DispathToClient(command, dataPlayerListChanged);
                             break;
                         case "updateHand":
@@ -114,17 +117,42 @@ namespace Puppet.Poker
             isClientWasListener = true;
         }
 
-        public List<PokerPlayerController> ListPlayer
+        void UpdatePlayerInRoom(ResponsePlayerListChanged dataPlayerChange)
         {
-            get { return new List<PokerPlayerController>(dataUpdateGame.players); }
+            switch (dataPlayerChange.GetActionState())
+            {
+                case PokerPlayerChangeAction.playerAdded:
+                    _listPlayers.Add(dataPlayerListChanged.player);
+                    break;
+                case PokerPlayerChangeAction.playerRemoved:
+                case PokerPlayerChangeAction.playerQuitGame:
+                    int indexP = _listPlayers.FindIndex(p => p.userName == dataPlayerListChanged.player.userName);
+                    if (indexP >= 0) _listPlayers.RemoveAt(indexP);
+                    break;
+                case PokerPlayerChangeAction.waitingPlayerAdded:
+                    _listWaitingPlayers.Add(dataPlayerChange.player);
+                    break;
+                case PokerPlayerChangeAction.waitingPlayerRemoved:
+                    int indexW = _listWaitingPlayers.FindIndex(p => p.userName == dataPlayerListChanged.player.userName);
+                    if (indexW >= 0) _listWaitingPlayers.RemoveAt(indexW);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Chỉ mới lưu để sử dụng username là chính.
+        /// </summary>
+        public List<PokerPlayerController> ListPlayer 
+        { 
+            get {
+                //return _listPlayers.Count != 0 ? _listPlayers : new List<PokerPlayerController>(dataUpdateGame.players); 
+                return _listPlayers;
+            } 
         }
 
         public PokerPlayerController YourController
         {
-            get 
-            {
-                return ListPlayer.Find(p => p.userName == Puppet.API.Client.APIUser.GetUserInformation().info.userName);
-            }
+            get  { return ListPlayer.Find(p => p.userName == Puppet.API.Client.APIUser.GetUserInformation().info.userName); }
         }
 
         internal PokerSide GetSide(PokerPlayerController player)
