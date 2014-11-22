@@ -20,5 +20,9 @@ namespace Puppet
         }
 
         protected abstract void Init();
+
+        public virtual void ResetSingleton() {
+            _instance = null;
+        }
     }
 }

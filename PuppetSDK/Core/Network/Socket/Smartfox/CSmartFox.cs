@@ -13,6 +13,7 @@ using Puppet.Core.Network.Socket;
 using System.Reflection;
 using Sfs2X.Util;
 using Sfs2X.Logging;
+using System.Text;
 
 namespace Puppet.Core.Network.Socket
 {
@@ -115,12 +116,12 @@ namespace Puppet.Core.Network.Socket
             {
                 object obj = evt.Params[key];
                 if(obj is SFSObject)
-                    Logger.Log("SFServer [" + key + "]:", ((SFSObject)evt.Params[key]).GetDump(), ELogColor.CYAN);
+                {
+                    SFSObject sfsObject = (SFSObject)obj;
+                    Logger.Log("SFServer [" + key + "]:", sfsObject.GetDump(), ELogColor.CYAN);
+                    Logger.Log("JsonFormat =>\n", new JsonFormatter(Utility.SFSObjectToString(sfsObject)).Format(), ELogColor.CYAN);
+                }
             }
-            //if(evt.Params.Contains("params"))
-            //    Logger.Log("SFServer [params]:", ((SFSObject)evt.Params["params"]).GetDump(), ELogColor.CYAN);
-            //if (evt.Params.Contains("data"))
-            //    Logger.Log("SFServer [data]:", ((SFSObject)evt.Params["data"]).GetDump(), ELogColor.CYAN);
 
             ISocketResponse response = new SFSocketResponse(evt);
 

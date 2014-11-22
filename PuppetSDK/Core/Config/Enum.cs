@@ -44,6 +44,8 @@ namespace Puppet
         Chip,
         [AttributeAsset("gold")]
         Gold,
+        [AttributeAsset("exp")]
+        Experience,
     }
 
     public enum ECardRank

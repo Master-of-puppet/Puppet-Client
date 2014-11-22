@@ -24,5 +24,25 @@ namespace Puppet.Core.Model
             this.info = info;
             this.assets = assets;
         }
+
+        public void UpdateInfo(DataUser newInfo, DataAssets newAssets)
+        {
+            if(info != null)
+                this.info = info;
+
+            if (newAssets != null && newAssets.content != null)
+            {
+                List<DataAssetItem> currentContent = new List<DataAssetItem>(assets.content);
+                foreach (DataAssetItem item in newAssets.content)
+                {
+                    DataAssetItem findItem = currentContent.Find(c => c.assetType == item.assetType);
+                    if (findItem == null)
+                        currentContent.Add(item);
+                    else
+                        findItem = item;
+                }
+                assets.content = currentContent.ToArray();
+            }
+        }
     }
 }

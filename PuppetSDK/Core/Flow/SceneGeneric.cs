@@ -107,6 +107,10 @@ namespace Puppet.Core.Flow
         {
             SceneHandler.Instance.Scene_GoTo(EScene.LoginScreen, string.Empty);
             PuMain.Socket.Disconnect();
+
+            UserHandler.Instance.ResetSingleton();
+            RoomHandler.Instance.ResetSingleton();
+            PuGlobal.Instance.ResetSingleton();
         }
 
         internal void GetDailyGift()

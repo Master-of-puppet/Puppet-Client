@@ -133,6 +133,7 @@
     <Compile Include="Utils\Thread\SimpleThread.cs" />
     <Compile Include="Utils\Thread\ThreadHandler.cs" />
     <Compile Include="Utils\Utility\AOTSafe.cs" />
+    <Compile Include="Utils\Utility\JsonFormatter.cs" />
     <Compile Include="Utils\Utility\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
