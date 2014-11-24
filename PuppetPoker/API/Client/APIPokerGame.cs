@@ -48,5 +48,10 @@ namespace Puppet.API.Client
         {
             PuMain.Socket.Request(RequestPool.SetAutoBuy(autoBuy));
         }
+
+        public static void StandUp()
+        {
+            PuMain.Socket.Request(RequestPool.GetStandUpRequest());
+        }
     }
 }

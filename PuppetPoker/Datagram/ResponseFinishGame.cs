@@ -50,6 +50,8 @@ namespace Puppet.Poker.Datagram
     {
         public int[] cards { get; set; }
         public string userName { get; set; }
+        public string ranking { get; set; }
+        public int rankingId { get; set; }
 
         public ResponseFinishCardPlayer()
              : base ()
