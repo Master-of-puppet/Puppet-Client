@@ -39,5 +39,10 @@ namespace Puppet.API.Client
         {
             HttpPool.GetInfoRecharge(callback);
         }
+
+        public static DataLobby SelectedLobby()
+        {
+            return PuGlobal.Instance.SelectedLobby;
+        }
     }
 }

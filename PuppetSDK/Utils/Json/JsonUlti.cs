@@ -81,19 +81,6 @@ namespace Puppet.Utils
                 }
             }
         }
-
-        public static string DecodeFromUtf8(this string srcString)
-        {
-            //// read the string as UTF-8 bytes.
-            //byte[] encodedBytes = Encoding.UTF8.GetBytes(utf8String);
-            //// convert them into unicode bytes.
-            //byte[] unicodeBytes = Encoding.Convert(Encoding.UTF8, Encoding.Unicode, encodedBytes);
-            //// builds the converted string.
-            //return Encoding.Unicode.GetString(encodedBytes);
-            // copy the string as UTF-8 bytes.
-            byte[] utf8String = Encoding.UTF8.GetBytes(srcString);
-            return Encoding.UTF8.GetString(utf8String);
-        }
     }
 }
 
