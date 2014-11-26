@@ -18,15 +18,13 @@ namespace Puppet.Poker
         public const PokerSide DEFAULT_SIDE_MAIN_PLAYER = PokerSide.Slot_1;
         public int MAX_PLAYER_IN_GAME = 9;
 
-        internal ResponseUpdateGame dataUpdateGame;
-        internal ResponseUpdateRoomMaster dataRoomMaster;
-        internal ResponseUpdateGameState dataGameState;
-        internal ResponsePlayerListChanged dataPlayerListChanged;
-
         List<KeyValuePair<string, object>> queueWaitingSendClient;
         bool isClientWasListener;
-        List<PokerPlayerController> _listPlayers = new List<PokerPlayerController>();
-        List<PokerPlayerController> _listWaitingPlayers = new List<PokerPlayerController>();
+        /// <summary>
+        /// Thông tin người chơi trong game
+        /// </summary>
+        Dictionary<string, PokerPlayerController> _dictPlayerInGame = new Dictionary<string,PokerPlayerController>();
+        double _maxCurrentBetting = 0;
 
         public override void EnterGameplay()
         {
@@ -34,10 +32,7 @@ namespace Puppet.Poker
             queueWaitingSendClient = new List<KeyValuePair<string, object>>();
         }
 
-        public override void ExitGameplay()
-        {
-
-        }
+        public override void ExitGameplay() {}
 
         public override void ProcessEvents(string eventType, ISocketResponse onEventResponse)
         {
@@ -51,28 +46,35 @@ namespace Puppet.Poker
                     {
                         case "updateGameToWaitingPlayer":
                         case "updateGame":
-                            dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
+                            if (command == "updateGameToWaitingPlayer")
+                                ResetCurrentBetting();
+                            ResponseUpdateGame dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
+                            RefreshDataPlayer(dataUpdateGame.players);
                             DispathToClient(command, dataUpdateGame);
                             break;
                         case "updateGameState":
-                            dataGameState = SFSDataModelFactory.CreateDataModel<ResponseUpdateGameState>(messageObj);
+                            ResponseUpdateGameState dataGameState = SFSDataModelFactory.CreateDataModel<ResponseUpdateGameState>(messageObj);
                             DispathToClient(command, dataGameState);
                             break;
                         case "updateRoomMaster":
-                            dataRoomMaster = SFSDataModelFactory.CreateDataModel<ResponseUpdateRoomMaster>(messageObj);
+                            ResponseUpdateRoomMaster dataRoomMaster = SFSDataModelFactory.CreateDataModel<ResponseUpdateRoomMaster>(messageObj);
+                            RefreshDataPlayer(dataRoomMaster.player);
                             DispathToClient(command, dataRoomMaster);
                             break;
                         case "playerListChanged" :
-                            dataPlayerListChanged = SFSDataModelFactory.CreateDataModel<ResponsePlayerListChanged>(messageObj);
+                            ResponsePlayerListChanged dataPlayerListChanged = SFSDataModelFactory.CreateDataModel<ResponsePlayerListChanged>(messageObj);
                             UpdatePlayerInRoom(dataPlayerListChanged);
                             DispathToClient(command, dataPlayerListChanged);
                             break;
                         case "updateHand":
                             ResponseUpdateHand dataUpdateHand = SFSDataModelFactory.CreateDataModel<ResponseUpdateHand>(messageObj);
+                            RefreshDataPlayer(dataUpdateHand.players);
                             DispathToClient(command, dataUpdateHand);
                             break;
                         case "turn":
                             ResponseUpdateTurnChange dataTurn = SFSDataModelFactory.CreateDataModel<ResponseUpdateTurnChange>(messageObj);
+                            RefreshDataPlayer(dataTurn.fromPlayer, dataTurn.toPlayer);
+                            OnTurnChange(dataTurn);
                             DispathToClient(command, dataTurn);
                             break;
                         case "finishGame":
@@ -85,10 +87,12 @@ namespace Puppet.Poker
                             break;
                         case "udpatePot":
                             ResponseUpdatePot dataPot = SFSDataModelFactory.CreateDataModel<ResponseUpdatePot>(messageObj);
+                            ResetCurrentBetting();
                             DispathToClient(command, dataPot);
                             break;
                         case "updateUserInfo" :
                             ResponseUpdateUserInfo dataUserInfo = SFSDataModelFactory.CreateDataModel<ResponseUpdateUserInfo>(messageObj);
+                            RefreshDataPlayer(dataUserInfo.userInfo);
                             DispathToClient(command, dataUserInfo);
                             break;
                         case "error" :
@@ -100,6 +104,7 @@ namespace Puppet.Poker
             }
         }
 
+        #region Dispath To Client
         private void DispathToClient(string command, object data)
         {
             if (isClientWasListener)
@@ -116,48 +121,106 @@ namespace Puppet.Poker
 
             isClientWasListener = true;
         }
+        #endregion
 
+        #region Betting
+        public double MaxCurrentBetting
+        {
+            get { return _maxCurrentBetting; }
+            private set { if (_maxCurrentBetting < value) _maxCurrentBetting = value; }
+        }
+
+        void OnTurnChange(ResponseUpdateTurnChange dataTurn)
+        {
+            if (dataTurn != null)
+            {
+                CurrentPlayer = dataTurn.toPlayer;
+                LastPlayer = dataTurn.fromPlayer;
+
+                if (CurrentPlayer != null)
+                    MaxCurrentBetting = CurrentPlayer.currentBet;
+                if (LastPlayer != null)
+                    MaxCurrentBetting = LastPlayer.currentBet;
+                if (dataTurn.firstTurn && dataTurn.bigBlind != null)
+                    MaxCurrentBetting = dataTurn.bigBlind.currentBet;
+            }
+        }
+        
+        void ResetCurrentBetting()
+        {
+            _maxCurrentBetting = 0;
+            ListPlayer.ForEach(p => { p.currentBet = 0; p.DispatchAttribute("currentBet"); });
+        }
+        #endregion
+
+        #region Player Controller
         void UpdatePlayerInRoom(ResponsePlayerListChanged dataPlayerChange)
         {
             switch (dataPlayerChange.GetActionState())
             {
                 case PokerPlayerChangeAction.playerAdded:
-                    _listPlayers.Add(dataPlayerListChanged.player);
+                    RefreshDataPlayer(dataPlayerChange.player);
                     break;
                 case PokerPlayerChangeAction.playerRemoved:
                 case PokerPlayerChangeAction.playerQuitGame:
-                    int indexP = _listPlayers.FindIndex(p => p.userName == dataPlayerListChanged.player.userName);
-                    if (indexP >= 0) _listPlayers.RemoveAt(indexP);
-                    break;
-                case PokerPlayerChangeAction.waitingPlayerAdded:
-                    _listWaitingPlayers.Add(dataPlayerChange.player);
-                    break;
-                case PokerPlayerChangeAction.waitingPlayerRemoved:
-                    int indexW = _listWaitingPlayers.FindIndex(p => p.userName == dataPlayerListChanged.player.userName);
-                    if (indexW >= 0) _listWaitingPlayers.RemoveAt(indexW);
+                    _dictPlayerInGame.Remove(dataPlayerChange.player.userName);
                     break;
             }
         }
 
-        /// <summary>
-        /// Chỉ mới lưu để sử dụng username là chính.
-        /// </summary>
+        void RefreshDataPlayer(params PokerPlayerController [] players)
+        {
+            if (players != null && players.Length > 0)
+            {
+                foreach (PokerPlayerController p in players)
+                {
+                    if (p == null) 
+                        continue;
+
+                    if (!_dictPlayerInGame.ContainsKey(p.userName))
+                        _dictPlayerInGame.Add(p.userName, p);
+                    else
+                        _dictPlayerInGame[p.userName].UpdateData(p);
+
+                    if (_dictPlayerInGame[p.userName].userName == Puppet.API.Client.APIUser.GetUserInformation().info.userName)
+                        MainPlayer = _dictPlayerInGame[p.userName];
+                }
+            }
+        }
+
         public List<PokerPlayerController> ListPlayer 
         { 
-            get {
-                //return _listPlayers.Count != 0 ? _listPlayers : new List<PokerPlayerController>(dataUpdateGame.players); 
-                return _listPlayers;
-            } 
+            get { return _dictPlayerInGame.Select(p => p.Value).ToList(); } 
         }
 
-        public PokerPlayerController YourController
+        public PokerPlayerController GetPlayer(string userName)
         {
-            get  { return ListPlayer.Find(p => p.userName == Puppet.API.Client.APIUser.GetUserInformation().info.userName); }
+            return ListPlayer.Find(p => p.userName == userName);
         }
 
+        public PokerPlayerController MainPlayer
+        {
+            get;
+            private set;
+        }
+
+        public PokerPlayerController LastPlayer
+        {
+            get; 
+            private set;
+        }
+
+        public PokerPlayerController CurrentPlayer
+        {
+            get;
+            private set;
+        }
+        #endregion
+
+        #region Action Command
         internal PokerSide GetSide(PokerPlayerController player)
         {
-            PokerPlayerController your = YourController;
+            PokerPlayerController your = GetPlayer(Puppet.API.Client.APIUser.GetUserInformation().info.userName);
             if (your == null || your.slotIndex == (int)DEFAULT_SIDE_MAIN_PLAYER || your.slotIndex >= MAX_PLAYER_IN_GAME)
                 return (PokerSide)player.slotIndex;
 
@@ -177,27 +240,16 @@ namespace Puppet.Poker
             return (PokerSide)slot;
         }
 
-        internal void SendSitDown(int slotIndex, double money)
-        {
-            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetSitRequest(PokerRequestPlay.SIT, slotIndex, money));
-        }
-
-        internal void SendPlayRequest(PokerRequestPlay request, double value)
-        {
-            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetPlayRequest(request, value));
-        }
-
         internal void AutoSitDown(double money)
         {
             List<int> listIndex = (from player in ListPlayer select player.slotIndex).ToList<int>();
             int minValue = -1;
             for (int i = 0; i < Puppet.API.Client.APIPokerGame.GetPokerGameplay().MAX_PLAYER_IN_GAME; i++)
-            {
                 if (listIndex.Contains(i) == false) { minValue = i; break; }
-            }
 
             if (minValue >= 0)
-                SendSitDown(minValue, money);
+                API.Client.APIPokerGame.SitDown(minValue, money);
         }
+        #endregion
     }
 }

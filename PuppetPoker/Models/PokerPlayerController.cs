@@ -1,6 +1,7 @@
 ﻿using Puppet.Core.Model;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Puppet.Poker.Models
 {

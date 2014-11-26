@@ -13,6 +13,9 @@ namespace Puppet.Core.Model
     {
         //public const string objectTypeFieldName = "o_type";
 
+        public event Action onDataChanged;
+        public event Action<string> onAttributeChange;
+
         public Dictionary<string, object> ToDictionary()
         {
             var result = new Dictionary<string, object>();
@@ -94,6 +97,26 @@ namespace Puppet.Core.Model
                 }
             }
             return obj;
+        }
+
+        public void UpdateData(AbstractData data)
+        {
+            this.CopyPropertiesFrom(data, (propertyName) =>
+            {
+                if (onAttributeChange != null)
+                    onAttributeChange(propertyName);
+            });
+
+            if (onDataChanged != null)
+                onDataChanged();
+        }
+
+        public void DispatchAttribute(string propertyName)
+        {
+            if (onAttributeChange != null)
+                onAttributeChange(propertyName);
+            if (onDataChanged != null)
+                onDataChanged();
         }
     }
 }

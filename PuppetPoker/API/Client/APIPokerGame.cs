@@ -21,12 +21,12 @@ namespace Puppet.API.Client
 
         public static void SitDown(int slotIndex, double money)
         {
-            PokerMain.Instance.game.SendSitDown(slotIndex, money);
+            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetSitRequest(PokerRequestPlay.SIT, slotIndex, money));
         }
 
         public static void PlayRequest(PokerRequestPlay request, double value)
         {
-            PokerMain.Instance.game.SendPlayRequest(request, value);
+            PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetPlayRequest(request, value));
         }
 
         public static void AutoSitDown(double money)

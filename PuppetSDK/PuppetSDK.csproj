@@ -59,6 +59,7 @@
     <Compile Include="Core\Model\Base\AbstractData.cs" />
     <Compile Include="Core\Model\Base\DataModel.cs" />
     <Compile Include="Core\Model\Base\IDataModel.cs" />
+    <Compile Include="Core\Model\Base\ModelPool.cs" />
     <Compile Include="Core\Model\Common\AbstractGameplay.cs" />
     <Compile Include="Core\Model\Common\IGameplay.cs" />
     <Compile Include="Core\Model\Common\IScene.cs" />
