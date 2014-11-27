@@ -16,9 +16,9 @@ namespace Puppet
     {
         static IList<PropertyMap> GetMatchingProperties(Type targetType, Type sourceType)
         {
-            var sourceProperties = sourceType.GetProperties();
-            var targetProperties = targetType.GetProperties();
- 
+            var sourceProperties = sourceType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            var targetProperties = targetType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
             var properties = (from s in sourceProperties
                               from t in targetProperties
                               where s.Name == t.Name &&
@@ -26,15 +26,16 @@ namespace Puppet
                                     t.CanWrite && 
                                     s.PropertyType.IsPublic && 
                                     t.PropertyType.IsPublic &&
-                                    s.PropertyType == t.PropertyType &&
-                                    (
-                                      (s.PropertyType.IsValueType &&
-                                       t.PropertyType.IsValueType
-                                      ) ||
-                                      (s.PropertyType == typeof(string) &&
-                                       t.PropertyType == typeof(string)
-                                      )
-                                    )
+                                    s.PropertyType == t.PropertyType 
+                                    //&&
+                                    //(
+                                    //  (s.PropertyType.IsValueType &&
+                                    //   t.PropertyType.IsValueType
+                                    //  ) ||
+                                    //  (s.PropertyType == typeof(string) &&
+                                    //   t.PropertyType == typeof(string)
+                                    //  )
+                                    //)
                               select new PropertyMap
                                          {
                                              SourceProperty = s,

@@ -99,7 +99,7 @@ namespace Puppet.Core.Model
             return obj;
         }
 
-        public void UpdateData(AbstractData data)
+        public void UpdateData(IDataModel data)
         {
             this.CopyPropertiesFrom(data, (propertyName) =>
             {
