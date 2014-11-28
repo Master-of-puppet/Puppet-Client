@@ -30,6 +30,8 @@ namespace Puppet.Poker
         {
             isClientWasListener = false;
             queueWaitingSendClient = new List<KeyValuePair<string, object>>();
+            _dictPlayerInGame = new Dictionary<string, PokerPlayerController>();
+            _maxCurrentBetting = 0;
         }
 
         public override void ExitGameplay() {}
@@ -120,6 +122,7 @@ namespace Puppet.Poker
             queueWaitingSendClient.Clear();
 
             isClientWasListener = true;
+
         }
         #endregion
 

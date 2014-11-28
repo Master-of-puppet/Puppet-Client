@@ -38,6 +38,17 @@ namespace Puppet.Core.Flow
 
         public void BeginScene()
         {
+            if(ScenePockerLobby.Instance.lastUpdateGroupChildren != null)
+            {
+                foreach(DataLobby lobby in ScenePockerLobby.Instance.lastUpdateGroupChildren)
+                {
+                    if(lobby.roomId == RoomHandler.Instance.Current.Id)
+                    {
+                        PuGlobal.Instance.SelectedLobby = lobby;
+                        break;
+                    }
+                }
+            }
             PuMain.GameLogic.EnterGameplay();
         }
 
@@ -49,7 +60,6 @@ namespace Puppet.Core.Flow
         protected override void Init()
         {
         }
-
 
         public void ProcessEvents(string eventType, Network.Socket.ISocketResponse onEventResponse)
         {

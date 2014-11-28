@@ -22,6 +22,8 @@ namespace Puppet.Core.Flow
         DelegateAPICallbackDataLobby onGetAllLobby;
         DelegateAPICallbackDataLobby onGetGroupChildrenCallback;
 
+        internal List<DataLobby> lastUpdateGroupChildren;
+
         #region DEFAULT NOT MODIFY
         public string ServerScene
         {
@@ -75,7 +77,10 @@ namespace Puppet.Core.Flow
                     if (responseLobby.command == "updateChildren")
                         DispathGetAllLobby(true, string.Empty, new List<DataLobby>(responseLobby.children));
                     else if (responseLobby.command == "updateGroupChildren")
-                        DispathGetGroupChildren(true, string.Empty, new List<DataLobby>(responseLobby.children));
+                    {
+                        lastUpdateGroupChildren = new List<DataLobby>(responseLobby.children);
+                        DispathGetGroupChildren(true, string.Empty, lastUpdateGroupChildren);
+                    }
                 }
             }
         }

@@ -14,7 +14,7 @@ namespace Puppet
         internal DataGame SelectedGame;
         internal DataChannel SelectedChannel;
         internal List<DataChannel> GroupsLobby;
-        internal DataLobby SelectedLobby;
+        internal DataLobby SelectedLobby = new DataLobby();
         internal DataDailyGift CurrentDailyGift;
 
         protected override void Init()
