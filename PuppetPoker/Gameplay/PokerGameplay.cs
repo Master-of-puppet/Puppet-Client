@@ -28,6 +28,7 @@ namespace Puppet.Poker
 
         public override void EnterGameplay()
         {
+            MainPlayer = LastPlayer = CurrentPlayer = null;
             isClientWasListener = false;
             queueWaitingSendClient = new List<KeyValuePair<string, object>>();
             _dictPlayerInGame = new Dictionary<string, PokerPlayerController>();
@@ -75,8 +76,8 @@ namespace Puppet.Poker
                             break;
                         case "turn":
                             ResponseUpdateTurnChange dataTurn = SFSDataModelFactory.CreateDataModel<ResponseUpdateTurnChange>(messageObj);
+                            UpdatePlayerData(dataTurn);
                             RefreshDataPlayer(dataTurn.fromPlayer, dataTurn.toPlayer);
-                            OnTurnChange(dataTurn);
                             DispathToClient(command, dataTurn);
                             break;
                         case "finishGame":
@@ -133,12 +134,14 @@ namespace Puppet.Poker
             private set { if (_maxCurrentBetting < value) _maxCurrentBetting = value; }
         }
 
-        void OnTurnChange(ResponseUpdateTurnChange dataTurn)
+        void UpdatePlayerData(ResponseUpdateTurnChange dataTurn)
         {
             if (dataTurn != null)
             {
-                CurrentPlayer = dataTurn.toPlayer;
-                LastPlayer = dataTurn.fromPlayer;
+                if (dataTurn.toPlayer != null)
+                    CurrentPlayer = (PokerPlayerController)dataTurn.toPlayer.CloneObject();
+                if(dataTurn.fromPlayer != null)
+                    LastPlayer = (PokerPlayerController)dataTurn.fromPlayer.CloneObject();
 
                 if (CurrentPlayer != null)
                     MaxCurrentBetting = CurrentPlayer.currentBet;
@@ -183,11 +186,15 @@ namespace Puppet.Poker
                     if (!_dictPlayerInGame.ContainsKey(p.userName))
                         _dictPlayerInGame.Add(p.userName, p);
                     else
-                        _dictPlayerInGame[p.userName].UpdateData(p);
+                        _dictPlayerInGame[p.userName].UpdateData(p, false);
 
                     if (_dictPlayerInGame[p.userName].userName == Puppet.API.Client.APIUser.GetUserInformation().info.userName)
                         MainPlayer = _dictPlayerInGame[p.userName];
                 }
+
+                ListPlayer.ForEach(p => {
+                    if (p != null) p.DispatchAttribute(string.Empty);
+                });
             }
         }
 

@@ -99,9 +99,8 @@ namespace Puppet
             }
             else if (type.IsClass)
             {
-
                 object toret = Activator.CreateInstance(obj.GetType());
-                FieldInfo[] fields = type.GetFields(BindingFlags.Public |
+                FieldInfo[] fields =  type.GetFields(BindingFlags.Public |
                             BindingFlags.NonPublic | BindingFlags.Instance);
                 foreach (FieldInfo field in fields)
                 {
@@ -110,6 +109,17 @@ namespace Puppet
                         continue;
                     field.SetValue(toret, CloneObject(fieldValue));
                 }
+
+                PropertyInfo[] propertices = type.GetProperties(BindingFlags.Public |
+                            BindingFlags.NonPublic | BindingFlags.Instance);
+                foreach (PropertyInfo property in propertices)
+                {
+                    object propertyValue = property.GetValue(obj, null);
+                    if (propertyValue == null)
+                        continue;
+                    property.SetValue(toret, CloneObject(propertyValue), null);
+                }
+
                 return toret;
             }
             else

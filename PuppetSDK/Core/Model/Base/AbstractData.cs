@@ -99,15 +99,15 @@ namespace Puppet.Core.Model
             return obj;
         }
 
-        public void UpdateData(IDataModel data)
+        public void UpdateData(IDataModel data, bool autoDispatch = true)
         {
             this.CopyPropertiesFrom(data, (propertyName) =>
             {
-                if (onAttributeChange != null)
+                if (autoDispatch && onAttributeChange != null)
                     onAttributeChange(propertyName);
             });
 
-            if (onDataChanged != null)
+            if (autoDispatch && onDataChanged != null)
                 onDataChanged();
         }
 
