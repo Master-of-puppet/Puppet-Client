@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Timers;
 
 namespace Puppet.Poker
 {
@@ -23,16 +24,22 @@ namespace Puppet.Poker
         /// <summary>
         /// Thông tin người chơi trong game
         /// </summary>
-        Dictionary<string, PokerPlayerController> _dictPlayerInGame = new Dictionary<string,PokerPlayerController>();
+        Dictionary<string, PokerPlayerController> _dictAllPlayers = new Dictionary<string,PokerPlayerController>();
         double _maxCurrentBetting = 0;
+        List<string> _listPlayerInGame = new List<string>();
+        List<string> _listPlayerWaitNextGame = new List<string>();
+        string mainPlayerUsername = string.Empty;
 
         public override void EnterGameplay()
         {
             MainPlayer = LastPlayer = CurrentPlayer = null;
             isClientWasListener = false;
             queueWaitingSendClient = new List<KeyValuePair<string, object>>();
-            _dictPlayerInGame = new Dictionary<string, PokerPlayerController>();
+            _dictAllPlayers = new Dictionary<string, PokerPlayerController>();
             _maxCurrentBetting = 0;
+            _listPlayerInGame = new List<string>();
+            _listPlayerWaitNextGame = new List<string>();
+            mainPlayerUsername = Puppet.API.Client.APIUser.GetUserInformation().info.userName;
         }
 
         public override void ExitGameplay() {}
@@ -53,6 +60,7 @@ namespace Puppet.Poker
                                 ResetCurrentBetting();
                             ResponseUpdateGame dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
                             RefreshDataPlayer(dataUpdateGame.players);
+                            RefreshListPlayerInGame(false, dataUpdateGame.players);
                             DispathToClient(command, dataUpdateGame);
                             break;
                         case "updateGameState":
@@ -72,6 +80,7 @@ namespace Puppet.Poker
                         case "updateHand":
                             ResponseUpdateHand dataUpdateHand = SFSDataModelFactory.CreateDataModel<ResponseUpdateHand>(messageObj);
                             RefreshDataPlayer(dataUpdateHand.players);
+                            RefreshListPlayerInGame(true, dataUpdateHand.players);
                             DispathToClient(command, dataUpdateHand);
                             break;
                         case "turn":
@@ -82,6 +91,7 @@ namespace Puppet.Poker
                             break;
                         case "finishGame":
                             ResponseFinishGame dataFinishGame = SFSDataModelFactory.CreateDataModel<ResponseFinishGame>(messageObj);
+                            HandleFinishGame(dataFinishGame);
                             DispathToClient(command, dataFinishGame);
                             break;
                         case "waitingDealCard":
@@ -134,6 +144,19 @@ namespace Puppet.Poker
             private set { if (_maxCurrentBetting < value) _maxCurrentBetting = value; }
         }
 
+        void HandleFinishGame(ResponseFinishGame dataFinishGame)
+        {
+            //Timer t = new Timer(dataFinishGame.time);
+            //t.Interval = dataFinishGame.time;
+            //t.Enabled = true;
+            //t.Elapsed += (object source, ElapsedEventArgs e) =>
+            //{
+                ResetListPlayerInGame();
+            //    t.Enabled = false;
+            //    t.Dispose();
+            //};
+        }
+
         void UpdatePlayerData(ResponseUpdateTurnChange dataTurn)
         {
             if (dataTurn != null)
@@ -166,10 +189,14 @@ namespace Puppet.Poker
             {
                 case PokerPlayerChangeAction.playerAdded:
                     RefreshDataPlayer(dataPlayerChange.player);
+                    if (ListPlayerInGame.Count > 0)
+                        _listPlayerWaitNextGame.Add(dataPlayerChange.player.userName);
                     break;
                 case PokerPlayerChangeAction.playerRemoved:
                 case PokerPlayerChangeAction.playerQuitGame:
-                    _dictPlayerInGame.Remove(dataPlayerChange.player.userName);
+                    _dictAllPlayers.Remove(dataPlayerChange.player.userName);
+                    _listPlayerInGame.Remove(dataPlayerChange.player.userName);
+                    _listPlayerWaitNextGame.Remove(dataPlayerChange.player.userName);
                     break;
             }
         }
@@ -183,13 +210,13 @@ namespace Puppet.Poker
                     if (p == null) 
                         continue;
 
-                    if (!_dictPlayerInGame.ContainsKey(p.userName))
-                        _dictPlayerInGame.Add(p.userName, p);
+                    if (!_dictAllPlayers.ContainsKey(p.userName))
+                        _dictAllPlayers.Add(p.userName, p);
                     else
-                        _dictPlayerInGame[p.userName].UpdateData(p, false);
+                        _dictAllPlayers[p.userName].UpdateData(p, false);
 
-                    if (_dictPlayerInGame[p.userName].userName == Puppet.API.Client.APIUser.GetUserInformation().info.userName)
-                        MainPlayer = _dictPlayerInGame[p.userName];
+                    if (_dictAllPlayers[p.userName].userName == mainPlayerUsername)
+                        MainPlayer = _dictAllPlayers[p.userName];
                 }
 
                 ListPlayer.ForEach(p => {
@@ -198,14 +225,54 @@ namespace Puppet.Poker
             }
         }
 
+        void RefreshListPlayerInGame(bool ignoreState, params PokerPlayerController[] players)
+        {
+            if (players != null && players.Length > 0)
+            {
+                Array.ForEach<PokerPlayerController>(players, p =>
+                {
+                    if (p != null 
+                        && (ignoreState || p.GetPlayerState() != PokerPlayerState.none)
+                        && !_listPlayerInGame.Contains(p.userName))
+                        _listPlayerInGame.Add(p.userName);
+                });
+            }
+        }
+        void ResetListPlayerInGame()
+        {
+            _listPlayerInGame.Clear();
+            _listPlayerWaitNextGame.Clear();
+            ListPlayer.ForEach(p => { if (p != null) p.DispatchAttribute(string.Empty); });
+        }
+
         public List<PokerPlayerController> ListPlayer 
         { 
-            get { return _dictPlayerInGame.Select(p => p.Value).ToList(); } 
+            get { return _dictAllPlayers.Select(p => p.Value).ToList(); } 
+        }
+
+        public List<string> ListPlayerInGame
+        {
+            get { return _listPlayerInGame; }
+        }
+
+        public List<string> ListPlayerWaitNextGame
+        {
+            get { return _listPlayerWaitNextGame; }
         }
 
         public PokerPlayerController GetPlayer(string userName)
         {
             return ListPlayer.Find(p => p.userName == userName);
+        }
+
+        public bool IsMainPlayerInGame
+        {
+            get { return IsPlayerInGame(mainPlayerUsername); }
+        }
+
+        public bool IsPlayerInGame(string userName)
+        {
+            return ListPlayerInGame.Contains(userName);
         }
 
         public PokerPlayerController MainPlayer
