@@ -29,6 +29,7 @@ namespace Puppet.Poker
         List<string> _listPlayerInGame = new List<string>();
         List<string> _listPlayerWaitNextGame = new List<string>();
         string mainPlayerUsername = string.Empty;
+        string _dealerName = string.Empty;
 
         public override void EnterGameplay()
         {
@@ -81,6 +82,7 @@ namespace Puppet.Poker
                             ResponseUpdateHand dataUpdateHand = SFSDataModelFactory.CreateDataModel<ResponseUpdateHand>(messageObj);
                             RefreshDataPlayer(dataUpdateHand.players);
                             RefreshListPlayerInGame(true, dataUpdateHand.players);
+                            UpdateHand(dataUpdateHand);
                             DispathToClient(command, dataUpdateHand);
                             break;
                         case "turn":
@@ -136,6 +138,13 @@ namespace Puppet.Poker
 
         }
         #endregion
+
+        void UpdateHand(ResponseUpdateHand dataUpdateHand)
+        {
+            this._dealerName = dataUpdateHand.dealer;
+        }
+
+        public string Dealer { get { return _dealerName; } }
 
         #region Betting
         public double MaxCurrentBetting
