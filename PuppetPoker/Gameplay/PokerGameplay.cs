@@ -57,8 +57,6 @@ namespace Puppet.Poker
                     {
                         case "updateGameToWaitingPlayer":
                         case "updateGame":
-                            if (command == "updateGameToWaitingPlayer")
-                                ResetCurrentBetting();
                             ResponseUpdateGame dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
                             RefreshDataPlayer(dataUpdateGame.players);
                             RefreshListPlayerInGame(false, dataUpdateGame.players);
