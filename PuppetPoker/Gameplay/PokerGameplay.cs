@@ -126,14 +126,19 @@ namespace Puppet.Poker
                 queueWaitingSendClient.Add(new KeyValuePair<string, object>(command, data));
         }
 
-        internal void StartListenerEvent()
+        public void StartListenerEvent()
         {
+            //Logger.Log(ELogColor.BLUE, "PokerGameplay -> StartListenerEvent");
             foreach (KeyValuePair<string, object> keyAndValue in queueWaitingSendClient)
                 EventDispatcher.SetGameEvent(keyAndValue.Key, keyAndValue.Value);
             queueWaitingSendClient.Clear();
-
             isClientWasListener = true;
+        }
 
+        public void StopListenerEvent()
+        {
+            //Logger.Log(ELogColor.BLUE, "PokerGameplay -> StopListenerEvent");
+            isClientWasListener = false;
         }
         #endregion
 
