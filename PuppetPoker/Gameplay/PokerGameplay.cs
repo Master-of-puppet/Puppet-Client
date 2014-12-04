@@ -128,17 +128,19 @@ namespace Puppet.Poker
 
         public void StartListenerEvent()
         {
-            //Logger.Log(ELogColor.BLUE, "PokerGameplay -> StartListenerEvent");
             foreach (KeyValuePair<string, object> keyAndValue in queueWaitingSendClient)
                 EventDispatcher.SetGameEvent(keyAndValue.Key, keyAndValue.Value);
             queueWaitingSendClient.Clear();
             isClientWasListener = true;
         }
-
-        public void StopListenerEvent()
+        public void StartFinishGame()
         {
-            //Logger.Log(ELogColor.BLUE, "PokerGameplay -> StopListenerEvent");
             isClientWasListener = false;
+        }
+        public void EndFinishGame()
+        {
+            StartListenerEvent();
+            ResetListPlayerInGame();
         }
         #endregion
 
@@ -158,15 +160,6 @@ namespace Puppet.Poker
 
         void HandleFinishGame(ResponseFinishGame dataFinishGame)
         {
-            //Timer t = new Timer(dataFinishGame.time);
-            //t.Interval = dataFinishGame.time;
-            //t.Enabled = true;
-            //t.Elapsed += (object source, ElapsedEventArgs e) =>
-            //{
-                ResetListPlayerInGame();
-            //    t.Enabled = false;
-            //    t.Dispose();
-            //};
         }
 
         void UpdatePlayerData(ResponseUpdateTurnChange dataTurn)
