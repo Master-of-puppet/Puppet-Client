@@ -19,6 +19,8 @@ namespace Puppet.Poker
         public const PokerSide DEFAULT_SIDE_MAIN_PLAYER = PokerSide.Slot_1;
         public int MAX_PLAYER_IN_GAME = 9;
 
+        public event Action<PokerCard[]> onDealCardsChange;
+
         List<KeyValuePair<string, object>> queueWaitingSendClient;
         bool isClientWasListener;
         /// <summary>
@@ -30,6 +32,8 @@ namespace Puppet.Poker
         List<string> _listPlayerWaitNextGame = new List<string>();
         string mainPlayerUsername = string.Empty;
         string _dealerName = string.Empty;
+        List<PokerCard> _comminityCards = new List<PokerCard>();
+        List<PokerCard> _cardMainPlayer = new List<PokerCard>();
 
         public override void EnterGameplay()
         {
@@ -60,6 +64,7 @@ namespace Puppet.Poker
                             ResponseUpdateGame dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
                             RefreshDataPlayer(dataUpdateGame.players);
                             RefreshListPlayerInGame(false, dataUpdateGame.players);
+                            UpdateCardDeal(dataUpdateGame.dealComminityCards);
                             DispathToClient(command, dataUpdateGame);
                             break;
                         case "updateGameState":
@@ -78,24 +83,28 @@ namespace Puppet.Poker
                             break;
                         case "updateHand":
                             ResponseUpdateHand dataUpdateHand = SFSDataModelFactory.CreateDataModel<ResponseUpdateHand>(messageObj);
+                            UpdateCardMainPlayer(dataUpdateHand.hand);
                             RefreshDataPlayer(dataUpdateHand.players);
                             RefreshListPlayerInGame(true, dataUpdateHand.players);
-                            UpdateHand(dataUpdateHand);
+                            HandleUpdateHand(dataUpdateHand);
                             DispathToClient(command, dataUpdateHand);
                             break;
                         case "turn":
                             ResponseUpdateTurnChange dataTurn = SFSDataModelFactory.CreateDataModel<ResponseUpdateTurnChange>(messageObj);
                             UpdatePlayerData(dataTurn);
+                            UpdateCardDeal(dataTurn.dealComminityCards);
                             RefreshDataPlayer(dataTurn.fromPlayer, dataTurn.toPlayer);
                             DispathToClient(command, dataTurn);
                             break;
                         case "finishGame":
                             ResponseFinishGame dataFinishGame = SFSDataModelFactory.CreateDataModel<ResponseFinishGame>(messageObj);
+                            UpdateCardDeal(dataFinishGame.dealComminityCards);
                             HandleFinishGame(dataFinishGame);
                             DispathToClient(command, dataFinishGame);
                             break;
                         case "waitingDealCard":
                             ResponseWaitingDealCard dataWaitingDealcard = SFSDataModelFactory.CreateDataModel<ResponseWaitingDealCard>(messageObj);
+                            HandleWaitNewGame();
                             DispathToClient(command, dataWaitingDealcard);
                             break;
                         case "udpatePot":
@@ -144,12 +153,56 @@ namespace Puppet.Poker
         }
         #endregion
 
-        void UpdateHand(ResponseUpdateHand dataUpdateHand)
+        void UpdateCardDeal(int [] comminityCards)
+        {
+            if (comminityCards == null || comminityCards.Length == 0) return;
+
+            List<PokerCard> newCards = new List<PokerCard>();
+            for (int i = 0; i < comminityCards.Length; i++)
+            {
+                int cardId = comminityCards[i];
+                if (_comminityCards.Find(c => c.cardId == cardId) != null || newCards.Find(c => c.cardId ==cardId) != null)
+                    continue;
+
+                newCards.Add(new PokerCard(cardId));
+            }
+
+            if (newCards.Count > 0)
+            {
+                _comminityCards.AddRange(newCards);
+                if (onDealCardsChange != null)
+                    onDealCardsChange(newCards.ToArray());
+            }
+        }
+        void UpdateCardMainPlayer(int [] cards)
+        {
+            if(cards != null && cards.Length > 0)
+            {
+                _cardMainPlayer.Clear();
+                for (int i = 0; i < cards.Length;i++ )
+                {
+                    int cardId = cards[i];
+                    _cardMainPlayer = new List<PokerCard>(cardId);
+                }
+            }
+        }
+
+        void HandleUpdateHand(ResponseUpdateHand dataUpdateHand)
         {
             this._dealerName = dataUpdateHand.dealer;
         }
 
+        void HandleWaitNewGame()
+        {
+            _comminityCards.Clear();
+            _cardMainPlayer.Clear();
+        }
+
         public string Dealer { get { return _dealerName; } }
+
+        public List<PokerCard> DealComminityCards { get { return _comminityCards; } }
+
+        public List<PokerCard> CardsMainPlayer { get { return _cardMainPlayer; } }
 
         #region Betting
         public double MaxCurrentBetting
