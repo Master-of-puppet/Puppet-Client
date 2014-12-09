@@ -178,11 +178,10 @@ namespace Puppet.Poker
         {
             if(cards != null && cards.Length > 0)
             {
-                _cardMainPlayer.Clear();
                 for (int i = 0; i < cards.Length;i++ )
                 {
                     int cardId = cards[i];
-                    _cardMainPlayer = new List<PokerCard>(cardId);
+                    _cardMainPlayer.Add(new PokerCard(cardId));
                 }
             }
         }
