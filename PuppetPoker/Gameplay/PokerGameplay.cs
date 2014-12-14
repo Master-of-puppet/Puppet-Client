@@ -28,6 +28,7 @@ namespace Puppet.Poker
         /// </summary>
         Dictionary<string, PokerPlayerController> _dictAllPlayers = new Dictionary<string,PokerPlayerController>();
         double _maxCurrentBetting = 0;
+        SortedDictionary<string, int> _timesInteractiveInRound = new SortedDictionary<string, int>();
         List<string> _listPlayerInGame = new List<string>();
         List<string> _listPlayerWaitNextGame = new List<string>();
         string mainPlayerUsername = string.Empty;
@@ -63,8 +64,11 @@ namespace Puppet.Poker
                         case "updateGame":
                             ResponseUpdateGame dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
                             RefreshDataPlayer(dataUpdateGame.players);
-                            RefreshListPlayerInGame(false, dataUpdateGame.players);
-                            UpdateCardDeal(dataUpdateGame.dealComminityCards);
+                            if (command != "updateGameToWaitingPlayer")
+                            {
+                                RefreshListPlayerInGame(false, dataUpdateGame.players);
+                                UpdateCardDeal(dataUpdateGame.dealComminityCards);
+                            }
                             DispathToClient(command, dataUpdateGame);
                             break;
                         case "updateGameState":
@@ -150,6 +154,7 @@ namespace Puppet.Poker
         {
             StartListenerEvent();
             ResetListPlayerInGame();
+            ResetCurrentBetting();
         }
         #endregion
 
@@ -210,6 +215,11 @@ namespace Puppet.Poker
             private set { if (_maxCurrentBetting < value) _maxCurrentBetting = value; }
         }
 
+        public int GetTimesInteractiveInRound(string userName)
+        {
+            return _timesInteractiveInRound.ContainsKey(userName) ? _timesInteractiveInRound[userName] : 0;
+        }
+
         void HandleFinishGame(ResponseFinishGame dataFinishGame)
         {
         }
@@ -220,8 +230,15 @@ namespace Puppet.Poker
             {
                 if (dataTurn.toPlayer != null)
                     CurrentPlayer = (PokerPlayerController)dataTurn.toPlayer.CloneObject();
-                if(dataTurn.fromPlayer != null)
+                if (dataTurn.fromPlayer != null)
+                {
+                    string fromUsername = dataTurn.fromPlayer.userName;
+                    if (!_timesInteractiveInRound.ContainsKey(fromUsername))
+                        _timesInteractiveInRound.Add(fromUsername, 0);
+                    _timesInteractiveInRound[fromUsername]++;
+
                     LastPlayer = (PokerPlayerController)dataTurn.fromPlayer.CloneObject();
+                }
 
                 if (CurrentPlayer != null)
                     MaxCurrentBetting = CurrentPlayer.currentBet;
@@ -234,6 +251,8 @@ namespace Puppet.Poker
         
         void ResetCurrentBetting()
         {
+            foreach (string userName in _timesInteractiveInRound.Keys)
+                _timesInteractiveInRound[userName] = 0;
             _maxCurrentBetting = 0;
             ListPlayer.ForEach(p => { p.currentBet = 0; p.DispatchAttribute("currentBet"); });
         }
@@ -254,6 +273,10 @@ namespace Puppet.Poker
                     _dictAllPlayers.Remove(dataPlayerChange.player.userName);
                     _listPlayerInGame.Remove(dataPlayerChange.player.userName);
                     _listPlayerWaitNextGame.Remove(dataPlayerChange.player.userName);
+
+                    if (ListPlayerInGame.Count == 0)
+                        EndFinishGame();
+
                     break;
             }
         }
@@ -288,7 +311,7 @@ namespace Puppet.Poker
             {
                 Array.ForEach<PokerPlayerController>(players, p =>
                 {
-                    if (p != null 
+                    if (p != null && players.Length > 0
                         && (ignoreState || p.GetPlayerState() != PokerPlayerState.none)
                         && !_listPlayerInGame.Contains(p.userName))
                         _listPlayerInGame.Add(p.userName);
@@ -300,6 +323,7 @@ namespace Puppet.Poker
             _listPlayerInGame.Clear();
             _listPlayerWaitNextGame.Clear();
             ListPlayer.ForEach(p => { if (p != null) p.DispatchAttribute(string.Empty); });
+            CurrentPlayer = LastPlayer = null;
         }
 
         public List<PokerPlayerController> ListPlayer 
