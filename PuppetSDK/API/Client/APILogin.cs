@@ -135,5 +135,10 @@ namespace Puppet.API.Client
             };
             PuMain.WWWHandler.Request(request, PuMain.Setting.ServerModeService);
         }
+
+        public static void RequestChangePassword(string yourEmail, DelegateAPICallback callback)
+        {
+            HttpPool.RequestChangePassword(yourEmail, callback);
+        }
     }
 }

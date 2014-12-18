@@ -15,5 +15,6 @@ namespace Puppet
         public const string QUICK_REGISTER              = "quickRegister?";
         public const string GET_ACCESS_TOKEN            = "getAccessToken?";
         public const string GET_INFO_RECHARGE           = "getInfoRecharge?";
+        public const string FORGOT_PASSWORD             = "forgotPassword?";
     }
 }

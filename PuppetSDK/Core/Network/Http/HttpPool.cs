@@ -27,6 +27,12 @@ namespace Puppet.Core.Network.Http
             });
         }
 
+        internal static void RequestChangePassword(string yourEmail, DelegateAPICallback callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            Request(Commands.FORGOT_PASSWORD, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "email", yourEmail);
+        }
+
         internal static void ChangeUseInformation(string username, string password, string newpass, DelegateAPICallback callback)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
