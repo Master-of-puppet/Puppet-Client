@@ -6,6 +6,7 @@ using Puppet.Core.Flow;
 using Puppet.Core.Network.Http;
 using Puppet.Core.Model;
 using Puppet.Core;
+using Puppet.Core.Network.Socket;
 
 namespace Puppet.API.Client
 {
@@ -43,6 +44,21 @@ namespace Puppet.API.Client
         public static DataLobby SelectedLobby()
         {
             return PuGlobal.Instance.SelectedLobby;
+        }
+
+        /// <summary>
+        /// Gửi một message đến tất cả những người chơi cùng Room
+        /// </summary>
+        /// <param name="message">Nội dung</param>
+        /// <param name="data">Dữ liệu truyền đi kèm</param>
+        public static void SendPublicMessage(string message, AbstractData data = null)
+        {
+            SceneGeneric.Instance.SendPublicMessage(message, data);
+        }
+
+        public static void SendChat(DataChat data)
+        {
+            PuMain.Socket.Request(RequestPool.GetPublicMessageRequest(DefineKeys.KEY_CHAT_MESSAGE, data));
         }
     }
 }

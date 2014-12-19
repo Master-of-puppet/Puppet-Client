@@ -11,51 +11,58 @@ using Puppet.Core.Flow;
 
 namespace Puppet.Core.Network.Socket
 {
-    public sealed class RequestPool
+    internal sealed class RequestPool
     {
-        public static ISocketRequest GetLoginRequest(string token)
+        internal static ISocketRequest GetLoginRequest(string token)
         {
             ISFSObject obj = new RequestLogin(token).ToSFSObject();
             return new SFSocketRequest(new LoginRequest(string.Empty, string.Empty, string.Empty, obj));
         }
-        
-        public static ISocketRequest GetJoinRoomRequest(RoomInfo room)
+
+        internal static ISocketRequest GetJoinRoomRequest(RoomInfo room)
         {
             ISFSObject obj = room.ToSFSObject();
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_JOIN_ROOM, obj));
         }
 
-        public static ISocketRequest GetRequestPlugin(AbstractData data)
+        internal static ISocketRequest GetRequestPlugin(AbstractData data)
         {
             ISFSObject obj = new RequestPlugin(data).ToSFSObject();
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, RoomHandler.Instance.Current));
         }
 
-        public static ISocketRequest GetRequestGetChidren()
+        internal static ISocketRequest GetRequestGetChidren()
         {
             return GetRequestPlugin(new RequestCommand(Fields.COMMAND_GET_CHIDREN));
         }
 
-        public static ISocketRequest GetRequestGetGroupChildren(string groupName)
+        internal static ISocketRequest GetRequestGetGroupChildren(string groupName)
         {
             return GetRequestPlugin(new RequestGetGroups(Fields.COMMAND_GET_GROUP_CHILDREN, groupName));
         }
 
-        public static ISocketRequest GetRequestCreateLobby(double maxBet, int numberPlayer)
+        internal static ISocketRequest GetRequestCreateLobby(double maxBet, int numberPlayer)
         {
             return GetRequestPlugin(new RequestCreateGame(Fields.COMMAND_CREATE_GAME, PuGlobal.Instance.SelectedChannel.name, PuGlobal.Instance.SelectedGame.roomName, new DataConfigGame(maxBet, numberPlayer)));
         }
 
-        public static ISocketRequest GetDailyGift(DataDailyGift data)
+        internal static ISocketRequest GetDailyGift(DataDailyGift data)
         {
             string pluginName = data.listenerPlugin ?? RequestPlugin.OBSERVER_PLUGIN_VALUE;
             ISFSObject obj = new RequestPlugin(new RequestGetGift(data), pluginName).ToSFSObject();
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj));
         }
 
-        public static ISocketRequest GetLogout()
+        internal static ISocketRequest GetLogout()
         {
             return new SFSocketRequest(new LogoutRequest());
+        }
+
+        internal static ISocketRequest GetPublicMessageRequest(string message, AbstractData data)
+        {
+            ISFSObject obj = SFSObject.NewInstance();
+            if (data != null) obj = data.ToSFSObject();
+            return new SFSocketRequest(new PublicMessageRequest(message, obj, RoomHandler.Instance.Current));
         }
     }
 }

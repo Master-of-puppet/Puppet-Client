@@ -101,6 +101,15 @@ namespace Puppet.Core.Flow
             {
 
             }
+            else if (eventType.Equals(SFSEvent.PUBLIC_MESSAGE))
+            {
+                if (response.Params.Contains("messsage") && response.Params["messsage"] == DefineKeys.KEY_CHAT_MESSAGE)
+                {
+                    ISFSObject obj = (SFSObject)response.Params["data"];
+                    DataChat dataChat = SFSDataModelFactory.CreateDataModel<DataChat>(obj);
+                    PuMain.Dispatcher.SetChatMessage(dataChat);
+                }
+            }
         }
 
         private void DisconnectAndLogin()
@@ -117,6 +126,11 @@ namespace Puppet.Core.Flow
         {
             if (PuGlobal.Instance.CurrentDailyGift != null)
                 PuMain.Socket.Request(RequestPool.GetDailyGift(PuGlobal.Instance.CurrentDailyGift));
+        }
+
+        internal void SendPublicMessage(string message, AbstractData data = null)
+        {
+            PuMain.Socket.Request(RequestPool.GetPublicMessageRequest(message, data));
         }
 
         #region When Click Back UIButton

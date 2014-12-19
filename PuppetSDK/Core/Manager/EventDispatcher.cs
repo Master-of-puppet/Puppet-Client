@@ -12,6 +12,7 @@ namespace Puppet.Core.Manager
         public event Action<EMessage, string> onNoticeMessage;
         public event Action<EUpgrade, string, string> onWarningUpgrade;
         public event Action<DataDailyGift> onDailyGift;
+        public event Action<DataChat> onChatMessage;
 
         internal void SetChangeScene(EScene fromScene, EScene toScene)
         {
@@ -35,6 +36,12 @@ namespace Puppet.Core.Manager
         {
             if (onDailyGift != null)
                 onDailyGift(data);
+        }
+
+        internal void SetChatMessage(DataChat data)
+        {
+            if (onChatMessage != null)
+                onChatMessage(data);
         }
     }
 }

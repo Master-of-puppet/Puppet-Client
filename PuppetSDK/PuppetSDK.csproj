@@ -64,6 +64,7 @@
     <Compile Include="Core\Model\Common\IGameplay.cs" />
     <Compile Include="Core\Model\Common\IScene.cs" />
     <Compile Include="Core\Model\Datagram\RequestCreateGame.cs" />
+    <Compile Include="Core\Model\DataChat.cs" />
     <Compile Include="Core\Model\DataResponseRecharge.cs" />
     <Compile Include="Core\Model\DataGameAssets.cs" />
     <Compile Include="Core\Model\DataAssets.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Core\Network\Socket\Smartfox\SFSocketResponse.cs" />
     <Compile Include="Core\Network\Socket\SocketHandler.cs" />
     <Compile Include="Core\Patterns\BaseSingleton.cs" />
+    <Compile Include="Core\Patterns\Constant\DefineKeys.cs" />
     <Compile Include="Core\Patterns\Constant\Commands.cs" />
     <Compile Include="Core\Patterns\Constant\Fields.cs" />
     <Compile Include="Core\Patterns\Delegate.cs" />
