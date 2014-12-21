@@ -6,11 +6,9 @@ using System.Text;
 
 namespace Puppet.Core.Model
 {
-    public class DataChat : DataModel
+    public class DataChat : DataMessageBase
     {
-        public DataUser Sender { get; set; }
         public string Content { get; set; }
-        public long TimeSent { get; set; }
         public bool Readed { get; set; }
         public string ReceiverName { get; set; }
         public int Type { get; set; }
@@ -34,9 +32,7 @@ namespace Puppet.Core.Model
 
         public DataChat(string content, ChatType type) : this ()
         {
-            this.Sender = UserHandler.Instance.Self.info;
             this.Content = content;
-            this.TimeSent = DateTime.Now.Ticks;
             this.Readed = false;
             this.Type = (int)type;
         }
@@ -49,11 +45,6 @@ namespace Puppet.Core.Model
         public ChatType GetChatType()
         {
             return (ChatType)this.Type;
-        }
-
-        public DateTime GetTimeSent()
-        {
-            return new DateTime(this.TimeSent);
         }
     }
 }

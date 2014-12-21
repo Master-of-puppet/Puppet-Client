@@ -103,9 +103,9 @@ namespace Puppet.Core.Flow
             }
             else if (eventType.Equals(SFSEvent.PUBLIC_MESSAGE))
             {
-                if (response.Params.Contains("messsage") && response.Params["messsage"] == DefineKeys.KEY_CHAT_MESSAGE)
+                if (response.Params.Contains(Fields.MESSAGE) && response.Params[Fields.MESSAGE].ToString() == DefineKeys.KEY_CHAT_MESSAGE)
                 {
-                    ISFSObject obj = (SFSObject)response.Params["data"];
+                    ISFSObject obj = (SFSObject)response.Params[Fields.DATA];
                     DataChat dataChat = SFSDataModelFactory.CreateDataModel<DataChat>(obj);
                     PuMain.Dispatcher.SetChatMessage(dataChat);
                 }

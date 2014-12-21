@@ -20,6 +20,7 @@ namespace Puppet.Poker
         public int MAX_PLAYER_IN_GAME = 9;
 
         public event Action<PokerCard[]> onDealCardsChange;
+        public event Action<DataMessageBase> onDispatchViewCard;
 
         List<KeyValuePair<string, object>> queueWaitingSendClient;
         bool isClientWasListener;
@@ -126,6 +127,16 @@ namespace Puppet.Poker
                             DispathToClient(command, dataError);
                             break;
                     }
+                }
+            }
+            else if (eventType.Equals(SFSEvent.PUBLIC_MESSAGE))
+            {
+                if (onEventResponse.Params.Contains(Fields.MESSAGE) && onEventResponse.Params[Fields.MESSAGE].ToString() == Constant.KEY_VIEW_CARD)
+                {
+                    ISFSObject obj = (SFSObject)onEventResponse.Params[Fields.DATA];
+                    DataMessageBase dataViewCard = SFSDataModelFactory.CreateDataModel<DataMessageBase>(obj);
+                    if (onDispatchViewCard != null)
+                        onDispatchViewCard(dataViewCard);
                 }
             }
         }

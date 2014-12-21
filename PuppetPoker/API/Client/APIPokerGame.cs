@@ -1,4 +1,5 @@
-﻿using Puppet.Poker;
+﻿using Puppet.Core.Model;
+using Puppet.Poker;
 using Puppet.Poker.Datagram;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,11 @@ namespace Puppet.API.Client
         public static void StandUp()
         {
             PuMain.Socket.Request(RequestPool.GetStandUpRequest());
+        }
+
+        public static void RequestViewCard()
+        {
+            Puppet.API.Client.APIGeneric.SendPublicMessage(Constant.KEY_VIEW_CARD, new DataMessageBase());
         }
     }
 }
