@@ -19,6 +19,10 @@ namespace Puppet.Poker
         public const PokerSide DEFAULT_SIDE_MAIN_PLAYER = PokerSide.Slot_1;
         public int MAX_PLAYER_IN_GAME = 9;
 
+        /// <summary>
+        /// Info Setting Poker Game
+        /// </summary>
+        public PokerGameDetails gameDetails;
         public event Action<PokerCard[]> onDealCardsChange;
         public event Action<DataMessageBase> onDispatchViewCard;
 
@@ -36,6 +40,8 @@ namespace Puppet.Poker
         string _dealerName = string.Empty;
         List<PokerCard> _comminityCards = new List<PokerCard>();
         List<PokerCard> _cardMainPlayer = new List<PokerCard>();
+        string _roomMaster = string.Empty;
+        double _lastBetForSitdown;
 
         public override void EnterGameplay()
         {
@@ -46,6 +52,7 @@ namespace Puppet.Poker
             _maxCurrentBetting = 0;
             _listPlayerInGame = new List<string>();
             _listPlayerWaitNextGame = new List<string>();
+            _lastBetForSitdown = 0;
             mainPlayerUsername = Puppet.API.Client.APIUser.GetUserInformation().info.userName;
         }
 
@@ -64,6 +71,8 @@ namespace Puppet.Poker
                         case "updateGameToWaitingPlayer":
                         case "updateGame":
                             ResponseUpdateGame dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
+                            if (dataUpdateGame != null && dataUpdateGame.gameDetails != null)
+                                gameDetails = dataUpdateGame.gameDetails;
                             RefreshDataPlayer(dataUpdateGame.players);
                             if (command != "updateGameToWaitingPlayer")
                             {
@@ -78,6 +87,7 @@ namespace Puppet.Poker
                             break;
                         case "updateRoomMaster":
                             ResponseUpdateRoomMaster dataRoomMaster = SFSDataModelFactory.CreateDataModel<ResponseUpdateRoomMaster>(messageObj);
+                            _roomMaster = dataRoomMaster.player.userName;
                             RefreshDataPlayer(dataRoomMaster.player);
                             DispathToClient(command, dataRoomMaster);
                             break;
@@ -169,6 +179,7 @@ namespace Puppet.Poker
         }
         #endregion
 
+        #region Card Hand & Comminity Card
         void UpdateCardDeal(int [] comminityCards)
         {
             if (comminityCards == null || comminityCards.Length == 0) return;
@@ -213,11 +224,30 @@ namespace Puppet.Poker
             _cardMainPlayer.Clear();
         }
 
-        public string Dealer { get { return _dealerName; } }
-
         public List<PokerCard> DealComminityCards { get { return _comminityCards; } }
 
         public List<PokerCard> CardsMainPlayer { get { return _cardMainPlayer; } }
+        #endregion
+
+        #region Others
+        public string Dealer { get { return _dealerName; } }
+
+        public double SmallBlind { get { return gameDetails.customConfiguration.SmallBlind; } }
+
+        public double MaxBlind { get { return gameDetails.customConfiguration.SmallBlind * 2; } }
+
+        public double LastBetForSitdown
+        {
+            get
+            {
+                if (_lastBetForSitdown <= 0)
+                    _lastBetForSitdown = SmallBlind * 20;
+                return _lastBetForSitdown;
+            }
+        }
+
+        public string RoomMaster { get { return _roomMaster; } }
+        #endregion
 
         #region Betting
         public double MaxCurrentBetting
@@ -409,15 +439,21 @@ namespace Puppet.Poker
             return (PokerSide)slot;
         }
 
-        internal void AutoSitDown(double money)
+        internal void StandUp()
+        {
+            _lastBetForSitdown = 0;
+            PuMain.Socket.Request(RequestPool.GetStandUpRequest());
+        }
+
+        internal void AutoSitDown()
         {
             List<int> listIndex = (from player in ListPlayer select player.slotIndex).ToList<int>();
             int minValue = -1;
             for (int i = 0; i < Puppet.API.Client.APIPokerGame.GetPokerGameplay().MAX_PLAYER_IN_GAME; i++)
                 if (listIndex.Contains(i) == false) { minValue = i; break; }
-
+            
             if (minValue >= 0)
-                API.Client.APIPokerGame.SitDown(minValue, money);
+                API.Client.APIPokerGame.SitDown(minValue, LastBetForSitdown);
         }
         #endregion
     }

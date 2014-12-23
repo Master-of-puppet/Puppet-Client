@@ -25,9 +25,9 @@ namespace Puppet.API.Client
             PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetPlayRequest(request, value));
         }
 
-        public static void AutoSitDown(double money)
+        public static void AutoSitDown()
         {
-            PokerMain.Instance.game.AutoSitDown(money);
+            PokerMain.Instance.game.AutoSitDown();
         }
 
         public static void GetOrderHand(Dictionary<string,int[]> cardPlayers)
@@ -47,7 +47,7 @@ namespace Puppet.API.Client
 
         public static void StandUp()
         {
-            PuMain.Socket.Request(RequestPool.GetStandUpRequest());
+            PokerMain.Instance.game.StandUp();
         }
 
         public static void RequestViewCard()
