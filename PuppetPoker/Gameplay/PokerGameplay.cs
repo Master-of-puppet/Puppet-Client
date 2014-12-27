@@ -45,6 +45,7 @@ namespace Puppet.Poker
 
         public override void EnterGameplay()
         {
+            gameDetails = null;
             MainPlayer = LastPlayer = CurrentPlayer = null;
             isClientWasListener = false;
             queueWaitingSendClient = new List<KeyValuePair<string, object>>();
