@@ -130,7 +130,7 @@ namespace Puppet.Poker
                             break;
                         case "updateUserInfo" :
                             ResponseUpdateUserInfo dataUserInfo = SFSDataModelFactory.CreateDataModel<ResponseUpdateUserInfo>(messageObj);
-                            RefreshDataPlayer(dataUserInfo.userInfo);
+                            UpdateUserInfo(dataUserInfo);
                             DispathToClient(command, dataUserInfo);
                             break;
                         case "error" :
@@ -297,6 +297,28 @@ namespace Puppet.Poker
                 _timesInteractiveInRound[userName] = 0;
             _maxCurrentBetting = 0;
             ListPlayer.ForEach(p => { p.currentBet = 0; p.DispatchAttribute("currentBet"); });
+        }
+        #endregion
+
+        #region updateUserInfo
+        private void UpdateUserInfo(ResponseUpdateUserInfo dataUserInfo)
+        {
+            if (dataUserInfo.asset == null) return;
+
+            if (dataUserInfo.field == "assetGame")
+            {
+                PokerPlayerController player = GetPlayer(dataUserInfo.userName);
+                if (player != null)
+                {
+                    player.asset.UpdateAssets(dataUserInfo.asset.content);
+                    RefreshDataPlayer(player);
+                }
+            }
+            else if (dataUserInfo.field == "asset") 
+            {
+                // Lưu ngược vào SDK Core. Sau này nên xử lý riêng ở Core không nên đưa vào Gameplay.
+                API.Client.APIUser.UpdateAssetInfo(dataUserInfo.asset.content);
+            }
         }
         #endregion
 

@@ -10,8 +10,10 @@ namespace Puppet.Poker.Datagram
 {
     public class ResponseUpdateUserInfo : DataModel
     {
-        public PokerPlayerController userInfo  { get; set; }
+        public string userName { get; set; }
+        public string field { get; set; }
         public string command { get; set; }
+        public DataAssets asset { get; set; }
 
         public ResponseUpdateUserInfo()
             : base()

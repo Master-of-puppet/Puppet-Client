@@ -22,6 +22,22 @@ namespace Puppet.Core.Model
                 item.assetType.name == CustomAttribute.GetCustomAttribute<AttributeAsset>(asset).Name
             );
         }
+
+        public void UpdateAssets(DataAssetItem[] updateContents)
+        {
+            if (updateContents == null) return;
+            List<DataAssetItem> listAsset = new List<DataAssetItem>(content);
+            for(int i=0;i<updateContents.Length;i++)
+            {
+                DataAssetItem newContent = updateContents[i];
+                DataAssetItem oldContent = listAsset.Find(asset => asset.assetType.name == newContent.assetType.name);
+                if(oldContent == null)
+                    listAsset.Add(newContent);
+                else
+                    oldContent = newContent;
+            }
+            content = listAsset.ToArray();
+        }
     }
 
     public class DataAssetItem : DataModel

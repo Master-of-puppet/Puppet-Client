@@ -51,6 +51,11 @@ namespace Puppet.Core
             get { return _self; }
         }
 
+        internal void UpdateAsset(DataAssetItem[] newContent)
+        {
+            _self.assets.UpdateAssets(newContent);
+        }
+
         SFSObject GetValueUserVariable(string field)
         {
             if (_mySelf.ContainsVariable(field))

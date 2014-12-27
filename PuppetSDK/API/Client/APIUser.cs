@@ -31,5 +31,13 @@ namespace Puppet.API.Client
         {
             return UserHandler.Instance.Self;
         }
+
+        /// <summary>
+        /// Không được gọi hàm này khi không hiểu nhé. Tạm thời chỉ sử dụng để các API gọi ngược vào Core SDK thôi.
+        /// </summary>
+        public static void UpdateAssetInfo(DataAssetItem[] newContents)
+        {
+            UserHandler.Instance.UpdateAsset(newContents);
+        }
     }
 }

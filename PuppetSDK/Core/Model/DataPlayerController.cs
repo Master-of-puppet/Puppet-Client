@@ -9,7 +9,7 @@ namespace Puppet.Core.Model
     public class DataPlayerController : DataModel
     {
         public string userName { get; set; }
-        public DataGameAssets asset { get; set; }
+        public DataAssets asset { get; set; }
         public string gameState { get; set; }
         public int slotIndex { get; set; }
         public bool isMaster { get; set; }
