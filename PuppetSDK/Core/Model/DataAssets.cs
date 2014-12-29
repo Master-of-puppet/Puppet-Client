@@ -31,10 +31,10 @@ namespace Puppet.Core.Model
             {
                 DataAssetItem newContent = updateContents[i];
                 DataAssetItem oldContent = listAsset.Find(asset => asset.assetType.name == newContent.assetType.name);
-                if(oldContent == null)
+                if (oldContent == null)
                     listAsset.Add(newContent);
                 else
-                    oldContent = newContent;
+                    oldContent.value = newContent.value;
             }
             content = listAsset.ToArray();
         }

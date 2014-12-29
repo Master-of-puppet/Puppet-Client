@@ -119,7 +119,7 @@ namespace Puppet.Core.Network.Socket
                 {
                     SFSObject sfsObject = (SFSObject)obj;
                     Logger.Log("SFServer [" + key + "]:", sfsObject.GetDump(), ELogColor.CYAN);
-                    Logger.Log("JsonFormat =>\n", new JsonFormatter(Utility.SFSObjectToString(sfsObject)).Format(), ELogColor.CYAN);
+                    //Logger.Log("JsonFormat =>\n", new JsonFormatter(Utility.SFSObjectToString(sfsObject)).Format(), ELogColor.CYAN);
                 }
             }
 

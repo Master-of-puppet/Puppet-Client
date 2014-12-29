@@ -305,7 +305,7 @@ namespace Puppet.Poker
         {
             if (dataUserInfo.asset == null) return;
 
-            if (dataUserInfo.field == "assetGame")
+            if (dataUserInfo.field == "assetGame") //dataUserInfo.field == "experience"
             {
                 PokerPlayerController player = GetPlayer(dataUserInfo.userName);
                 if (player != null)
