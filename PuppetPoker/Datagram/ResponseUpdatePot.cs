@@ -22,6 +22,7 @@ namespace Puppet.Poker.Datagram
         {
             public int id { get; set; }
             public double value { get; set; }
+            public int contributors { get; set; }
             public DataPot() : base() { }
         }
     }

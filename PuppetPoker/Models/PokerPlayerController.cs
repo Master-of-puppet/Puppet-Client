@@ -11,6 +11,7 @@ namespace Puppet.Poker.Models
         public int handSize { get; set; }
         public string action { get; set; }
         public int[] hand { get; set; }
+        public bool inTurn { get; set; }
 
         public PokerPlayerController() 
             : base()

@@ -25,6 +25,7 @@ namespace Puppet.Poker
         public PokerGameDetails gameDetails;
         public event Action<PokerCard[]> onDealCardsChange;
         public event Action<DataMessageBase> onDispatchViewCard;
+        public event Action<ResponseUpdateGame> onFirstTimeJoinGame;
 
         List<KeyValuePair<string, object>> queueWaitingSendClient;
         bool isClientWasListener;
@@ -42,6 +43,7 @@ namespace Puppet.Poker
         List<PokerCard> _cardMainPlayer = new List<PokerCard>();
         string _roomMaster = string.Empty;
         double _lastBetForSitdown;
+        bool firstTimeJoinGame = false;
 
         public override void EnterGameplay()
         {
@@ -55,6 +57,7 @@ namespace Puppet.Poker
             _listPlayerWaitNextGame = new List<string>();
             _lastBetForSitdown = 0;
             mainPlayerUsername = Puppet.API.Client.APIUser.GetUserInformation().info.userName;
+            firstTimeJoinGame = true;
         }
 
         public override void ExitGameplay() {}
@@ -75,7 +78,7 @@ namespace Puppet.Poker
                             if (dataUpdateGame != null && dataUpdateGame.gameDetails != null)
                                 gameDetails = dataUpdateGame.gameDetails;
                             RefreshDataPlayer(dataUpdateGame.players);
-                            if (command != "updateGameToWaitingPlayer")
+                            //if (command != "updateGameToWaitingPlayer")
                             {
                                 RefreshListPlayerInGame(false, dataUpdateGame.players);
                                 UpdateCardDeal(dataUpdateGame.dealComminityCards);
@@ -102,7 +105,7 @@ namespace Puppet.Poker
                             UpdateCardMainPlayer(dataUpdateHand.hand);
                             RefreshDataPlayer(dataUpdateHand.players);
                             RefreshListPlayerInGame(true, dataUpdateHand.players);
-                            HandleUpdateHand(dataUpdateHand);
+                            HandleUpdateHand(dataUpdateHand.dealer);
                             DispathToClient(command, dataUpdateHand);
                             break;
                         case "turn":
@@ -156,7 +159,7 @@ namespace Puppet.Poker
         private void DispathToClient(string command, object data)
         {
             if (isClientWasListener)
-                EventDispatcher.SetGameEvent(command, data);
+                SendGameEventToClient(command, data);
             else
                 queueWaitingSendClient.Add(new KeyValuePair<string, object>(command, data));
         }
@@ -164,10 +167,27 @@ namespace Puppet.Poker
         public void StartListenerEvent()
         {
             foreach (KeyValuePair<string, object> keyAndValue in queueWaitingSendClient)
-                EventDispatcher.SetGameEvent(keyAndValue.Key, keyAndValue.Value);
+                SendGameEventToClient(keyAndValue.Key, keyAndValue.Value);
             queueWaitingSendClient.Clear();
             isClientWasListener = true;
         }
+
+        void SendGameEventToClient(string command, object data)
+        {
+            if (firstTimeJoinGame && data is ResponseUpdateGame)
+            {
+                firstTimeJoinGame = false;
+                ResponseUpdateGame dataGame = data as ResponseUpdateGame;
+                HandleFirstTimeJoinGame(dataGame);
+                if (onFirstTimeJoinGame != null)
+                    onFirstTimeJoinGame(dataGame);
+            }
+            else
+            {
+                EventDispatcher.SetGameEvent(command, data);
+            }
+        }
+
         public void StartFinishGame()
         {
             isClientWasListener = false;
@@ -214,9 +234,9 @@ namespace Puppet.Poker
             }
         }
 
-        void HandleUpdateHand(ResponseUpdateHand dataUpdateHand)
+        void HandleUpdateHand(string userName)
         {
-            this._dealerName = dataUpdateHand.dealer;
+            this._dealerName = userName;
         }
 
         void HandleWaitNewGame()
@@ -257,6 +277,14 @@ namespace Puppet.Poker
             private set { if (_maxCurrentBetting < value) _maxCurrentBetting = value; }
         }
 
+        void ResetCurrentBetting()
+        {
+            foreach (string userName in _timesInteractiveInRound.Keys)
+                _timesInteractiveInRound[userName] = 0;
+            _maxCurrentBetting = 0;
+            ListPlayer.ForEach(p => { p.currentBet = 0; p.DispatchAttribute("currentBet"); });
+        }
+
         public int GetTimesInteractiveInRound(string userName)
         {
             return _timesInteractiveInRound.ContainsKey(userName) ? _timesInteractiveInRound[userName] : 0;
@@ -264,6 +292,24 @@ namespace Puppet.Poker
 
         void HandleFinishGame(ResponseFinishGame dataFinishGame)
         {
+        }
+
+        void HandleFirstTimeJoinGame(ResponseUpdateGame dataGame)
+        {
+            if (!string.IsNullOrEmpty(dataGame.dealer))
+                HandleUpdateHand(dataGame.dealer);
+
+            if(dataGame.players != null)
+            {
+                PokerPlayerController player = Array.Find<PokerPlayerController>(dataGame.players, p => p.inTurn);
+                if (player != null)
+                    CurrentPlayer = (PokerPlayerController)player.CloneObject();
+
+                for(int i=0;i<dataGame.players.Length;i++)
+                    MaxCurrentBetting = dataGame.players[i].currentBet;
+
+                ListPlayer.ForEach(p => p.DispatchAttribute(string.Empty));
+            }
         }
 
         void UpdatePlayerData(ResponseUpdateTurnChange dataTurn)
@@ -289,14 +335,6 @@ namespace Puppet.Poker
                 if (dataTurn.firstTurn && dataTurn.bigBlind != null)
                     MaxCurrentBetting = dataTurn.bigBlind.currentBet;
             }
-        }
-        
-        void ResetCurrentBetting()
-        {
-            foreach (string userName in _timesInteractiveInRound.Keys)
-                _timesInteractiveInRound[userName] = 0;
-            _maxCurrentBetting = 0;
-            ListPlayer.ForEach(p => { p.currentBet = 0; p.DispatchAttribute("currentBet"); });
         }
         #endregion
 

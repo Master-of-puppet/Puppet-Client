@@ -18,6 +18,8 @@ namespace Puppet.Poker.Datagram
         public int remainingTime { get; set; }
         public int totalTime { get; set; }
         public int[] dealComminityCards { get; set; }
+        public ResponseUpdatePot.DataPot[] pot { get; set; }
+        public string dealer { get; set; }
         
         public ResponseUpdateGame()
             : base()
