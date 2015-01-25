@@ -21,6 +21,9 @@ namespace Puppet.Poker.Datagram
 
         public PokerPlayerChangeAction GetActionState()
         {
+            if (string.IsNullOrEmpty(action))
+                return PokerPlayerChangeAction.none;
+
             object state = Enum.Parse(typeof(PokerPlayerChangeAction), action);
             if (state != null)
                 return (PokerPlayerChangeAction)state;

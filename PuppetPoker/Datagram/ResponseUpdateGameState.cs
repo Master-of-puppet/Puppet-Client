@@ -21,6 +21,9 @@ namespace Puppet.Poker.Datagram
 
         public PokerGameState GetCurrentState()
         {
+            if (string.IsNullOrEmpty(gameState))
+                return PokerGameState.none;
+
             object state = Enum.Parse(typeof(PokerGameState), gameState);
             if (state != null)
                 return (PokerGameState)state;
@@ -33,6 +36,9 @@ namespace Puppet.Poker.Datagram
 
         public PokerGameState GetLastState()
         {
+            if (string.IsNullOrEmpty(lastGameState))
+                return PokerGameState.none;
+
             object state = Enum.Parse(typeof(PokerGameState), lastGameState);
             if (state != null)
                 return (PokerGameState)state;
