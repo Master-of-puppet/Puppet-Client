@@ -48,6 +48,15 @@ namespace Puppet.Core.Flow
 
         public void BeginScene()
         {
+            GetListGame((status, message, data) =>
+            {
+                if(status && data.Count >= 1)
+                {
+                    JoinGame(data[0], (joinStatus, joinMessage) =>
+                    {
+                    });
+                }
+            });
         }
 
         public void EndScene()

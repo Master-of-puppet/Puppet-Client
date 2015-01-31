@@ -25,7 +25,7 @@ namespace Puppet.API.Client
                 return;
             }
 
-            SceneWorldGame.Instance.GetListGame(onGetListGame);
+            //SceneWorldGame.Instance.GetListGame(onGetListGame);
         }
 
         public static void JoinRoom(DataGame game, DelegateAPICallback onJoinRoomCallback)
