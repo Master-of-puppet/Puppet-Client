@@ -76,7 +76,10 @@ namespace Puppet.Poker
                         case "updateGame":
                             ResponseUpdateGame dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
                             if (dataUpdateGame != null && dataUpdateGame.gameDetails != null)
+                            {
                                 gameDetails = dataUpdateGame.gameDetails;
+                                MAX_PLAYER_IN_GAME = gameDetails.customConfiguration.numPlayers;
+                            }
                             RefreshDataPlayer(dataUpdateGame.players);
                             //if (command != "updateGameToWaitingPlayer")
                             {
@@ -196,7 +199,6 @@ namespace Puppet.Poker
         {
             StartListenerEvent();
             ResetListPlayerInGame();
-            ResetCurrentBetting();
         }
         #endregion
 
@@ -292,6 +294,7 @@ namespace Puppet.Poker
 
         void HandleFinishGame(ResponseFinishGame dataFinishGame)
         {
+            ResetCurrentBetting();
         }
 
         void HandleFirstTimeJoinGame(ResponseUpdateGame dataGame)
@@ -395,7 +398,7 @@ namespace Puppet.Poker
                     if (!_dictAllPlayers.ContainsKey(p.userName))
                         _dictAllPlayers.Add(p.userName, p);
                     else
-                        _dictAllPlayers[p.userName].UpdateData(p, false);
+                        _dictAllPlayers[p.userName].UpdateData(p, false, false);
 
                     if (_dictAllPlayers[p.userName].userName == mainPlayerUsername)
                         MainPlayer = _dictAllPlayers[p.userName];
@@ -510,7 +513,7 @@ namespace Puppet.Poker
         {
             List<int> listIndex = (from player in ListPlayer select player.slotIndex).ToList<int>();
             int minValue = -1;
-            for (int i = 0; i < Puppet.API.Client.APIPokerGame.GetPokerGameplay().MAX_PLAYER_IN_GAME; i++)
+            for (int i = 0; i < MAX_PLAYER_IN_GAME; i++)
                 if (listIndex.Contains(i) == false) { minValue = i; break; }
             
             if (minValue >= 0)

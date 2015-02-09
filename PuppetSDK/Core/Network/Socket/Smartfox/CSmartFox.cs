@@ -110,16 +110,27 @@ namespace Puppet.Core.Network.Socket
         {
             if (evt.Type == SFSEvent.HANDSHAKE) return;
 
-            Logger.Log("SFServer: type [" +  evt.Type + "]", JsonUtil.Serialize(evt.Params), ELogColor.CYAN);
-
-            foreach(object key in evt.Params.Keys)
+            if (PuMain.Setting.IsDebug)
             {
-                object obj = evt.Params[key];
-                if(obj is SFSObject)
+                Logger.Log("SFServer: type [" + evt.Type + "]", JsonUtil.Serialize(evt.Params), ELogColor.CYAN);
+
+                foreach (object key in evt.Params.Keys)
                 {
-                    SFSObject sfsObject = (SFSObject)obj;
-                    Logger.Log("SFServer [" + key + "]:", sfsObject.GetDump(), ELogColor.CYAN);
-                    //Logger.Log("JsonFormat =>\n", new JsonFormatter(Utility.SFSObjectToString(sfsObject)).Format(), ELogColor.CYAN);
+                    object obj = evt.Params[key];
+                    if (obj is SFSObject)
+                    {
+                        SFSObject sfsObject = (SFSObject)obj;
+
+                        string command = string.Empty;
+                        if (sfsObject.ContainsKey("message"))
+                        {
+                            ISFSObject message = sfsObject.GetSFSObject("message");
+                            if (message.ContainsKey("command"))
+                                command = message.GetUtfString("command");
+                        }
+                        Logger.Log("SFServer [" + key + "]" + (string.IsNullOrEmpty(command) ? "" : "[" + command + "]") + ":", sfsObject.GetDump(), ELogColor.CYAN);
+                        //Logger.Log("JsonFormat =>\n", new JsonFormatter(Utility.SFSObjectToString(sfsObject)).Format(), ELogColor.CYAN);
+                    }
                 }
             }
 
@@ -134,7 +145,10 @@ namespace Puppet.Core.Network.Socket
 
         private void OnDebugMessage(BaseEvent evt)
         {
-            Logger.Log("{0}: {1}", evt.Type, evt.Params["message"]);
+            if (PuMain.Setting.IsDebug)
+            {
+                Logger.Log("{0}: {1}", evt.Type, evt.Params["message"]);
+            }
         }
     }
 }

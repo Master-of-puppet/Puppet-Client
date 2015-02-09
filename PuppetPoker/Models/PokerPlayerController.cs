@@ -12,6 +12,7 @@ namespace Puppet.Poker.Models
         public string action { get; set; }
         public int[] hand { get; set; }
         public bool inTurn { get; set; }
+        public DataAssets globalAsset { get; set; }
 
         public PokerPlayerController() 
             : base()
@@ -38,9 +39,11 @@ namespace Puppet.Poker.Models
             }
         }
 
-        public double GetMoney()
+        public double GetAvailableChip()
         {
-            return asset.GetAsset(EAssets.Chip).value;
+            if (globalAsset == null || globalAsset.GetAsset(EAssets.Chip) == null)
+                return 0;
+            return globalAsset.GetAsset(EAssets.Chip).value;
         }
     }
 }

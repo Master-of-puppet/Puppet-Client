@@ -52,7 +52,7 @@ namespace Puppet
         /// <param name="target">Đối tượng được sao chép</param>
         /// <param name="source">Đối tượng lấy dữ liệu</param>
         /// <param name="onAttributeChanged">Sự kiện khi một thuộc tính thay đổi</param>
-        public static void CopyPropertiesFrom(this object target, object source, Action<string> onAttributeChanged = null)
+        public static void CopyPropertiesFrom(this object target, object source, bool nullAble = true, Action<string> onAttributeChanged = null)
         {
             var targetType = target.GetType();
             var sourceType = source.GetType();
@@ -62,7 +62,9 @@ namespace Puppet
             {
                 var prop = propMap[i];
                 var sourceValue = prop.SourceProperty.GetValue(source, null);
-                prop.TargetProperty.SetValue(target, sourceValue, null);
+
+                if (nullAble || sourceValue != null)
+                    prop.TargetProperty.SetValue(target, sourceValue, null);
 
                 if(onAttributeChanged != null)
                     onAttributeChanged(prop.TargetProperty.Name);
