@@ -33,6 +33,10 @@ namespace Puppet.Core.Network.Http
             Request(Commands.FORGOT_PASSWORD, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "email", yourEmail);
         }
 
+        #region CHANGE USER INFORMATION
+        /// <summary>
+        /// Change password
+        /// </summary>
         internal static void ChangeUseInformation(string username, string password, string newpass, DelegateAPICallback callback)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
@@ -43,6 +47,52 @@ namespace Puppet.Core.Network.Http
 
             Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "type", "changePassword");
         }
+
+        /// <summary>
+        /// Change Avatar
+        /// </summary>
+        internal static void ChangeUseInformation(string username, byte[] avatar, DelegateAPICallback callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("username", username);
+            dict.Add("avatar", Convert.ToString(avatar[20], 2).PadLeft(8, '0'));
+
+            Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "type", "changeAvatar");
+        }
+
+        /// <summary>
+        /// Change infomation
+        /// </summary>
+        /// <param name="gender">Male is 0; Female is 1; Unknows is 2</param>
+        /// <param name="address"></param>
+        /// <param name="birthday">dd/mm/yyyy</param>
+        internal static void ChangeUseInformation(string username, string firstName, string lastName, string middleName, string gender, string address, string birthday, DelegateAPICallback callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("username", username);
+            dict.Add("first_name", firstName);
+            dict.Add("last_name", lastName);
+            dict.Add("middle_name", middleName);
+            dict.Add("gender", gender);
+            dict.Add("address", address);
+            dict.Add("birthday", birthday);
+
+            Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "type", "changeInformation");
+        }
+
+        /// <summary>
+        /// Change Information Special
+        /// </summary>
+        internal static void ChangeUseInformationSpecial(string username, string email, string mobile, DelegateAPICallback callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("username", username);
+            dict.Add("email", email);
+            dict.Add("mobile", mobile);
+
+            Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "type", "changeInformationSpecial");
+        }
+        #endregion
 
         internal static void QuickRegister(string username, string password, DelegateAPICallback callback)
         {
