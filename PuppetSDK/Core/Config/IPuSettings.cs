@@ -28,5 +28,8 @@ namespace Puppet
         
         void ActionPrintLog(ELogType type, object message);
         void Init();
+        void OnApplicationPause(bool pauseStatus);
+        void OnApplicationQuit();
+        void OnUpdate();
     }
 }

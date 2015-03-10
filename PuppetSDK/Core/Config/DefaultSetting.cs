@@ -140,6 +140,30 @@ namespace Puppet
             get { return _actionUpdate; }
             set { _actionUpdate = value; }
         }
+
+        public virtual void OnApplicationPause(bool pauseStatus)
+        {
+            Logger.LogWarning("OnApplicationPause: " + pauseStatus);
+            if(pauseStatus)
+            {
+                Puppet.Utils.CacheHandler.Instance.SaveFile((saveStatus) =>
+                {
+                    Logger.Log("DefaultSetting.StoreCache=" + saveStatus);
+                });
+            }
+        }
+
+        public virtual void OnApplicationQuit()
+        {
+            Logger.LogWarning("OnApplicationQuit");
+            PuMain.Socket.Disconnect();
+        }
+
+        public virtual void OnUpdate()
+        {
+            if (ActionUpdate != null)
+                ActionUpdate();
+        }
     }
 
     class ServerMode : IServerMode
