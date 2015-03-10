@@ -23,6 +23,7 @@ namespace Puppet
         public const string COMMAND_CREATE_GAME = "createGame";
 
         public const string REQUEST_JOIN_ROOM = "joinRoomRequest";
+        public const string REQUEST_QUICK_JOIN_ROOM = "quickJoinGame";
         public const string REQUEST_PLUGIN = "pluginRequest";
 
         public const string RESPONSE_FIRST_ROOM_TO_JOIN = "firstRoomToJoin";

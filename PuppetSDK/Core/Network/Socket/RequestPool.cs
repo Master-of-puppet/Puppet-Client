@@ -25,6 +25,11 @@ namespace Puppet.Core.Network.Socket
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_JOIN_ROOM, obj));
         }
 
+        internal static ISocketRequest GetQuickJoinRoomRequest()
+        {
+            return GetRequestPlugin(new RequestCommand(Fields.REQUEST_QUICK_JOIN_ROOM));
+        }
+
         internal static ISocketRequest GetRequestPlugin(AbstractData data)
         {
             ISFSObject obj = new RequestPlugin(data).ToSFSObject();

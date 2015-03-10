@@ -19,6 +19,7 @@ namespace Puppet.Core.Flow
 
         internal DelegateAPICallback onCreateLobbyCallback;
         internal DelegateAPICallback onJoinLobbyCallback;
+        internal DelegateAPICallback onQuickJoinLobbyCallback;
         DelegateAPICallbackDataLobby onGetAllLobby;
         DelegateAPICallbackDataLobby onGetGroupChildrenCallback;
 
@@ -114,6 +115,12 @@ namespace Puppet.Core.Flow
             PuGlobal.Instance.SelectedLobby = lobby;
             this.onJoinLobbyCallback = onJoinLobbyCallback;
             PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(new RoomInfo(lobby.roomId)));
+        }
+
+        internal void QuickJoinLobby(DelegateAPICallback onQuickJoinLobbyCallback)
+        {
+            this.onQuickJoinLobbyCallback = onQuickJoinLobbyCallback;
+            PuMain.Socket.Request(RequestPool.GetQuickJoinRoomRequest());
         }
 
         void DispathGetAllLobby(bool status, string message, List<DataLobby> data)

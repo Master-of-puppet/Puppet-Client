@@ -55,9 +55,9 @@ namespace Puppet.Core.Network.Http
         void StartWebRequest()
         {
             string url = isFullUrl ? _path : server.GetPath(_path);
-            Logger.Log("SimpleHttp Request Url: ", url, ELogColor.LIME);
             WebRequest request = HttpWebRequest.Create(url);
 
+            string printLog = url;
             if (Method == HttpMethod.Post)
             {
                 request.Method = "POST";
@@ -73,6 +73,8 @@ namespace Puppet.Core.Network.Http
                     postData += string.Format(format, key, PostData[key].ToString());
                     i++;
                 }
+                printLog += postData;
+                
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
 
                 try
@@ -85,12 +87,14 @@ namespace Puppet.Core.Network.Http
                 }
                 catch (Exception e)
                 {
+                    Logger.LogError("SimpleHttp Request Exception: ", printLog);
                     simpleResponse.Error = e.Message;
                     simpleResponse.State = HttpStatusCode.ServiceUnavailable;
                     DispatchEventResponse();
                     return;
                 }
             }
+            Logger.Log("SimpleHttp Request Url: ", printLog, ELogColor.LIME);
 
             if (onProgress != null)
                 onProgress(this, 0f);

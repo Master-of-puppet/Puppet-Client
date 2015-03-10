@@ -34,6 +34,11 @@ namespace Puppet.API.Client
             ScenePockerLobby.Instance.JoinLobby(lobby, onJoinLobby);
         }
 
+        public static void QuickJoinLobby(DelegateAPICallback onJoinLobby)
+        {
+            ScenePockerLobby.Instance.QuickJoinLobby(onJoinLobby);
+        }
+
         public static void AddListener(Action<List<DataLobby>> onCreateCallback, Action<List<DataLobby>> onUpdateCallback, Action<List<DataLobby>> onDeleteCallback)
         {
 
