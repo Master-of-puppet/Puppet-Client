@@ -74,8 +74,6 @@ namespace Puppet.Core.Network.Http
                     i++;
                 }
                 printLog += postData;
-                
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
 
                 try
                 {
@@ -90,6 +88,7 @@ namespace Puppet.Core.Network.Http
                     Logger.LogError("SimpleHttp Request Exception: ", printLog);
                     simpleResponse.Error = e.Message;
                     simpleResponse.State = HttpStatusCode.ServiceUnavailable;
+
                     DispatchEventResponse();
                     return;
                 }
@@ -127,6 +126,7 @@ namespace Puppet.Core.Network.Http
 
             if (onProgress != null)
                 onProgress(this, 1f);
+
             DispatchEventResponse();
         }
 
@@ -150,7 +150,7 @@ namespace Puppet.Core.Network.Http
                     + "\nFromRequest: " + (isFullUrl ? _path : server.GetPath(_path))
                     , ELogColor.LIME);
             else
-                Logger.LogError("SimpleHttp Error: ", simpleResponse.Error
+                Logger.LogError("SimpleHttp Error: {0}", simpleResponse.Error
                     + "\nFromRequest: " + (isFullUrl ? _path : server.GetPath(_path))
                     , ELogColor.LIME);
                    
