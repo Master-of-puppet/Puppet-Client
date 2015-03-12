@@ -57,6 +57,11 @@ namespace Puppet.Utils
             return cmd != cmdName ? null : ((SFSObject)response.Params[Fields.PARAMS]);
         }
 
+        public static string GetCommandName(ISFSObject obj)
+        {
+            return obj != null && obj.ContainsKey(Fields.COMMAND) ? obj.GetUtfString(Fields.COMMAND) : string.Empty;
+        }
+
         public static FieldInfo[] GetFieldInfo(Type t, BindingFlags bindingFlags)
         {
             return t.GetFields(bindingFlags);

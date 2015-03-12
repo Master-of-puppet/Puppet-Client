@@ -19,7 +19,7 @@ namespace Puppet.Core.Flow
 
         internal DelegateAPICallback onCreateLobbyCallback;
         internal DelegateAPICallback onJoinLobbyCallback;
-        internal DelegateAPICallback onQuickJoinLobbyCallback;
+        internal DelegateAPICallbackObject onQuickJoinLobbyCallback;
         DelegateAPICallbackDataLobby onGetAllLobby;
         DelegateAPICallbackDataLobby onGetGroupChildrenCallback;
 
@@ -74,13 +74,23 @@ namespace Puppet.Core.Flow
                 ISFSObject obj = Utility.GetDataExtensionResponse(onEventResponse, Fields.RESPONSE_CMD_PLUGIN_MESSAGE);
                 if (obj != null)
                 {
-                    ResponseListLobby responseLobby = SFSDataModelFactory.CreateDataModel<ResponseListLobby>(obj);
-                    if (responseLobby.command == "updateChildren")
-                        DispathGetAllLobby(true, string.Empty, new List<DataLobby>(responseLobby.children));
-                    else if (responseLobby.command == "updateGroupChildren")
+                    string command = Utility.GetCommandName(obj);
+
+                    if (command == "quickJoinGame")
                     {
-                        lastUpdateGroupChildren = new List<DataLobby>(responseLobby.children);
-                        DispathGetGroupChildren(true, string.Empty, lastUpdateGroupChildren);
+                        ResponseQuickJoinGame quickJoinGame = SFSDataModelFactory.CreateDataModel<ResponseQuickJoinGame>(obj);
+                        DispathQuickJoinLobby(quickJoinGame);
+                    }
+                    else if (command == "updateChildren" || command == "updateGroupChildren")
+                    {
+                        ResponseListLobby responseLobby = SFSDataModelFactory.CreateDataModel<ResponseListLobby>(obj);
+                        if (responseLobby.command == "updateChildren")
+                            DispathGetAllLobby(true, string.Empty, new List<DataLobby>(responseLobby.children));
+                        else if (responseLobby.command == "updateGroupChildren")
+                        {
+                            lastUpdateGroupChildren = new List<DataLobby>(responseLobby.children);
+                            DispathGetGroupChildren(true, string.Empty, lastUpdateGroupChildren);
+                        }
                     }
                 }
             }
@@ -112,12 +122,11 @@ namespace Puppet.Core.Flow
 
         internal void JoinLobby(DataLobby lobby, DelegateAPICallback onJoinLobbyCallback)
         {
-            PuGlobal.Instance.SelectedLobby = lobby;
             this.onJoinLobbyCallback = onJoinLobbyCallback;
             PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(new RoomInfo(lobby.roomId)));
         }
 
-        internal void QuickJoinLobby(DelegateAPICallback onQuickJoinLobbyCallback)
+        internal void QuickJoinLobby(DelegateAPICallbackObject onQuickJoinLobbyCallback)
         {
             this.onQuickJoinLobbyCallback = onQuickJoinLobbyCallback;
             PuMain.Socket.Request(RequestPool.GetQuickJoinRoomRequest());
@@ -150,6 +159,20 @@ namespace Puppet.Core.Flow
             if (onGetGroupChildrenCallback != null)
                 onGetGroupChildrenCallback(status, message, data);
             //onGetGroupChildrenCallback = null;
+        }
+
+        void DispathQuickJoinLobby(ResponseQuickJoinGame quickJoinGame)
+        {
+            if (quickJoinGame != null)
+            {
+                if (onQuickJoinLobbyCallback != null)
+                    onQuickJoinLobbyCallback(true, quickJoinGame.message, quickJoinGame.roomId);
+
+                if (quickJoinGame.roomId >= 0)
+                    PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(new RoomInfo(quickJoinGame.roomId)));
+            }
+
+            onQuickJoinLobbyCallback = null;
         }
     }
 }

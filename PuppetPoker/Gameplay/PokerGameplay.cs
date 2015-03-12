@@ -29,6 +29,7 @@ namespace Puppet.Poker
 
         List<KeyValuePair<string, object>> queueWaitingSendClient;
         bool isClientWasListener;
+
         /// <summary>
         /// Thông tin người chơi trong game
         /// </summary>
@@ -69,7 +70,7 @@ namespace Puppet.Poker
                 ISFSObject messageObj = Puppet.Utils.Utility.GetDataExtensionResponse(onEventResponse, Fields.RESPONSE_CMD_PLUGIN_MESSAGE);
                 if(messageObj != null)
                 {
-                    string command = messageObj.GetUtfString("command");
+                    string command = Puppet.Utils.Utility.GetCommandName(messageObj);
                     switch (command)
                     {
                         case "updateGameToWaitingPlayer":

@@ -59,7 +59,8 @@ namespace Puppet.Core.Flow
                 ISFSObject obj = Utility.GetGlobalExtensionResponse(response, Fields.RESPONSE_CMD_GLOBAL_MESSAGE);
                 if (obj != null)
                 {
-                    if (obj.ContainsKey("command") && obj.GetUtfString("command") == "openDailyGift")
+                    string command = Utility.GetCommandName(obj);
+                    if (command == "openDailyGift")
                     {
                         DataDailyGift dataGift = SFSDataModelFactory.CreateDataModel<DataDailyGift>(obj);
                         PuGlobal.Instance.CurrentDailyGift = dataGift;

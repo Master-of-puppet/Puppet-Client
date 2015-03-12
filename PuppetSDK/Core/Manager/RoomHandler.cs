@@ -32,7 +32,19 @@ namespace Puppet.Core
                 //For debug show log RoomVariable
                 foreach (RoomVariable r in _sfsCurrentRoom.GetVariables())
                     Logger.Log("RoomVariable: [" + r.Name + "]", ((SFSObject)r.Value).GetDump(), ELogColor.CYAN);
+
+                OnRoomJoin();
             }
+        }
+
+        void OnRoomJoin()
+        {
+            if (PuGlobal.Instance.SelectedRoomJoin == null)
+                PuGlobal.Instance.SelectedRoomJoin = new RoomInfo();
+
+            PuGlobal.Instance.SelectedRoomJoin.roomId = Current.Id;
+            PuGlobal.Instance.SelectedRoomJoin.roomName = Current.Name;
+            PuGlobal.Instance.SelectedRoomJoin.groupName = Current.GroupId;
         }
 
         internal string GetSceneNameFromCurrentRoom

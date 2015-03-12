@@ -17,6 +17,7 @@ namespace Puppet
         public const string PARAMS              = "params";
         public const string MESSAGE             = "message";
         public const string CMD                 = "cmd";
+        public const string COMMAND             = "command";
 
         public const string COMMAND_GET_CHIDREN  = "getChildren";
         public const string COMMAND_GET_GROUP_CHILDREN = "getGroupChildren";

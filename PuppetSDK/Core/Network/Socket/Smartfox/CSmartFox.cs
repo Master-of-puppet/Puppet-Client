@@ -122,11 +122,10 @@ namespace Puppet.Core.Network.Socket
                         SFSObject sfsObject = (SFSObject)obj;
 
                         string command = string.Empty;
-                        if (sfsObject.ContainsKey("message"))
+                        if (sfsObject.ContainsKey(Fields.MESSAGE))
                         {
-                            ISFSObject message = sfsObject.GetSFSObject("message");
-                            if (message.ContainsKey("command"))
-                                command = message.GetUtfString("command");
+                            ISFSObject message = sfsObject.GetSFSObject(Fields.MESSAGE);
+                            command = Utility.GetCommandName(message);
                         }
                         Logger.Log("SFServer [" + key + "]" + (string.IsNullOrEmpty(command) ? "" : "[" + command + "]") + ":", sfsObject.GetDump(), ELogColor.CYAN);
                         //Logger.Log("JsonFormat =>\n", new JsonFormatter(Utility.SFSObjectToString(sfsObject)).Format(), ELogColor.CYAN);
@@ -147,7 +146,7 @@ namespace Puppet.Core.Network.Socket
         {
             if (PuMain.Setting.IsDebug)
             {
-                Logger.Log("{0}: {1}", evt.Type, evt.Params["message"]);
+                Logger.Log("{0}: {1}", evt.Type, evt.Params[Fields.MESSAGE]);
             }
         }
     }
