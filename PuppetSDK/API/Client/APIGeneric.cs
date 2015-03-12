@@ -41,9 +41,9 @@ namespace Puppet.API.Client
             HttpPool.GetInfoRecharge(callback);
         }
 
-        public static DataLobby SelectedLobby()
+        public static RoomInfo SelectedRoomJoin()
         {
-            return PuGlobal.Instance.SelectedLobby;
+            return PuGlobal.Instance.SelectedRoomJoin;
         }
 
         /// <summary>

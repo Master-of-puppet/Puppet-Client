@@ -30,6 +30,11 @@ namespace Puppet.Core.Model
 
         public override string ToString()
         {
+            return ToSFSObject().GetDump();
+        }
+
+        public string ToJson()
+        {
             return JsonUtil.Serialize(this.ToDictionary());
         }
 
