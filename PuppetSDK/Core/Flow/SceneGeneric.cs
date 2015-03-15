@@ -15,7 +15,7 @@ namespace Puppet.Core.Flow
     internal sealed class SceneGeneric : BaseSingleton<SceneGeneric>
     {
         DelegateAPICallback onBackSceneCallback;
-        DelegateAPICallback onLogoutCallback;
+        DelegateAPICallback onLogoutCallback; 
 
         protected override void Init() {}
 
