@@ -14,7 +14,6 @@ namespace Puppet.Core
     internal class UserHandler : BaseSingleton<UserHandler>
     {
         User _mySelf;
-        UserInfo _self;
 
         protected override void Init(){}
 
@@ -31,10 +30,10 @@ namespace Puppet.Core
                     SFSObject assetObj = GetValueUserVariable("assets");
                     DataUser dataUser = SFSDataModelFactory.CreateDataModel<DataUser>(infoObj);
                     DataAssets dataAsset = SFSDataModelFactory.CreateDataModel<DataAssets>(assetObj);
-                    if (_self == null) 
-                        _self = new UserInfo(dataUser, dataAsset);
-                    else 
-                        _self.UpdateInfo(dataUser, dataAsset);
+                    if (Self == null)
+                        Self = new UserInfo(dataUser, dataAsset);
+                    else
+                        Self.UpdateInfo(dataUser, dataAsset);
 
                     Logger.Log(ELogColor.GREEN, "Updated User Infomations!!!");
                 }
@@ -48,12 +47,15 @@ namespace Puppet.Core
 
         internal UserInfo Self
         {
-            get { return _self; }
+            get { return PuGlobal.Instance.mUserInfo; }
+            private set { 
+                PuGlobal.Instance.mUserInfo = value; 
+            }
         }
 
         internal void UpdateAsset(DataAssetItem[] newContent)
         {
-            _self.assets.UpdateAssets(newContent);
+            Self.assets.UpdateAssets(newContent);
         }
 
         SFSObject GetValueUserVariable(string field)

@@ -57,7 +57,7 @@ namespace Puppet.Core.Network.Http
             string url = isFullUrl ? _path : server.GetPath(_path);
             WebRequest request = HttpWebRequest.Create(url);
 
-            string printLog = url;
+            string printLog = url + "?";
             if (Method == HttpMethod.Post)
             {
                 request.Method = "POST";

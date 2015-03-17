@@ -55,7 +55,8 @@ namespace Puppet.Core.Network.Http
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict.Add("username", username);
-            dict.Add("avatar", Convert.ToString(avatar[20], 2).PadLeft(8, '0'));
+            if(avatar != null)
+                dict.Add("avatar", StringUtil.ConvertToBinary(avatar));
 
             Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "type", "changeAvatar");
         }
@@ -130,17 +131,48 @@ namespace Puppet.Core.Network.Http
             Request(Commands.GET_ACCESS_TOKEN, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "username", username, "password", password, "type", "register");
         }
 
-        internal static void GetInfoRecharge(Action<DataResponseRecharge> callback)
+        internal static void GetInfoRecharge(Action<bool, string, DataResponseRecharge> callback)
         {
             Request(Commands.GET_INFO_RECHARGE, GetVersion(), (bool status, string jsonData) => 
             {
                 if (status)
                 {
                     DataResponseRecharge data = Puppet.Core.Model.Factory.JsonDataModelFactory.CreateDataModel<DataResponseRecharge>(jsonData);
+
+                    bool responseStatus = false;
+                    string responseMessage = string.Empty;
+                    HandleCallback(status, jsonData, out responseStatus, out responseMessage);
+
                     if (callback != null && data != null)
-                        callback(data);
+                        callback (responseStatus, responseMessage, data);
+                }
+                else if (callback != null)
+                {
+                    callback (false, jsonData, null);
                 }
             });
+        }
+
+        internal static void RechargeCard(string userName, string pin, string serial, string type, DelegateAPICallback callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string,string>();
+            dict.Add("username", userName);
+            dict.Add("pin", pin);
+            dict.Add("serial", serial);
+            dict.Add("type", type);
+            Request(Commands.RECHARGE_CARD, dict, (bool status, string message) => HandleCallback(status, message, ref callback));
+        }
+
+        internal static void PostFacebook(string userName, string accessToken, string title, byte[] picture, DelegateAPICallback callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("username", userName);
+            dict.Add("accessToken", accessToken);
+            dict.Add("title", title);
+            if (picture != null)
+                dict.Add("picture", StringUtil.ConvertToBinary(picture));
+
+            Request(Commands.POST_FACEBOOK, dict, (bool status, string message) => HandleCallback(status, message, ref callback));
         }
 
         static Dictionary<string, string> GetVersion()
@@ -160,28 +192,35 @@ namespace Puppet.Core.Network.Http
         {
             bool responseStatus = false;
             string message = string.Empty;
-
-            if (status)
-            {
-                Dictionary<string, object> currentDict = JsonUtil.Deserialize(data);
-                int code = int.Parse(currentDict["code"].ToString());
-                responseStatus = code == 0;
-                message = currentDict["message"].ToString();
-            }
-            else
-                message = data;
+            HandleCallback(status, data, out responseStatus, out message);
 
             if (callback != null)
                 callback(responseStatus, message);
         }
 
-        static void Request(string command, Dictionary<string, string> dict, Action<bool, string> callback, params object[] postData)
+        static void HandleCallback(bool status, string responseData, out bool responseStatus, out string message)
+        {
+            responseStatus = false;
+            message = string.Empty;
+
+            if (status)
+            {
+                Dictionary<string, object> currentDict = JsonUtil.Deserialize(responseData);
+                int code = int.Parse(currentDict["code"].ToString());
+                responseStatus = code == 0;
+                message = currentDict["message"].ToString();
+            }
+            else
+                message = responseData;
+        }
+
+        static void Request(string command, Dictionary<string, string> jsonData, Action<bool, string> callback, params object[] postData)
         {
             List<object> lst = new List<object>();
             if (postData != null)
                 lst = new List<object>(postData);
             lst.Add("data");
-            lst.Add(JsonUtil.Serialize(dict));
+            lst.Add(JsonUtil.Serialize(jsonData));
 
             SimpleHttpRequest request = new SimpleHttpRequest(command, lst.ToArray());
             request.onResponse = (IHttpRequest myRequest, IHttpResponse response) =>

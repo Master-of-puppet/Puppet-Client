@@ -10,6 +10,7 @@ namespace Puppet
     internal class PuGlobal : BaseSingleton<PuGlobal>
     {
         internal string token;
+        internal UserInfo mUserInfo;
         internal RoomInfo FirtRoomToJoin;
         internal DataGame SelectedGame;
         internal DataChannel SelectedChannel;

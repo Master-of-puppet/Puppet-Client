@@ -11,22 +11,21 @@ namespace Puppet.API.Client
 {
     public sealed class APIUser
     {
+        private static string USERNAME
+        {
+            get { return PuGlobal.Instance.mUserInfo.info.userName; }
+        }
+
         #region Change Use Information
         /// <summary>
         /// Thay đổi mật khẩu người chơi
         /// </summary>
-        /// <param name="username">Tên truy cập</param>
         /// <param name="password">Mật khẩu hiện tại</param>
         /// <param name="newpass">Mật khẩu mới</param>
         /// <param name="callback">Hành động khi hoàn tất đổi thông tin</param>
-        public static void ChangeUseInformation(string username, string password, string newpass, DelegateAPICallback callback)
+        public static void ChangeUseInformation(string password, string newpass, DelegateAPICallback callback)
         {
-            if (string.IsNullOrEmpty(username))
-            {
-                if (callback != null) callback(false, "ERROR: Không có thông tin về tài khoản.");
-                return;
-            }
-            else if (string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(password))
             {
                 if (callback != null) callback(false, "ERROR: Mật khẩu hiện tại chưa được nhập.");
                 return;
@@ -37,36 +36,29 @@ namespace Puppet.API.Client
                 return;
             }
 
-            HttpPool.ChangeUseInformation(username, password, newpass, callback);
+            HttpPool.ChangeUseInformation(USERNAME, password, newpass, callback);
         }
 
         /// <summary>
         /// Thay đổi avatar của người chơi
         /// </summary>
-        /// <param name="username">Tên truy cập</param>
         /// <param name="avatar">Thông tin về ảnh (byte[]) mới</param>
         /// <param name="callback">Hành động khi hoàn tất đổi thông tin</param>
         /// 
-        public static void ChangeUseInformation(string username, byte[] avatar, DelegateAPICallback callback)
+        public static void ChangeUseInformation(byte[] avatar, DelegateAPICallback callback)
         {
-            if (string.IsNullOrEmpty(username))
-            {
-                if (callback != null) callback(false, "ERROR: Không có thông tin về tài khoản.");
-                return;
-            }
-            else if (avatar == null)
+            if (avatar == null)
             {
                 if (callback != null) callback(false, "ERROR: Không có dữ liệu về avatar mới.");
                 return;
             }
 
-            HttpPool.ChangeUseInformation(username, avatar, callback);
+            HttpPool.ChangeUseInformation(USERNAME, avatar, callback);
         }
        
         /// <summary>
         /// Thay đổi thông tin cá nhân của người chơi
         /// </summary>
-        /// <param name="username">Tên truy cập</param>
         /// <param name="firstName">First Name</param>
         /// <param name="lastName">Last Name</param>
         /// <param name="middleName">Middle Name</param>
@@ -74,15 +66,10 @@ namespace Puppet.API.Client
         /// <param name="address">Địa chỉ</param>
         /// <param name="birthday">Ngày sinh (dd/MM/yyyy)</param>
         /// <param name="callback">Hành động khi hoàn tất đổi thông tin</param>
-        public static void ChangeUseInformation(string username, string firstName, string lastName, string middleName, int gender, string address, string birthday, DelegateAPICallback callback)
+        public static void ChangeUseInformation(string firstName, string lastName, string middleName, int gender, string address, string birthday, DelegateAPICallback callback)
         {
             DateTime date;
-            if (string.IsNullOrEmpty(username))
-            {
-                if (callback != null) callback(false, "ERROR: Không có thông tin về tài khoản.");
-                return;
-            }
-            else if (DateTime.TryParseExact(birthday, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out date))
+            if (DateTime.TryParseExact(birthday, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out date))
             {
                 if (callback != null) callback(false, "ERROR: Định dạng sinh không chính xác. Vui lòng sử dụng định dạng dd/MM/yyyy.");
                 return;
@@ -90,7 +77,7 @@ namespace Puppet.API.Client
 
             if(gender >= 0 && gender <= 2)
             {
-                HttpPool.ChangeUseInformation(username, firstName, lastName, middleName, gender.ToString(), address, birthday, callback);
+                HttpPool.ChangeUseInformation(USERNAME, firstName, lastName, middleName, gender.ToString(), address, birthday, callback);
             }
             else if(callback != null )
             {
@@ -101,13 +88,12 @@ namespace Puppet.API.Client
         /// <summary>
         /// Thay đổi mật khẩu người chơi
         /// </summary>
-        /// <param name="username">Tên truy cập</param>
         /// <param name="email">Emial mới</param>
         /// <param name="mobile">Mobile mới</param>
         /// <param name="callback">Hành động khi hoàn tất đổi thông tin</param>
-        public static void ChangeUseInformationSpecial(string username, string email, string mobile, DelegateAPICallback callback)
+        public static void ChangeUseInformationSpecial(string email, string mobile, DelegateAPICallback callback)
         {
-            HttpPool.ChangeUseInformationSpecial(username, email, mobile, callback);
+            HttpPool.ChangeUseInformationSpecial(USERNAME, email, mobile, callback);
         }
         #endregion
 

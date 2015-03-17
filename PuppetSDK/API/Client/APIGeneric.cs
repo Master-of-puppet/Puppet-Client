@@ -12,6 +12,11 @@ namespace Puppet.API.Client
 {
     public sealed class APIGeneric
     {
+        private static string USERNAME
+        {
+            get { return PuGlobal.Instance.mUserInfo.info.userName; }
+        }
+
         /// <summary>
         /// Thông báo server quay về cảnh trước đó, Bao gồm cả Logout.
         /// </summary>
@@ -36,11 +41,36 @@ namespace Puppet.API.Client
         /// <summary>
         /// Lấy thông tin về các thể loại nạp tiền
         /// </summary>
-        public static void GetInfoRecharge(Action<DataResponseRecharge> callback)
+        public static void GetInfoRecharge(Action<bool, string, DataResponseRecharge> callback)
         {
             HttpPool.GetInfoRecharge(callback);
         }
 
+        /// <summary>
+        /// Nạp tiền cho hệ thông (sử dụng thẻ cào)
+        /// </summary>
+        /// <param name="pin">Mã pin của thẻ sẽ nạp</param>
+        /// <param name="serial">Mã serial của thẻ sẽ nạp</param>
+        /// <param name="type">Loại thẻ là một trong các loại 'VIETTEL'; 'VINAPHONE'; 'MOBIFONE'; 'VCOIN'; 'GATE'; 'MEGACARD'</param>
+        public static void RechargeCard(string pin, string serial, string type, DelegateAPICallback callback)
+        {
+            HttpPool.RechargeCard(USERNAME, pin, serial, type, callback);
+        }
+
+        /// <summary>
+        /// Đăng mẩu tin lên Facebook
+        /// </summary>
+        /// <param name="accessToken">Facebook AccessToken</param>
+        /// <param name="title">Tiêu đề sẽ được đăng</param>
+        /// <param name="picture">Hình ảnh sẽ được đăng</param>
+        public static void PostFacebook(string accessToken, string title, byte[] picture, DelegateAPICallback callback)
+        {
+            HttpPool.PostFacebook(USERNAME, accessToken, title, picture, callback);
+        }
+
+        /// <summary>
+        /// Lấy thông tin về RoomInfo hiện tại
+        /// </summary>
         public static RoomInfo SelectedRoomJoin()
         {
             return PuGlobal.Instance.SelectedRoomJoin;
@@ -56,6 +86,10 @@ namespace Puppet.API.Client
             SceneGeneric.Instance.SendPublicMessage(message, data);
         }
 
+        /// <summary>
+        /// Gửi nội dung chat đến người chơi cùng trong phòng.
+        /// </summary>
+        /// <param name="data">Kiểu dữ liệu sẽ gửi đi và nội dung sẽ gửi đi</param>
         public static void SendChat(DataChat data)
         {
             PuMain.Socket.Request(RequestPool.GetPublicMessageRequest(DefineKeys.KEY_CHAT_MESSAGE, data));

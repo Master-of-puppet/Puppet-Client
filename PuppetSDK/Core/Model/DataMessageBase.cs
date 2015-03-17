@@ -14,7 +14,7 @@ namespace Puppet.Core.Model
         public DataMessageBase() 
             : base()
         {
-            this.Sender = UserHandler.Instance.Self.info;
+            this.Sender = PuGlobal.Instance.mUserInfo.info;
             this.TimeSent = DateTime.Now.Ticks;
         }
 

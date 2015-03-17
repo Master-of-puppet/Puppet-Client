@@ -7,7 +7,12 @@ namespace Puppet.Core.Model
 {
     public class DataResponseRecharge : DataModel
     {
-        public DataRecharge[] items { get; set; }
+        public int code { get; set; }
+        public string message { get; set; }
+        public string support_phone { get; set; }
+
+        public DataRecharge[] sms { get; set; }
+        public DataRecharge[] card { get; set; }
 
         public DataResponseRecharge() : base() { }
     }

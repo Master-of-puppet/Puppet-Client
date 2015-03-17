@@ -223,6 +223,6 @@ namespace Puppet
 
         public string Domain { get { return domain; } }
 
-        public string GetPath(string path) { return string.Format("{0}/api/{1}", GetBaseUrl(), path); }
+        public string GetPath(string path) { return string.Format("{0}/static/api/{1}", GetBaseUrl(), path); }
     }
 }
