@@ -69,6 +69,17 @@ namespace Puppet.API.Client
         }
 
         /// <summary>
+        /// Thông báo để server lưu lại các yêu cầu đã gửi.
+        /// (Được dùng sau khi Request Application https://developers.facebook.com/docs/unity/reference/current/FB.Apprequest)
+        /// </summary>
+        /// <param name="facebookId">Facebook Id của bạn</param>
+        /// <param name="requestIds">Danh sách Ids các người chơi được gửi yêu cầu</param>
+        public static void SaveRequestFB(string facebookId, string[] requestIds, DelegateAPICallback callback)
+        {
+            HttpPool.SaveRequestFB(facebookId, requestIds, callback);
+        }
+
+        /// <summary>
         /// Lấy thông tin về RoomInfo hiện tại
         /// </summary>
         public static RoomInfo SelectedRoomJoin()

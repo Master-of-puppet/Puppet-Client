@@ -18,5 +18,6 @@ namespace Puppet
         public const string FORGOT_PASSWORD             = "forgotPassword";
         public const string RECHARGE_CARD               = "rechargeCard";
         public const string POST_FACEBOOK               = "postFacebook";
+        public const string SAVE_REQUEST_FB             = "saveRequestFb";
     }
 }
