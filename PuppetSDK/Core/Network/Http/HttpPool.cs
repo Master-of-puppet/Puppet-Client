@@ -159,7 +159,7 @@ namespace Puppet.Core.Network.Http
             dict.Add("username", userName);
             dict.Add("pin", pin);
             dict.Add("serial", serial);
-            dict.Add("type", type);
+            dict.Add("type", type.ToUpper());
             Request(Commands.RECHARGE_CARD, dict, (bool status, string message) => HandleCallback(status, message, ref callback));
         }
 
