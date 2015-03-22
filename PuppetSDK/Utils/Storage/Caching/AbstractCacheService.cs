@@ -38,6 +38,14 @@ namespace Puppet.Utils.Storage
 
         public Dictionary<string, CacheModel> memCache = new Dictionary<string, CacheModel>();
 
+        public Dictionary<string, string> MemCacheToString()
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach(string key in memCache.Keys)
+                dict.Add(key, memCache[key].ToJson());
+            return dict;
+        }
+
         private void SetKeyValue(string fullKey, string value, string type)
         {
             if (HasKey(fullKey))
@@ -46,15 +54,11 @@ namespace Puppet.Utils.Storage
                 if (tmp.type != type)
                     throw new ArgumentException(DUPLICATE_KEY_FOR_VALUE_TYPES_EXCEPTION);
                 else
-                {
-                    CacheModel model = new CacheModel(type, value);
-                    memCache[fullKey] = model;
-                }
+                    memCache[fullKey] = new CacheModel(type, value);
             }
             else
             {
-                CacheModel model = new CacheModel(type, value);
-                memCache.Add(fullKey, model);
+                memCache.Add(fullKey, new CacheModel(type, value));
             }
         }
 
@@ -158,6 +162,7 @@ namespace Puppet.Utils.Storage
             if (HasKey(key))
             {
                 CacheModel model = memCache[key];
+
                 if (model.type == KEY_VALUE_OBJECT)
                 {
                     byte[] bytes = Convert.FromBase64String(model.value);
@@ -169,10 +174,14 @@ namespace Puppet.Utils.Storage
                     }
                 }
                 else
-                    throw new ArgumentException(KEY_NOT_FOUND);
+                {
+                    throw new Exception("Type invalid: " + model.type + " - not is: " + KEY_VALUE_OBJECT);
+                }
             }
             else
+            {
                 throw new ArgumentException(KEY_NOT_FOUND);
+            }
         }
 
         public void DeleteAll()
@@ -192,6 +201,11 @@ namespace Puppet.Utils.Storage
         public bool HasKey(string key)
         {
             return memCache.ContainsKey(key);
+        }
+
+        public bool HasFullKey(string key)
+        {
+            return memCache.ContainsKey(GetFullKey(key));
         }
 
         public string GetFullKey(string key)

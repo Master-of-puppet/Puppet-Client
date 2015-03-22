@@ -145,17 +145,15 @@ namespace Puppet
         {
             Logger.LogWarning("OnApplicationPause: " + pauseStatus);
             if(pauseStatus)
-            {
-                Puppet.Utils.CacheHandler.Instance.SaveFile((saveStatus) =>
-                {
-                    Logger.Log("DefaultSetting.StoreCache=" + saveStatus);
-                });
-            }
+                SaveCache();
         }
 
         public virtual void OnApplicationQuit()
         {
             Logger.LogWarning("OnApplicationQuit");
+
+            SaveCache();
+
             PuMain.Socket.Disconnect();
         }
 
@@ -163,6 +161,12 @@ namespace Puppet
         {
             if (ActionUpdate != null)
                 ActionUpdate();
+        }
+
+        private void SaveCache()
+        {
+            PuSession.Instance.SaveSession();
+            Puppet.Utils.CacheHandler.Instance.SaveFile(null);
         }
     }
 

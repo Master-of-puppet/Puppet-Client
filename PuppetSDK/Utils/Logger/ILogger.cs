@@ -14,7 +14,11 @@ namespace Puppet.Utils.Loggers
 
         void Log(ELogColor color, string message, params object[] list);
 
+        void LogError(string message);
+
         void LogError(string message, params object[] list);
+
+        void LogWarning(string message);
 
         void LogWarning(string message, params object[] list);
 

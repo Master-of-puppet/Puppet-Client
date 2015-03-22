@@ -63,6 +63,8 @@ namespace Puppet.Core.Flow
 
         internal void Login(string token, DelegateAPICallback onLoginCallback)
         {
+            PuSession.Login.SaveLoginInfo(token);
+
             PuGlobal.Instance.token = token;
             this.onLoginCallback = onLoginCallback;
 

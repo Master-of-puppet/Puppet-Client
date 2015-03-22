@@ -6,6 +6,9 @@ namespace Puppet.Utils
 {
     public sealed class CacheHandler : BaseSingleton<CacheHandler>, IStorage, IStorageFile
     {
+        public event Action<bool> onLoadCache;
+        public event Action<bool> onSaveCache;
+
         AbstractCacheService _cache;
 
         protected override void Init()
@@ -18,21 +21,6 @@ namespace Puppet.Utils
                 default:
                     _cache = new DeviceCacheService(PuMain.Setting.PathCache);
                     break;
-            }
-
-            try
-            {
-                LoadFile((bool status) => {
-                    Logger.Log("Load cache file {0}: {1}", PuMain.Setting.PathCache, status);
-                });
-            }
-            catch (System.IO.FileNotFoundException e)
-            {
-                Logger.Log("{0}: Cache file {1} not found", e.Message, PuMain.Setting.PathCache);
-            }
-            catch (Exception e)
-            {
-                Logger.LogException(e);
             }
         }
 
@@ -88,17 +76,33 @@ namespace Puppet.Utils
 
         public bool HasKey(string key)
         {
-            return _cache.HasKey(key);
+            return _cache.HasFullKey(key);
         }
 
         public void SaveFile(Action<bool> callback)
         {
-            _cache.SaveFile(callback);
+            _cache.SaveFile(delegate(bool status)
+            {
+                Logger.LogWarning("StoreCache file {0}: {1}", PuMain.Setting.PathCache, status);
+                if (onSaveCache != null) 
+                    onSaveCache(status);
+
+                if (callback != null)
+                    callback(status);
+            });
         }
 
         public void LoadFile(Action<bool> callback)
         {
-            _cache.LoadFile(callback);
+            _cache.LoadFile(delegate(bool status) 
+            {
+                Logger.LogWarning("LoadCache file {0}: {1}", PuMain.Setting.PathCache, status);
+                if (onLoadCache != null) 
+                    onLoadCache(status);
+
+                if (callback != null) 
+                    callback(status);
+            });
         }
 
         public void DeleteFile(Action<bool> callback)

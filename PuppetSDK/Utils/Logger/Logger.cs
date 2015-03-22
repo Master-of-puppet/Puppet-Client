@@ -42,9 +42,19 @@ namespace Puppet
             Instance._logger.Log("{0}{1}{2}{3}", Logger.StartColor(color), message1, Logger.EndColor(), message2);
         }
 
+        public static void LogError(string message)
+        {
+            Instance._logger.LogError(message);
+        }
+
         public static void LogError(string message, params object[] list)
         {
             Instance._logger.LogError(message, list);
+        }
+
+        public static void LogWarning(string message)
+        {
+            Instance._logger.LogWarning(message);
         }
 
         public static void LogWarning(string message, params object[] list)

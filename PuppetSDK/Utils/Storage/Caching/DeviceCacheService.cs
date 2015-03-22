@@ -38,16 +38,18 @@ namespace Puppet.Utils.Storage
                 {
                     stream.Close();
                 }
+
+                Logger.LogWarning("*** Cache Load JsonData: " + json);
+
                 if (json != null)
                 {
-                    Dictionary<string, object> jsonDict = JsonUtil.Deserialize(json) as Dictionary<string, object>;
+                    Dictionary<string, object> jsonDict = MiniJSON.Json.Deserialize(json) as Dictionary<string, object>;
                     memCache = new Dictionary<string, CacheModel>();
                     foreach (var item in jsonDict)
                     {
-                        CacheModel model = JsonDataModelFactory.CreateDataModel<CacheModel>(item.Value as Dictionary<string, object>);
+                        CacheModel model = JsonDataModelFactory.CreateDataModel<CacheModel>(item.Value.ToString());
+                        //CacheModel model = JsonDataModelFactory.CreateDataModel<CacheModel>(item.Value as Dictionary<string, object>);
                         memCache.Add(item.Key, model);
-                        Logger.Log("Key: " + item.Key);
-                        Logger.Log("Value: " + model.value);
                     }
                     success = true;
                 }
@@ -59,8 +61,10 @@ namespace Puppet.Utils.Storage
         {
             if (memCache == null)
                 throw new ArgumentNullException("data cannot be null.");
-            string data = JsonUtil.Serialize(memCache);
-            Logger.Log("data: " + data);
+
+            //string data = MiniJSON.Json.Serialize(memCache);
+            string data = MiniJSON.Json.Serialize(MemCacheToString());
+            Logger.LogWarning("*** Cache Save JsonData: " + data);
 
             AOTSafe.SetEnvironmentVariables();
             Stream stream = File.Open(filePath, FileMode.OpenOrCreate);

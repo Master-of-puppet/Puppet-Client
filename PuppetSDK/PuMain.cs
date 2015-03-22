@@ -1,8 +1,10 @@
 ﻿using Puppet.Core;
+using Puppet.Core.Flow;
 using Puppet.Core.Manager;
 using Puppet.Core.Model;
 using Puppet.Core.Network.Http;
 using Puppet.Core.Network.Socket;
+using Puppet.Utils;
 using System;
 using System.Collections.Generic;
 
@@ -85,6 +87,13 @@ namespace Puppet
         protected override void Init()
         {
             Logger.Log(ELogColor.GREEN, "PuppetMain has been initialized");
+
+            CacheHandler.Instance.LoadFile((status) =>
+            {
+                PuSession.Instance.Start(status);
+
+                AutoLogin();
+            });
         }
 
         public Sfs2X.Entities.Room SfsRoom
@@ -98,6 +107,17 @@ namespace Puppet
         public void Load()
         {
             new LoadConfig();
+        }
+
+        private void AutoLogin()
+        {
+            if (!string.IsNullOrEmpty(PuSession.Login.Time))
+            {
+                if (!string.IsNullOrEmpty(PuSession.Login.Token))
+                    API.Client.APILogin.Login(PuSession.Login.Token, null);
+                else
+                    API.Client.APILogin.LoginTrial(null);
+            }
         }
     }
 }

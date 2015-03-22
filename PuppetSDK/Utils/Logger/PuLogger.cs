@@ -35,9 +35,19 @@ namespace Puppet.Utils.Loggers
                 Log(message, list);
         }
 
+        public void LogError(string message)
+        {
+            PuMain.Setting.ActionPrintLog(ELogType.Error, message);
+        }
+
         public void LogError(string message, params object[] list)
         {
             PuMain.Setting.ActionPrintLog(ELogType.Error, string.Format(message, list));
+        }
+
+        public void LogWarning(string message)
+        {
+            PuMain.Setting.ActionPrintLog(ELogType.Warning, message);
         }
 
         public void LogWarning(string message, params object[] list)

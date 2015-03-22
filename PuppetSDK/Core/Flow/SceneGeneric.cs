@@ -146,6 +146,7 @@ namespace Puppet.Core.Flow
 
         internal void LoginOut(DelegateAPICallback onLogoutCallback)
         {
+            PuSession.Login.Clear();
             this.onLogoutCallback = onLogoutCallback;
             PuMain.Socket.Request(RequestPool.GetLogout());
         }
