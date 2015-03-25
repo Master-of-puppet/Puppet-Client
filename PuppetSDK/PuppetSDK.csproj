@@ -32,7 +32,9 @@
     <ConsolePause>False</ConsolePause>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\Network\Socket\SocketAddOn\" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Client\APIUser.cs" />
     <Compile Include="API\Client\APIGeneric.cs" />
@@ -94,17 +96,22 @@
     <Compile Include="Core\Model\Factory\SFSDataModelFactory.cs" />
     <Compile Include="Core\Model\RoomInfo.cs" />
     <Compile Include="Core\Model\UserInfo.cs" />
+    <Compile Include="Core\Modules\Buddy\BuddyHandler.cs" />
+    <Compile Include="Core\Modules\Buddy\IBuddy.cs" />
+    <Compile Include="Core\Modules\Buddy\SFBuddy.cs" />
     <Compile Include="Core\Network\Http\BaseHttp.cs" />
     <Compile Include="Core\Network\Http\HttpHandler.cs" />
     <Compile Include="Core\Network\Http\HttpPool.cs" />
     <Compile Include="Core\Network\Http\IHttp.cs" />
     <Compile Include="Core\Network\Http\SimpleHttpRequest.cs" />
     <Compile Include="Core\Network\IServerMode.cs" />
+    <Compile Include="Core\Network\Socket\SocketAbstract.cs" />
     <Compile Include="Core\Network\Socket\ISocket.cs" />
     <Compile Include="Core\Network\Socket\RequestPool.cs" />
     <Compile Include="Core\Network\Socket\Smartfox\CSmartFox.cs" />
     <Compile Include="Core\Network\Socket\Smartfox\SFSocketRequest.cs" />
     <Compile Include="Core\Network\Socket\Smartfox\SFSocketResponse.cs" />
+    <Compile Include="Core\Network\Socket\ISocketAddOn.cs" />
     <Compile Include="Core\Network\Socket\SocketHandler.cs" />
     <Compile Include="Core\Patterns\BaseSingleton.cs" />
     <Compile Include="Core\Patterns\Constant\DefineKeys.cs" />

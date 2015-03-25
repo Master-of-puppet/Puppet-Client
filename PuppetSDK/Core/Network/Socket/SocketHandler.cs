@@ -18,7 +18,12 @@ namespace Puppet.Core.Network.Socket
         ISocket socket;
         protected override void Init() 
         {
-            socket = PuMain.Setting.Socket;
+        }
+
+        public void Init(ISocket yourSocket)
+        {
+            this.socket = yourSocket;
+            PuMain.Setting.Socket = this.socket;
 
             AddListener(OnResponse);
         }
@@ -68,6 +73,16 @@ namespace Puppet.Core.Network.Socket
         public void Close()
         {
             socket.Close();
+        }
+
+        public void AddPlugin(ISocketAddOn addOn)
+        {
+            socket.AddPlugin(addOn);
+        }
+
+        public void RemovePlugin(ISocketAddOn addOn)
+        {
+            socket.RemovePlugin(addOn);
         }
         #endregion
     }

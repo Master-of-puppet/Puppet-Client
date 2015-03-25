@@ -17,6 +17,8 @@ namespace Puppet.Core.Network.Socket
         void Disconnect();
         void Request(ISocketRequest request);
         void Close();
+        void AddPlugin(ISocketAddOn addOn);
+        void RemovePlugin(ISocketAddOn addOn);
     }
 
     public interface ISocketRequest

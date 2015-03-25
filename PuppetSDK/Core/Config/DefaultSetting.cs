@@ -22,7 +22,6 @@ namespace Puppet
         protected IServerMode server, serverWebHttp, serverWebService, serverBundle;
         EPlatform _platform;
         ServerEnvironment _env;
-        ISocket _socket;
         string zoneName = "FoxPoker";
         Action _actionUpdate;
         bool isDebug = true;
@@ -37,7 +36,8 @@ namespace Puppet
             serverBundle = new WebServerMode(domain);
             serverWebHttp = new WebServerMode(domain);
             
-            _socket = new CSmartFox(null);
+            SocketHandler.Instance.Init(new CSmartFox(null));
+            SocketHandler.Instance.AddPlugin(new Puppet.Core.Modules.Buddy.SFBuddy());
 
             AfterInit();
         }
@@ -86,7 +86,7 @@ namespace Puppet
         public IServerMode ServerModeService { get { return serverWebService; } set { serverWebService = value; } }
         public IServerMode ServerModeBundle { get { return serverBundle; } set { serverBundle = value; } }
         public IServerMode ServerModeSocket { get { return server; } set { server = value; } }
-        public ISocket Socket { get { return _socket;  } set { _socket = value; } }
+        public ISocket Socket { get; set; }
 
         public virtual void ActionPrintLog(ELogType type, object message)
         {

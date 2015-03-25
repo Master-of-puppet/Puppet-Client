@@ -17,11 +17,12 @@ using System.Text;
 
 namespace Puppet.Core.Network.Socket
 {
-    internal class CSmartFox : ISocket
+    internal class CSmartFox : SocketAbstract
     {
-        public event Action<string, ISocketResponse> onResponse;
         SmartFox smartFox;
         ConfigData configData;
+
+        public SmartFox SmartFox { get { return smartFox; } }
         
         public CSmartFox(Action<string, ISocketResponse> onEventResponse)
         {
@@ -36,29 +37,20 @@ namespace Puppet.Core.Network.Socket
 
             //if (PuMain.Setting.UseUnity && PuMain.Setting.IsDebug)
             //    foreach (LogLevel log in Enum.GetValues(typeof(LogLevel)))
-            //        smartFox.AddLogListener(log, OnDebugMessage);
+            //        smbtartFox.AddLogListener(log, OnDebugMessage);
 
             if (onEventResponse != null)
                 AddListener(onEventResponse);
         }
 
-        public void AddListener(Action<string, ISocketResponse> onEventResponse)
-        {
-            this.onResponse += onEventResponse;
-        }
-
-        public void RemoveListener(Action<string, ISocketResponse> onEventResponse)
-        {
-            this.onResponse -= onEventResponse;
-        }
-
-        public bool IsConnected
+        public override bool IsConnected
         {
             get { return smartFox.IsConnected; }
         }
 
-        public void Connect()
+        public override void Connect()
         {
+            base.Connect();
             if (!IsConnected)
             {
                 configData = new ConfigData();
@@ -70,26 +62,25 @@ namespace Puppet.Core.Network.Socket
                 Logger.Log(ELogColor.GREEN, "Connecting...");
 
                 //After connect: Start get event in queue
-                PuMain.Setting.ActionUpdate = ProcessEvents;
+                PuMain.Setting.ActionUpdate = () =>
+                {
+                    smartFox.ProcessEvents();
+                };
             }
         }
 
-        public void Reconnect()
+        public override void Disconnect()
+        {
+            base.Disconnect();
+            smartFox.Disconnect();
+        }
+
+        public override void Reconnect()
         {
             smartFox.Connect();
         }
 
-        public void Disconnect()
-        {
-            smartFox.Disconnect();
-        }
-
-        public void ProcessEvents()
-        {
-            smartFox.ProcessEvents();
-        }
-
-        public void Request(ISocketRequest request)
+        public override void Request(ISocketRequest request)
         {
             SFSocketRequest myRequest = (SFSocketRequest)request;
             smartFox.Send(myRequest.Resquest);
@@ -101,7 +92,7 @@ namespace Puppet.Core.Network.Socket
             }
         }
 
-        public void Close()
+        public override void Close()
         {
             smartFox.KillConnection();
         }
@@ -138,8 +129,7 @@ namespace Puppet.Core.Network.Socket
             if(evt.Type == SFSEvent.ROOM_JOIN)
                 RoomHandler.Instance.SetCurrentRoom(response);
 
-            if (onResponse != null)
-                onResponse(evt.Type, response);
+            DispatchResponse(evt.Type, response);
         }
 
         private void OnDebugMessage(BaseEvent evt)
