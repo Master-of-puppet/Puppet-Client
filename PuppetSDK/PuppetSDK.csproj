@@ -33,9 +33,10 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Core\Network\Socket\SocketAddOn\" />
+    <Folder Include="Core\Modules\Room\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Client\APIFriend.cs" />
     <Compile Include="API\Client\APIUser.cs" />
     <Compile Include="API\Client\APIGeneric.cs" />
     <Compile Include="API\Client\APILobby.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Core\Model\Common\IGameplay.cs" />
     <Compile Include="Core\Model\Common\IScene.cs" />
     <Compile Include="Core\Model\Datagram\ResponseQuickJoinGame.cs" />
+    <Compile Include="Core\Model\DataBuddy.cs" />
     <Compile Include="Core\Model\DataMessageBase.cs" />
     <Compile Include="Core\Model\Datagram\RequestCreateGame.cs" />
     <Compile Include="Core\Model\DataChat.cs" />
@@ -97,8 +99,8 @@
     <Compile Include="Core\Model\RoomInfo.cs" />
     <Compile Include="Core\Model\UserInfo.cs" />
     <Compile Include="Core\Modules\Buddy\BuddyHandler.cs" />
-    <Compile Include="Core\Modules\Buddy\IBuddy.cs" />
-    <Compile Include="Core\Modules\Buddy\SFBuddy.cs" />
+    <Compile Include="Core\Modules\Buddy\IBuddyManager.cs" />
+    <Compile Include="Core\Modules\Buddy\CSFBuddy.cs" />
     <Compile Include="Core\Network\Http\BaseHttp.cs" />
     <Compile Include="Core\Network\Http\HttpHandler.cs" />
     <Compile Include="Core\Network\Http\HttpPool.cs" />

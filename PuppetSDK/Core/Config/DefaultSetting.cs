@@ -1,4 +1,5 @@
 ﻿using Puppet.Core.Model;
+using Puppet.Core.Modules.Buddy;
 using Puppet.Core.Network.Socket;
 using Puppet.Utils;
 using Puppet.Utils.Loggers;
@@ -37,7 +38,7 @@ namespace Puppet
             serverWebHttp = new WebServerMode(domain);
             
             SocketHandler.Instance.Init(new CSmartFox(null));
-            SocketHandler.Instance.AddPlugin(new Puppet.Core.Modules.Buddy.SFBuddy());
+            BuddyHandler.Instance.Init(new CSFBuddy());
 
             AfterInit();
         }

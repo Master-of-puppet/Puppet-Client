@@ -26,8 +26,8 @@ namespace Puppet.Core
                 {
                     _mySelf = user;
 
-                    SFSObject infoObj = GetValueUserVariable("info");
-                    SFSObject assetObj = GetValueUserVariable("assets");
+                    SFSObject infoObj = GetValueUserVariable(_mySelf, "info");
+                    SFSObject assetObj = GetValueUserVariable(_mySelf, "assets");
                     DataUser dataUser = SFSDataModelFactory.CreateDataModel<DataUser>(infoObj);
                     DataAssets dataAsset = SFSDataModelFactory.CreateDataModel<DataAssets>(assetObj);
                     if (Self == null)
@@ -58,14 +58,24 @@ namespace Puppet.Core
             Self.assets.UpdateAssets(newContent);
         }
 
-        SFSObject GetValueUserVariable(string field)
+        SFSObject GetValueUserVariable(User user, string field)
         {
-            if (_mySelf.ContainsVariable(field))
+            if (user.ContainsVariable(field))
             {
-                UserVariable roomVar = _mySelf.GetVariable(field);
+                UserVariable roomVar = user.GetVariable(field);
                 return (SFSObject)roomVar.Value;
             }
             return null;
         }
+
+        internal UserInfo ConvertUser(User user)
+        {
+            SFSObject infoObj = GetValueUserVariable(user, "info");
+            SFSObject assetObj = GetValueUserVariable(user, "assets");
+            DataUser dataUser = SFSDataModelFactory.CreateDataModel<DataUser>(infoObj);
+            DataAssets dataAsset = SFSDataModelFactory.CreateDataModel<DataAssets>(assetObj);
+            return new UserInfo(dataUser, dataAsset);
+        }
+
     }
 }

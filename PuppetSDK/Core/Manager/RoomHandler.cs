@@ -91,6 +91,14 @@ namespace Puppet.Core
             }
             return null;
         }
+
+        internal List<UserInfo> GetUsersInRoom()
+        {
+            List<UserInfo> listUser = new List<UserInfo>();
+            foreach (Sfs2X.Entities.User user in _sfsCurrentRoom.UserList)
+                listUser.Add(UserHandler.Instance.ConvertUser(user));
+            return listUser;
+        }
         
     }
 }

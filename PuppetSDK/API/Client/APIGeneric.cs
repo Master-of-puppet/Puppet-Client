@@ -80,6 +80,15 @@ namespace Puppet.API.Client
         }
 
         /// <summary>
+        /// Lấy thông tin các người chơi có trong phòng hiện tại.
+        /// </summary>
+        /// <returns>Danh sách các người chơi (bao gồm cả người đang gọi API)</returns>
+        public static List<UserInfo> GetUsersInRoom()
+        {
+            return RoomHandler.Instance.GetUsersInRoom();
+        }
+
+        /// <summary>
         /// Lấy thông tin về RoomInfo hiện tại
         /// </summary>
         public static RoomInfo SelectedRoomJoin()
