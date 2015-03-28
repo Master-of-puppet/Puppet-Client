@@ -112,10 +112,16 @@ namespace Puppet.Core.Network.Http
                 WebRequest requestState = result.AsyncState as WebRequest;
                 HttpWebResponse response = requestState.EndGetResponse(result) as HttpWebResponse;
                 simpleResponse.State = response.StatusCode;
-
                 Stream dataStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(dataStream);
                 simpleResponse.Data = reader.ReadToEnd();
+
+                //using (BinaryReader br = new BinaryReader(dataStream))
+                //{
+                //    simpleResponse.Bytes = br.ReadBytes(Convert.ToInt32(dataStream.Length));
+                //    br.Close();
+                //}
+
                 simpleResponse.State = HttpStatusCode.OK;
             }
             catch (Exception e)
@@ -153,9 +159,12 @@ namespace Puppet.Core.Network.Http
                 Logger.LogError("SimpleHttp Error: {0}", simpleResponse.Error
                     + "\nFromRequest: " + (isFullUrl ? _path : server.GetPath(_path))
                     , ELogColor.LIME);
-                   
-            if (onResponse != null)
-                onResponse(this, simpleResponse);
+
+            PuMain.Setting.Threading.QueueOnMainThread(() =>
+            {
+                if (onResponse != null)
+                    onResponse(this, simpleResponse);
+            });
         }
 
         public float TimeOut
@@ -191,5 +200,6 @@ namespace Puppet.Core.Network.Http
         public HttpStatusCode State { get; set; }
         public string Error { get; set; }
         public string Data { get; set; }
+        public byte[] Bytes { get; set; }
     }
 }

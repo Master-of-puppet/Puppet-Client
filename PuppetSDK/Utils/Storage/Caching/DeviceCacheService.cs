@@ -13,7 +13,7 @@ namespace Puppet.Utils.Storage
         string filePath = string.Empty;
         internal DeviceCacheService(string savePath)
         {
-            filePath = savePath;
+            filePath = Path.Combine(savePath, "Caching.save");
         }
 
         protected override bool LoadSync()

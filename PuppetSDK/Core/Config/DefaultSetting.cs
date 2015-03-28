@@ -1,4 +1,5 @@
-﻿using Puppet.Core.Model;
+﻿using Puppet.Core.Manager;
+using Puppet.Core.Model;
 using Puppet.Core.Modules.Buddy;
 using Puppet.Core.Network.Socket;
 using Puppet.Utils;
@@ -79,7 +80,7 @@ namespace Puppet
 
         public virtual string PathCache 
         { 
-            get  { return Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Caching.save"); }
+            get  { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
         }
 
         public ServerEnvironment Environment { get { return _env; } set { _env = value; } }
@@ -166,6 +167,7 @@ namespace Puppet
 
         private void SaveCache()
         {
+            PuDLCache.Instance.SaveCache();
             PuSession.Instance.SaveSession();
             Puppet.Utils.CacheHandler.Instance.SaveFile(null);
         }

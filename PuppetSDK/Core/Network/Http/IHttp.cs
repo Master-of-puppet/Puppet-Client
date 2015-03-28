@@ -27,6 +27,7 @@ namespace Puppet.Core.Network.Http
         HttpStatusCode State { get; set; }
         string Error { get; set; }
         string Data { get; set; }
+        byte[] Bytes { get; set; }
     }
 
     public enum HttpMethod

@@ -90,6 +90,7 @@ namespace Puppet
 
             CacheHandler.Instance.LoadFile((status) =>
             {
+                PuDLCache.Instance.Start();
                 PuSession.Instance.Start(status);
 
                 AutoLogin();

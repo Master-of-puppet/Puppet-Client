@@ -245,7 +245,7 @@ namespace Puppet.Core.Network.Http
                 bool status = string.IsNullOrEmpty(response.Error);
                 //Logger.Log(status ? response.Data : response.Error);
                 if (callback != null)
-                    PuMain.Setting.Threading.QueueOnMainThread(() => callback(status, status ? response.Data : response.Error));
+                    callback(status, status ? response.Data : response.Error);
             };
             PuMain.WWWHandler.Request(request);
         }

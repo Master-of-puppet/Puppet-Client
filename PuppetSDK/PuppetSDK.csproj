@@ -101,6 +101,7 @@
     <Compile Include="Core\Modules\Buddy\BuddyHandler.cs" />
     <Compile Include="Core\Modules\Buddy\IBuddyManager.cs" />
     <Compile Include="Core\Modules\Buddy\CSFBuddy.cs" />
+    <Compile Include="Core\Manager\PuDLCache.cs" />
     <Compile Include="Core\Network\Http\BaseHttp.cs" />
     <Compile Include="Core\Network\Http\HttpHandler.cs" />
     <Compile Include="Core\Network\Http\HttpPool.cs" />
