@@ -52,9 +52,9 @@ namespace Puppet.API.Client
         /// <param name="pin">Mã pin của thẻ sẽ nạp</param>
         /// <param name="serial">Mã serial của thẻ sẽ nạp</param>
         /// <param name="type">Loại thẻ là một trong các loại 'VIETTEL'; 'VINAPHONE'; 'MOBIFONE'; 'VCOIN'; 'GATE'; 'MEGACARD'</param>
-        public static void RechargeCard(string pin, string serial, string type, DelegateAPICallback callback)
+        public static void RechargeCard(string pin, string serial, string trackId, string type, DelegateAPICallback callback)
         {
-            HttpPool.RechargeCard(USERNAME, pin, serial, type, callback);
+            HttpPool.RechargeCard(USERNAME, pin, serial, trackId, type, callback);
         }
 
         /// <summary>

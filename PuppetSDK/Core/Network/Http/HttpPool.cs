@@ -153,12 +153,13 @@ namespace Puppet.Core.Network.Http
             });
         }
 
-        internal static void RechargeCard(string userName, string pin, string serial, string type, DelegateAPICallback callback)
+        internal static void RechargeCard(string userName, string pin, string serial, string trackId, string type, DelegateAPICallback callback)
         {
             Dictionary<string, string> dict = new Dictionary<string,string>();
             dict.Add("username", userName);
             dict.Add("pin", pin);
             dict.Add("serial", serial);
+            dict.Add("track_id", trackId);
             dict.Add("type", type.ToUpper());
             Request(Commands.RECHARGE_CARD, dict, (bool status, string message) => HandleCallback(status, message, ref callback));
         }
