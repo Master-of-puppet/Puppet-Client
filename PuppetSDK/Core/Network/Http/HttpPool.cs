@@ -176,7 +176,7 @@ namespace Puppet.Core.Network.Http
             Request(Commands.POST_FACEBOOK, dict, (bool status, string message) => HandleCallback(status, message, ref callback));
         }
 
-        internal static void SaveRequestFB(string facebookId, string[] requestIds, DelegateAPICallback callback)
+        internal static void SaveRequestFB(string facebookId, string userId, string[] requestIds, DelegateAPICallback callback)
         {
             string request = string.Empty;
             if (requestIds.Length > 0)
@@ -188,6 +188,7 @@ namespace Puppet.Core.Network.Http
 
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict.Add("fb_id", facebookId);
+            dict.Add("user_id", userId);
             dict.Add("request_ids", request);
 
             Request(Commands.SAVE_REQUEST_FB, dict, (bool status, string message) => HandleCallback(status, message, ref callback));

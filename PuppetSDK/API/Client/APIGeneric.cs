@@ -17,6 +17,11 @@ namespace Puppet.API.Client
             get { return PuGlobal.Instance.mUserInfo.info.userName; }
         }
 
+        private static int USER_ID
+        {
+            get { return PuGlobal.Instance.mUserInfo.info.id; }
+        }
+
         /// <summary>
         /// Thông báo server quay về cảnh trước đó, Bao gồm cả Logout.
         /// </summary>
@@ -76,7 +81,7 @@ namespace Puppet.API.Client
         /// <param name="requestIds">Danh sách Ids các người chơi được gửi yêu cầu</param>
         public static void SaveRequestFB(string facebookId, string[] requestIds, DelegateAPICallback callback)
         {
-            HttpPool.SaveRequestFB(facebookId, requestIds, callback);
+            HttpPool.SaveRequestFB(facebookId, USER_ID.ToString(), requestIds, callback);
         }
 
         /// <summary>
