@@ -19,7 +19,10 @@ namespace Puppet.Utils
 
         public static string ConvertToBinary(byte [] data)
         {
-            return Convert.ToString(data[20], 2).PadLeft(8, '0');
+            string binary_string = "";
+            for (int i = 0; i < data.Length; i++)
+                binary_string += Convert.ToString(data[i], 2).PadLeft(8, '0');
+            return binary_string;
         }
 
         public static string GetMd5Hash(string input)

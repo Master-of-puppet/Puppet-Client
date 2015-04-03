@@ -55,7 +55,8 @@ namespace Puppet.Core.Network.Http
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict.Add("username", username);
-            if(avatar != null)
+            if (avatar != null)
+                //dict.Add("avatar", Convert.ToBase64String(avatar));
                 dict.Add("avatar", StringUtil.ConvertToBinary(avatar));
 
             Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "type", "changeAvatar");
@@ -171,6 +172,7 @@ namespace Puppet.Core.Network.Http
             dict.Add("accessToken", accessToken);
             dict.Add("title", title);
             if (picture != null)
+                //dict.Add("picture", Convert.ToBase64String(picture));
                 dict.Add("picture", StringUtil.ConvertToBinary(picture));
 
             Request(Commands.POST_FACEBOOK, dict, (bool status, string message) => HandleCallback(status, message, ref callback));
