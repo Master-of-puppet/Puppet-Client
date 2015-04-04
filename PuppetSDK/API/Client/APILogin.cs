@@ -130,8 +130,19 @@ namespace Puppet.API.Client
                         token = dict[Fields.TOKEN].ToString();
                     else if (dict.ContainsKey(Fields.DETAILS))
                         token = dict[Fields.DETAILS].ToString();
+
+                    onGetTokenCallback(status, token, response);
                 }
-                onGetTokenCallback(status, token, response);
+                else
+                {
+                    HttpPool.GetAccessToken(userName, password, (httpStatus, httpMessage, httpDict) =>
+                    {
+                        if (httpStatus && httpDict.ContainsKey("accessToken"))
+                            token = httpDict["accessToken"].ToString();
+                        
+                        onGetTokenCallback(httpStatus, token, response);
+                    });
+                }
             };
             PuMain.WWWHandler.Request(request, PuMain.Setting.ServerModeService);
         }

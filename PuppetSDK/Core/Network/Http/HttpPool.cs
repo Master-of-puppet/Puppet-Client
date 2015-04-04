@@ -102,6 +102,33 @@ namespace Puppet.Core.Network.Http
             Request(Commands.QUICK_REGISTER, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "username", username, "password", password);
         }
 
+        internal static void GetAccessToken(string userName, string password, DelegateAPICallbackDictionary callback)
+        {
+            Dictionary<string, object> responseDict = new Dictionary<string, object>();
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("type", "login");
+            dict.Add("username", userName);
+            dict.Add("password", password);
+
+            Request(Commands.GET_ACCESS_TOKEN, dict, (bool status, string data) =>
+            {
+                bool responseStatus = false;
+                string message = string.Empty;
+                if (status)
+                {
+                    responseDict = JsonUtil.Deserialize(data);
+                    int code = int.Parse(responseDict["code"].ToString());
+                    responseStatus = code == 0;
+                    message = responseDict["message"].ToString();
+                }
+                else
+                    message = data;
+
+                if (callback != null)
+                    callback(responseStatus, message, responseDict);
+            });
+        }
+
         internal static void GetAccessTokenFacebook(string facebookToken, DelegateAPICallbackDictionary callback)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
