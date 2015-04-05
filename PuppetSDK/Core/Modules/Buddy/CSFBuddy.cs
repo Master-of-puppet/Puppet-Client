@@ -19,10 +19,13 @@ namespace Puppet.Core.Modules.Buddy
         #region for ISocketAddOn
         public bool Initialized { get { return socket != null; } }
 
-        public void Begin(ISocket socket)
+        public void InitSocket(ISocket socket)
         {
             this.socket = (CSmartFox)socket;
+        }
 
+        public void Begin()
+        {
             foreach (FieldInfo info in Utility.GetFieldInfo(typeof(SFSBuddyEvent), BindingFlags.Public | BindingFlags.Static))
                 this.socket.SmartFox.AddEventListener(info.GetValue(null).ToString(), ListenerDelegate);
         }

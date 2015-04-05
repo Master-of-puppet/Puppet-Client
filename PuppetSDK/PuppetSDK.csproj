@@ -32,9 +32,7 @@
     <ConsolePause>False</ConsolePause>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Core\Modules\Room\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="API\Client\APIFriend.cs" />
     <Compile Include="API\Client\APIUser.cs" />
@@ -102,6 +100,9 @@
     <Compile Include="Core\Modules\Buddy\IBuddyManager.cs" />
     <Compile Include="Core\Modules\Buddy\CSFBuddy.cs" />
     <Compile Include="Core\Manager\PuDLCache.cs" />
+    <Compile Include="Core\Modules\Ping\PingHandler.cs" />
+    <Compile Include="Core\Modules\Ping\CSFPing.cs" />
+    <Compile Include="Core\Modules\Ping\IPingManager.cs" />
     <Compile Include="Core\Network\Http\BaseHttp.cs" />
     <Compile Include="Core\Network\Http\HttpHandler.cs" />
     <Compile Include="Core\Network\Http\HttpPool.cs" />

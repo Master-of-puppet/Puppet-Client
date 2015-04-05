@@ -1,4 +1,5 @@
 ﻿using Puppet.Core.Model;
+using Puppet.Core.Modules.Buddy;
 using Puppet.Core.Network.Socket;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,16 @@ namespace Puppet.Core.Modules.Buddy
 
         protected override void Init()
         {
+            if (buddyManager == null)
+                buddyManager = new CSFBuddy();
         }
 
-        public void Init(IBuddyManager buddyManager)
+        internal IBuddyManager GetAddOn
         {
-            this.buddyManager = buddyManager;
-            SocketHandler.Instance.AddPlugin(this.buddyManager);
+            get
+            {
+                return buddyManager;
+            }
         }
 
         public void AddBuddy(DataBuddy buddy)

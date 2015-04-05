@@ -1,6 +1,8 @@
-﻿using Puppet.Core.Manager;
+﻿using Puppet.Core;
+using Puppet.Core.Manager;
 using Puppet.Core.Model;
 using Puppet.Core.Modules.Buddy;
+using Puppet.Core.Modules.Ping;
 using Puppet.Core.Network.Socket;
 using Puppet.Utils;
 using Puppet.Utils.Loggers;
@@ -38,8 +40,10 @@ namespace Puppet
             serverBundle = new WebServerMode(domain);
             serverWebHttp = new WebServerMode(domain);
             
-            SocketHandler.Instance.Init(new CSmartFox(null));
-            BuddyHandler.Instance.Init(new CSFBuddy());
+            SocketHandler.Instance.Init(new CSmartFox());
+            SocketHandler.Instance.AddPlugin(BuddyHandler.Instance.GetAddOn);
+            SocketHandler.Instance.AddPlugin(PingHandler.Instance.GetAddOn);
+            SocketHandler.Instance.InitSocket();
 
             AfterInit();
         }

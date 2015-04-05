@@ -20,12 +20,16 @@ namespace Puppet.Core.Network.Socket
         {
         }
 
-        public void Init(ISocket yourSocket)
+        internal void Init(ISocket yourSocket)
         {
             this.socket = yourSocket;
             PuMain.Setting.Socket = this.socket;
-
             AddListener(OnResponse);
+        }
+
+        internal void InitSocket()
+        {
+            socket.InitSocket();
         }
 
         void OnResponse(string eventType, ISocketResponse response)

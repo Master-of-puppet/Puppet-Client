@@ -6,7 +6,8 @@ namespace Puppet.Core.Network.Socket
     public interface ISocketAddOn
     {
         bool Initialized { get; }
-        void Begin(ISocket socket);
+        void InitSocket(ISocket socket);
+        void Begin();
         void ProcessMessage(string type, ISocketResponse response);
         void End();
     }

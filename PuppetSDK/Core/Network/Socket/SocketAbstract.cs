@@ -11,6 +11,12 @@ namespace Puppet.Core.Network.Socket
         public event Action<string, ISocketResponse> onResponse;
         protected List<ISocketAddOn> listAddOn = new List<ISocketAddOn>();
 
+        public virtual void InitSocket()
+        {
+            foreach (ISocketAddOn addOn in listAddOn)
+                addOn.InitSocket(this);
+        }
+
         public virtual void AddListener(Action<string, ISocketResponse> onEventResponse)
         {
             this.onResponse += onEventResponse;
@@ -46,7 +52,7 @@ namespace Puppet.Core.Network.Socket
         {
             foreach (ISocketAddOn addOn in listAddOn)
                 if(!addOn.Initialized)
-                    addOn.Begin(this);
+                    addOn.Begin();
         }
 
         public virtual void Disconnect()

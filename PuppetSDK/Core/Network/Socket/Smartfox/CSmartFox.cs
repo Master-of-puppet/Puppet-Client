@@ -24,23 +24,21 @@ namespace Puppet.Core.Network.Socket
 
         public SmartFox SmartFox { get { return smartFox; } }
         
-        public CSmartFox(Action<string, ISocketResponse> onEventResponse)
+        public override void InitSocket()
         {
             smartFox = new SmartFox(true);
 
+            foreach (FieldInfo info in Utility.GetFieldInfo(typeof(SFSEvent), BindingFlags.Public | BindingFlags.Static))
+                smartFox.AddEventListener(info.GetValue(null).ToString(), ListenerDelegate);
+
             //smartFox.SetReconnectionSeconds(10);
             smartFox.ThreadSafeMode = PuMain.Setting.UseUnity;
-            smartFox.EnableLagMonitor(false, 4, 10);
-
-            foreach(FieldInfo info in Utility.GetFieldInfo(typeof(SFSEvent), BindingFlags.Public | BindingFlags.Static))
-                smartFox.AddEventListener(info.GetValue(null).ToString(), ListenerDelegate);
 
             //if (PuMain.Setting.UseUnity && PuMain.Setting.IsDebug)
             //    foreach (LogLevel log in Enum.GetValues(typeof(LogLevel)))
             //        smbtartFox.AddLogListener(log, OnDebugMessage);
 
-            if (onEventResponse != null)
-                AddListener(onEventResponse);
+            base.InitSocket();
         }
 
         public override bool IsConnected

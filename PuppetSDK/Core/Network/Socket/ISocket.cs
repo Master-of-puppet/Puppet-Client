@@ -9,6 +9,7 @@ namespace Puppet.Core.Network.Socket
     public interface ISocket
     {
         event Action<string, ISocketResponse> onResponse;
+        void InitSocket();
         void AddListener(Action<string, ISocketResponse> onEventResponse);
         void RemoveListener(Action<string, ISocketResponse> onEventResponse);
         bool IsConnected { get; }
