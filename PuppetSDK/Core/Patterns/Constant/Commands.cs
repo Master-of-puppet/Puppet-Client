@@ -7,17 +7,18 @@ namespace Puppet
 {
     public static class Commands
     {
-        public const string COMMAND_GET_ACCESS_TOKEN    = "?command=get_access_token";
+        public const string COMMAND_GET_ACCESS_TOKEN    = "/realtime/puppet/?command=get_access_token";
 
-        public const string GET_APPLICATION_CONFIG      = "getApplicationConfig";
-        public const string CHANGE_USER_INFORMATION     = "ChangeUserInformation";
-        public const string CHECK_VERSION               = "checkVersion";
-        public const string QUICK_REGISTER              = "quickRegister";
-        public const string GET_ACCESS_TOKEN            = "getAccessToken";
-        public const string GET_INFO_RECHARGE           = "getInfoRecharge";
-        public const string FORGOT_PASSWORD             = "forgotPassword";
-        public const string RECHARGE_CARD               = "rechargeCard";
-        public const string POST_FACEBOOK               = "postFacebook";
-        public const string SAVE_REQUEST_FB             = "saveRequestFb";
+        public const string GET_APPLICATION_CONFIG      = "/static/api/getApplicationConfig";
+        public const string CHANGE_USER_INFORMATION     = "/static/api/ChangeUserInformation";
+        public const string CHECK_VERSION               = "/static/api/checkVersion";
+        public const string QUICK_REGISTER              = "/static/api/quickRegister";
+        public const string GET_ACCESS_TOKEN            = "/static/api/getAccessToken";
+        public const string GET_INFO_RECHARGE           = "/static/api/getInfoRecharge";
+        public const string FORGOT_PASSWORD             = "/static/api/forgotPassword";
+        public const string RECHARGE_CARD               = "/static/api/rechargeCard";
+        public const string POST_FACEBOOK               = "/static/api/postFacebook";
+        public const string SAVE_REQUEST_FB             = "/static/api/saveRequestFb";
+        public const string GET_EVENTS                  = "/api/getEvents";
     }
 }

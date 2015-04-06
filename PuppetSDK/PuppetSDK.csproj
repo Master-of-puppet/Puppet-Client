@@ -70,7 +70,8 @@
     <Compile Include="Core\Model\DataMessageBase.cs" />
     <Compile Include="Core\Model\Datagram\RequestCreateGame.cs" />
     <Compile Include="Core\Model\DataChat.cs" />
-    <Compile Include="Core\Model\DataResponseRecharge.cs" />
+    <Compile Include="Core\Model\DataEvent.cs" />
+    <Compile Include="Core\Model\DataRecharge.cs" />
     <Compile Include="Core\Model\DataAssets.cs" />
     <Compile Include="Core\Model\DataCard.cs" />
     <Compile Include="Core\Model\DataChannel.cs" />

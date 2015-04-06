@@ -30,13 +30,18 @@ namespace Puppet.API.Client
             SceneGeneric.Instance.BackScene(onBackSceneCallback);
         }
 
+        /// <summary>
+        /// Thông báo cần đăng xuất.
+        /// </summary>
+        /// <param name="onLogoutCallback"></param>
         public static void LoginOut(DelegateAPICallback onLogoutCallback)
         {
             SceneGeneric.Instance.LoginOut(onLogoutCallback);
         }
 
         /// <summary>
-        /// Nhận phần thưởng hàng ngày
+        /// Nhận phần thưởng hàng ngày.
+        /// Cần implemnent event EventDispatcher.onDailyGift.
         /// </summary>
         public static void GetDailyGift()
         {
@@ -44,7 +49,15 @@ namespace Puppet.API.Client
         }
 
         /// <summary>
-        /// Lấy thông tin về các thể loại nạp tiền
+        /// Yêu cầu lấy danh sách các sự kiện.
+        /// </summary>
+        public static void GetInfoEvents(Action<bool, string, DataResponseEvents> callback)
+        {
+            HttpPool.GetInfoEvents(callback);
+        }
+
+        /// <summary>
+        /// Lấy thông tin về các thể loại nạp tiền.
         /// </summary>
         public static void GetInfoRecharge(Action<bool, string, DataResponseRecharge> callback)
         {

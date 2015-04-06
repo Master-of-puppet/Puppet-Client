@@ -23,7 +23,7 @@ namespace Puppet
         public static string domain;
         public static string soketServer;
 
-        protected IServerMode server, serverWebHttp, serverWebService, serverBundle;
+        protected IServerMode server, serverWebHttp, serverBundle;
         EPlatform _platform;
         ServerEnvironment _env;
         string zoneName = "FoxPoker";
@@ -36,7 +36,6 @@ namespace Puppet
             _env = ServerEnvironment.Dev;
 
             server = new ServerMode(soketServer);
-            serverWebService = new WebServiceServerMode(domain);
             serverBundle = new WebServerMode(domain);
             serverWebHttp = new WebServerMode(domain);
             
@@ -89,7 +88,6 @@ namespace Puppet
 
         public ServerEnvironment Environment { get { return _env; } set { _env = value; } }
         public IServerMode ServerModeHttp { get { return serverWebHttp; } set { serverWebHttp = value; } }
-        public IServerMode ServerModeService { get { return serverWebService; } set { serverWebService = value; } }
         public IServerMode ServerModeBundle { get { return serverBundle; } set { serverBundle = value; } }
         public IServerMode ServerModeSocket { get { return server; } set { server = value; } }
         public ISocket Socket { get; set; }
@@ -197,26 +195,6 @@ namespace Puppet
         public string GetPath(string path) { return string.Format("{0}/{1}", GetBaseUrl(), path); }
     }
 
-    class WebServiceServerMode : IServerMode
-    {
-        string domain;
-        public WebServiceServerMode(string domain)
-        {
-            if (!string.IsNullOrEmpty(domain))
-                this.domain = domain;
-            else
-                this.domain = "127.0.0.1";
-        }
-
-        public string GetBaseUrl() { return string.Format("http://{0}:{1}", Domain, Port); }
-
-        public int Port { get { return 1990; } }
-
-        public string Domain { get { return domain; } }
-
-        public string GetPath(string path) { return string.Format("{0}/puppet/{1}", GetBaseUrl(), path); }
-    }
-
     class WebServerMode : IServerMode
     {
         string domain;
@@ -234,6 +212,6 @@ namespace Puppet
 
         public string Domain { get { return domain; } }
 
-        public string GetPath(string path) { return string.Format("{0}/static/api/{1}", GetBaseUrl(), path); }
+        public string GetPath(string path) { return string.Format("{0}{1}", GetBaseUrl(), path); }
     }
-}
+} 

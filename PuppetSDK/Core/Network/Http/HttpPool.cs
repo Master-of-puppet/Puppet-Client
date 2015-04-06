@@ -106,9 +106,6 @@ namespace Puppet.Core.Network.Http
         {
             Dictionary<string, object> responseDict = new Dictionary<string, object>();
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            dict.Add("type", "login");
-            dict.Add("username", userName);
-            dict.Add("password", password);
 
             Request(Commands.GET_ACCESS_TOKEN, dict, (bool status, string data) =>
             {
@@ -126,7 +123,7 @@ namespace Puppet.Core.Network.Http
 
                 if (callback != null)
                     callback(responseStatus, message, responseDict);
-            });
+            }, "type", "login", "username", userName, "password", password);
         }
 
         internal static void GetAccessTokenFacebook(string facebookToken, DelegateAPICallbackDictionary callback)
@@ -157,6 +154,28 @@ namespace Puppet.Core.Network.Http
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
             Request(Commands.GET_ACCESS_TOKEN, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "username", username, "password", password, "type", "register");
+        }
+
+        internal static void GetInfoEvents(Action<bool, string, DataResponseEvents> callback)
+        {
+            Request(Commands.GET_EVENTS, null, (bool status, string jsonData) =>
+            {
+                if (status)
+                {
+                    DataResponseEvents data = Puppet.Core.Model.Factory.JsonDataModelFactory.CreateDataModel<DataResponseEvents>(jsonData);
+
+                    bool responseStatus = false;
+                    string responseMessage = string.Empty;
+                    HandleCallback(status, jsonData, out responseStatus, out responseMessage);
+
+                    if (callback != null && data != null)
+                        callback(responseStatus, responseMessage, data);
+                }
+                else if (callback != null)
+                {
+                    callback(false, jsonData, null);
+                }
+            });
         }
 
         internal static void GetInfoRecharge(Action<bool, string, DataResponseRecharge> callback)
@@ -267,8 +286,11 @@ namespace Puppet.Core.Network.Http
             List<object> lst = new List<object>();
             if (postData != null)
                 lst = new List<object>(postData);
-            lst.Add("data");
-            lst.Add(JsonUtil.Serialize(jsonData));
+            if (jsonData != null && jsonData.Count > 0)
+            {
+                lst.Add("data");
+                lst.Add(JsonUtil.Serialize(jsonData));
+            }
 
             SimpleHttpRequest request = new SimpleHttpRequest(command, lst.ToArray());
             request.onResponse = (IHttpRequest myRequest, IHttpResponse response) =>
