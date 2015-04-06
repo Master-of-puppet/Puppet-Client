@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Text;
 
 namespace Puppet.Utils
@@ -19,10 +20,12 @@ namespace Puppet.Utils
 
         public static string ConvertToBinary(byte [] data)
         {
-            string binary_string = "";
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < data.Length; i++)
-                binary_string += Convert.ToString(data[i], 2).PadLeft(8, '0');
-            return binary_string;
+                sb.Append(Convert.ToString(data[i], 2));
+            return sb.ToString();
+            
+            //return BitConverter.ToString(data);
         }
 
         public static string GetMd5Hash(string input)

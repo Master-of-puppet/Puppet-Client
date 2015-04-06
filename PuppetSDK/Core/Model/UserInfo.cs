@@ -27,8 +27,10 @@ namespace Puppet.Core.Model
 
         public void UpdateInfo(DataUser newInfo, DataAssets newAssets)
         {
-            if(info != null)
-                this.info = info;
+            if (info != null)
+            {
+                this.info.UpdateData(newInfo);
+            }
 
             if (newAssets != null && newAssets.content != null)
             {

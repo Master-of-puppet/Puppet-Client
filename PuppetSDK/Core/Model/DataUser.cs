@@ -8,7 +8,11 @@ namespace Puppet.Core.Model
     {
         public int id { get; set; }
         public string userName { get; set; }
+        public int gender { get; set; }
         public string avatar { get; set; }
+        public string mobile { get; set; }
+        public string email { get; set; }
+        public string address { get; set; }
         public string firstName { get; set; }
         public string middleName { get; set; }
         public string lastName { get; set; }
