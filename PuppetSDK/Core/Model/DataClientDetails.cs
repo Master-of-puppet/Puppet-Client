@@ -12,6 +12,7 @@ namespace Puppet.Core.Model
         public string platform { get; set; }
         public string bundleId { get; set; }
         public string uniqueId { get; set; }
+        public string distributor { get; set; }
 
         public DataClientDetails()
             : base()
@@ -27,6 +28,7 @@ namespace Puppet.Core.Model
         void LoadDefault()
         {
             version = new Version();
+            version.LoadDefault();
             platform = "web-html5";
             bundleId = "com.puppet.game.foxpoker";
             uniqueId = PuMain.Setting.UniqueDeviceIdentification;
@@ -43,15 +45,27 @@ namespace Puppet.Core.Model
         public Version()
             : base()
         {
-            major = 0;
-            minor = 1;
-            patch = 0;
-            build = 1;
         }
 
         public Version(SerializationInfo info, StreamingContext ctxt) 
             : base(info, ctxt) 
         { 
+        }
+
+        public void LoadDefault()
+        {
+            this.major = 0;
+            this.minor = 1;
+            this.patch = 0;
+            this.build = 1;
+        }
+
+        public Version(int major, int minor, int patch, int build)
+        {
+            this.major = major;
+            this.minor = minor;
+            this.patch = patch;
+            this.build = build;
         }
     }
 }

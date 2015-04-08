@@ -244,14 +244,15 @@ namespace Puppet.Core.Network.Http
 
         static Dictionary<string, string> GetVersion()
         {
+            DataClientDetails details = PuMain.Setting.ClientDetails;
             Dictionary<string, string> dict = new Dictionary<string, string>();
             dict.Add("code_application", "foxpoker");
-            dict.Add("code_platform", "web-html5");
-            dict.Add("major", "1");
-            dict.Add("minor", "0");
-            dict.Add("patch", "0");
-            dict.Add("build", "100");
-            dict.Add("distributor", "foxpoker");
+            dict.Add("code_platform", details.platform);
+            dict.Add("distributor", details.distributor);
+            dict.Add("major", details.version.major.ToString());
+            dict.Add("minor", details.version.minor.ToString());
+            dict.Add("patch", details.version.patch.ToString());
+            dict.Add("build", details.version.build.ToString());
             return dict;
         }
 
