@@ -46,12 +46,12 @@ namespace Puppet.Core.Flow
                 if (reasonLostConnect == "idle")
                 {
                     PuMain.Socket.Reconnect();
-                    PuMain.Dispatcher.SetNoticeMessage(EMessage.Critical, "Đăng cố kết nối lại với máy chủ.");
+                    PuMain.Dispatcher.SetNoticeMessage(EMessage.Message, "Đăng cố kết nối lại với máy chủ.");
                 }
                 else
                 {
                     DisconnectAndLogin();
-                    PuMain.Dispatcher.SetNoticeMessage(EMessage.Critical, "Mất kết nối đến máy chủ. Vui lòng đăng nhập lại.");
+                    PuMain.Dispatcher.SetNoticeMessage(EMessage.Message, "Mất kết nối đến máy chủ. Vui lòng đăng nhập lại.");
                 }
             }
             else if (eventType.Equals(SFSEvent.EXTENSION_RESPONSE))
@@ -65,6 +65,11 @@ namespace Puppet.Core.Flow
                         DataDailyGift dataGift = SFSDataModelFactory.CreateDataModel<DataDailyGift>(obj);
                         PuGlobal.Instance.CurrentDailyGift = dataGift;
                         PuMain.Dispatcher.SetDailyGift(dataGift);
+                    }
+                    else if(command == "customMessage")
+                    {
+                        DataCustomMessage dataMessage = SFSDataModelFactory.CreateDataModel<DataCustomMessage>(obj);
+                        PuMain.Dispatcher.SetNoticeMessage(EMessage.Message, dataMessage.content);
                     }
                 }
             }

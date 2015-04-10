@@ -27,7 +27,10 @@ namespace Puppet
     public enum EMessage
     {
         Critical,
+        Warning,
         Notify,
+        Message,
+        Error
     }
 
     public enum EUpgrade
