@@ -19,6 +19,11 @@ namespace Puppet.API.Client
             ScenePockerLobby.Instance.GetGroupsLobby(onGetGroupNameCallback);
         }
 
+        /// <summary>
+        /// Chọn và tham gia vào một kênh
+        /// </summary>
+        /// <param name="channel">Kênh muốn tham gia</param>
+        /// <param name="onGetCallback">Thông tin phòng chơi trong kênh</param>
         public static void SetSelectChannel(DataChannel channel, DelegateAPICallbackDataLobby onGetCallback)
         {
             ScenePockerLobby.Instance.SetSelectChannel(channel, onGetCallback);
@@ -39,13 +44,13 @@ namespace Puppet.API.Client
             ScenePockerLobby.Instance.QuickJoinLobby(onJoinLobby);
         }
 
-        public static void AddListener(Action<List<DataLobby>> onCreateCallback, Action<List<DataLobby>> onUpdateCallback, Action<List<DataLobby>> onDeleteCallback)
+        public static void AddListener(Action<DataLobby> onCreateCallback, Action<DataLobby> onUpdateCallback, Action<DataLobby> onDeleteCallback)
         {
-
+            ScenePockerLobby.Instance.AddListener(onCreateCallback, onUpdateCallback, onDeleteCallback);
         }
-        public static void RemoveListener(Action<List<DataLobby>> onCreateCallback, Action<List<DataLobby>> onUpdateCallback, Action<List<DataLobby>> onDeleteCallback)
+        public static void RemoveListener()
         {
-
+            ScenePockerLobby.Instance.RemoveListener();
         }
     }
 }

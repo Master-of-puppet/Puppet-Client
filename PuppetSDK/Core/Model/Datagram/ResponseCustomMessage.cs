@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Puppet.Core.Model
 {
-    public class DataCustomMessage : DataModel
+    public class ResponseCustomMessage : DataModel
     {
         public string command { get; set; }
         public string content { get; set; }
 
-        public DataCustomMessage() : base() { }
+        public ResponseCustomMessage() : base() { }
     }
 }

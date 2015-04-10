@@ -23,7 +23,8 @@ namespace Puppet.Core.Flow
         DelegateAPICallbackDataLobby onGetAllLobby;
         DelegateAPICallbackDataLobby onGetGroupChildrenCallback;
 
-        internal List<DataLobby> lastUpdateGroupChildren;
+        internal List<DataLobby> _listCacheDataLobby;
+        Action<DataLobby> onCreateCallback, onUpdateCallback, onDeleteCallback;
 
         #region DEFAULT NOT MODIFY
         public string ServerScene
@@ -84,13 +85,34 @@ namespace Puppet.Core.Flow
                     else if (command == "updateChildren" || command == "updateGroupChildren")
                     {
                         ResponseListLobby responseLobby = SFSDataModelFactory.CreateDataModel<ResponseListLobby>(obj);
+
+                        List<DataLobby> listLobby = new List<DataLobby>(responseLobby.children);
+                        #region DISPATCH EVENT ADD OR REMOVE LOBBY
+                        if (_listCacheDataLobby != null)
+                        {
+                            List<DataLobby> lobbiesDeleted = _listCacheDataLobby.Except(listLobby).ToList();
+                            if(onDeleteCallback != null)
+                                foreach (DataLobby lobby in lobbiesDeleted) onDeleteCallback(lobby);
+                            List<DataLobby> lobbiesAdded = listLobby.Except(_listCacheDataLobby).ToList();
+                            if(onCreateCallback != null)
+                                foreach (DataLobby lobby in lobbiesAdded) onCreateCallback(lobby);
+                        }
+                        #endregion
+                        _listCacheDataLobby = listLobby;
+
                         if (responseLobby.command == "updateChildren")
-                            DispathGetAllLobby(true, string.Empty, new List<DataLobby>(responseLobby.children));
+                        {
+                            DispathGetAllLobby(true, string.Empty, _listCacheDataLobby);
+                        }
                         else if (responseLobby.command == "updateGroupChildren")
                         {
-                            lastUpdateGroupChildren = new List<DataLobby>(responseLobby.children);
-                            DispathGetGroupChildren(true, string.Empty, lastUpdateGroupChildren);
+                            DispathGetGroupChildren(true, string.Empty, _listCacheDataLobby);
                         }
+                    }
+                    else if (command == "updateUserInRoom" && _listCacheDataLobby.Count != 0 && onUpdateCallback != null)
+                    {
+                        DataLobby updateLobby = SFSDataModelFactory.CreateDataModel<DataLobby>(obj);
+                        onUpdateCallback(updateLobby);
                     }
                 }
             }
@@ -98,8 +120,15 @@ namespace Puppet.Core.Flow
 
         internal void GetAllLobby(DelegateAPICallbackDataLobby onGetAllLobby)
         {
-            this.onGetAllLobby = onGetAllLobby;
-            PuMain.Socket.Request(RequestPool.GetRequestGetChidren());
+            if (_listCacheDataLobby != null && _listCacheDataLobby.Count > 0 && onGetAllLobby != null)
+            {
+                onGetAllLobby(true, string.Empty, _listCacheDataLobby);
+            }
+            else
+            {
+                this.onGetAllLobby = onGetAllLobby;
+                PuMain.Socket.Request(RequestPool.GetRequestGetChidren());
+            }
         }
 
         internal void SetSelectChannel(DataChannel channel, DelegateAPICallbackDataLobby onGetGroupChildrenCallback)
@@ -132,6 +161,20 @@ namespace Puppet.Core.Flow
             PuMain.Socket.Request(RequestPool.GetQuickJoinRoomRequest());
         }
 
+        internal void AddListener(Action<DataLobby> onCreateCallback, Action<DataLobby> onUpdateCallback, Action<DataLobby> onDeleteCallback)
+        {
+            this.onCreateCallback = onCreateCallback;
+            this.onUpdateCallback = onUpdateCallback;
+            this.onDeleteCallback = onDeleteCallback;
+        }
+
+        internal void RemoveListener()
+        {
+            this.onCreateCallback = null;
+            this.onUpdateCallback = null;
+            this.onDeleteCallback = null;
+        }
+
         void DispathGetAllLobby(bool status, string message, List<DataLobby> data)
         {
             if (status)
@@ -158,7 +201,6 @@ namespace Puppet.Core.Flow
         {
             if (onGetGroupChildrenCallback != null)
                 onGetGroupChildrenCallback(status, message, data);
-            //onGetGroupChildrenCallback = null;
         }
 
         void DispathQuickJoinLobby(ResponseQuickJoinGame quickJoinGame)

@@ -68,7 +68,7 @@ namespace Puppet.Core.Flow
                     }
                     else if(command == "customMessage")
                     {
-                        DataCustomMessage dataMessage = SFSDataModelFactory.CreateDataModel<DataCustomMessage>(obj);
+                        ResponseCustomMessage dataMessage = SFSDataModelFactory.CreateDataModel<ResponseCustomMessage>(obj);
                         PuMain.Dispatcher.SetNoticeMessage(EMessage.Message, dataMessage.content);
                     }
                 }

@@ -65,7 +65,7 @@
     <Compile Include="Core\Model\Common\AbstractGameplay.cs" />
     <Compile Include="Core\Model\Common\IGameplay.cs" />
     <Compile Include="Core\Model\Common\IScene.cs" />
-    <Compile Include="Core\Model\DataCustomMessage.cs" />
+    <Compile Include="Core\Model\Datagram\ResponseCustomMessage.cs" />
     <Compile Include="Core\Model\Datagram\ResponseQuickJoinGame.cs" />
     <Compile Include="Core\Model\DataBuddy.cs" />
     <Compile Include="Core\Model\DataMessageBase.cs" />
