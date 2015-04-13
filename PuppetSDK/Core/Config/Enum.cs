@@ -24,6 +24,13 @@ namespace Puppet
         Pocker_Gameplay = 6,
     }
 
+    public enum EventType
+    {
+        WebView = 0,
+        Browser = 1,
+        FacebookApp = 2,
+    }
+
     public enum EMessage
     {
         Critical,

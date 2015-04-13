@@ -21,7 +21,16 @@ namespace Puppet.Core.Model
         public string create_time { get; set; }
         public string image { get; set; }
         public string url { get; set; }
+        public string display { get; set; }
+        public string extra_url { get; set; }
 
         public DataEvent() : base() { }
+
+        public EventType GetEventType ()
+        {
+            int type = 0;
+            int.TryParse(display, out type);
+            return (EventType)type;
+        }
     }
 }
