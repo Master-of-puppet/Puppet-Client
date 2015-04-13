@@ -112,6 +112,12 @@ namespace Puppet.Core.Flow
                     else if (command == "updateUserInRoom" && _listCacheDataLobby.Count != 0 && onUpdateCallback != null)
                     {
                         DataLobby updateLobby = SFSDataModelFactory.CreateDataModel<DataLobby>(obj);
+                        int index = _listCacheDataLobby.FindIndex(lobby => lobby.roomId == updateLobby.roomId);
+                        if(index >= 0)
+                        {
+                            _listCacheDataLobby[index].users = updateLobby.users;
+                            updateLobby = _listCacheDataLobby[index];
+                        }
                         onUpdateCallback(updateLobby);
                     }
                 }
