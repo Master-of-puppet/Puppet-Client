@@ -39,7 +39,7 @@ namespace Puppet.Poker.Models
             }
         }
 
-        public double GetAvailableChip()
+        public double GetGlobalAvailableChip()
         {
             if (globalAsset == null || globalAsset.GetAsset(EAssets.Chip) == null)
                 return 0;

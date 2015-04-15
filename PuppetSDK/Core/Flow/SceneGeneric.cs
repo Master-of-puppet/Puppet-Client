@@ -96,7 +96,7 @@ namespace Puppet.Core.Flow
             }
             else if (eventType.Equals(SFSEvent.USER_VARIABLES_UPDATE))
             {
-                UserHandler.Instance.SetCurrentUser(response);
+                UserHandler.Instance.UpdateUserVariable(response);
             }
             else if (eventType.Equals(SFSEvent.LOGOUT))
             {

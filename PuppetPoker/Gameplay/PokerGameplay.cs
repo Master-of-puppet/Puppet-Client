@@ -59,9 +59,19 @@ namespace Puppet.Poker
             _lastBetForSitdown = 0;
             mainPlayerUsername = Puppet.API.Client.APIUser.GetUserInformation().info.userName;
             firstTimeJoinGame = true;
+            PuMain.Dispatcher.onUserInfoUpdate += Dispatcher_onUserInfoUpdate;
         }
 
-        public override void ExitGameplay() {}
+        public override void ExitGameplay() {
+            PuMain.Dispatcher.onUserInfoUpdate -= Dispatcher_onUserInfoUpdate;
+        }
+
+        void Dispatcher_onUserInfoUpdate(UserInfo userInfo)
+        {
+            string dictKey = userInfo.info.userName;
+            if (_dictAllPlayers.ContainsKey(dictKey))
+                _dictAllPlayers[dictKey].globalAsset.UpdateAssets(userInfo.assets.content);
+        }
 
         public override void ProcessEvents(string eventType, ISocketResponse onEventResponse)
         {

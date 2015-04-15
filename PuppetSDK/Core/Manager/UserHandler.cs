@@ -17,9 +17,9 @@ namespace Puppet.Core
 
         protected override void Init(){}
 
-        internal void SetCurrentUser(ISocketResponse response)
+        internal void UpdateUserVariable(ISocketResponse response)
         {
-            if (response.Params.Contains("user"))
+            if (response.Params.Contains("user") && response.Params["user"] is User)
             {
                 User user = (User)response.Params["user"];
                 if (_mySelf == null || (_mySelf != null && _mySelf.Id == user.Id))
@@ -37,13 +37,11 @@ namespace Puppet.Core
 
                     Logger.Log(ELogColor.GREEN, "Updated User Infomations!!!");
                 }
+                PuMain.Dispatcher.SetUpdateUserInfo(ConvertUser(user));
 
                 //For debug show log RoomVariable
-                foreach (UserVariable r in _mySelf.GetVariables())
+                foreach (UserVariable r in user.GetVariables())
                     Logger.Log("UserVariable: [" + r.Name + "]", ((SFSObject)r.Value).GetDump(), ELogColor.CYAN);
-
-                Logger.LogWarning("---> Data UserInfo Changed to: " + Self.info.ToString());
-
             }
         }
 
