@@ -70,7 +70,10 @@ namespace Puppet.Poker
         {
             string dictKey = userInfo.info.userName;
             if (_dictAllPlayers.ContainsKey(dictKey))
+            {
                 _dictAllPlayers[dictKey].globalAsset.UpdateAssets(userInfo.assets.content);
+                _dictAllPlayers[dictKey].SetGlobalInfo(userInfo.info);
+            }
         }
 
         public override void ProcessEvents(string eventType, ISocketResponse onEventResponse)

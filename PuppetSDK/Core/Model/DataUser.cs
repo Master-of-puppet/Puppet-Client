@@ -16,7 +16,6 @@ namespace Puppet.Core.Model
         public string firstName { get; set; }
         public string middleName { get; set; }
         public string lastName { get; set; }
-        public long facebookId { get; set; }
         public int numberTotalGames { get; set; }
         public int numberWinGames { get; set; }
         public int numberLossGames { get; set; }
