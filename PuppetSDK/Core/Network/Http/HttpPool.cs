@@ -92,7 +92,44 @@ namespace Puppet.Core.Network.Http
             dict.Add("email", email);
             dict.Add("mobile", mobile);
 
-            Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "type", "changeInformationSpecial");
+            Request(Commands.CHANGE_USER_INFORMATION, dict, (bool status, string data) => {
+
+                Dictionary<string, object> responseDict = new Dictionary<string, object>();
+                bool responseStatus = false;
+                string message = string.Empty;
+                if (status)
+                {
+                    responseDict = JsonUtil.Deserialize(data);
+                    int code = int.Parse(responseDict["code"].ToString());
+                    responseStatus = code == 0;
+                    message = responseDict["message"].ToString();
+
+                    if (responseDict.ContainsKey("code_mobile"))
+                    {
+                        code = int.Parse(responseDict["code_mobile"].ToString());
+                        responseStatus = code == 0;
+                        if (code == 1)
+                            message = "Số điện thoại đã từng được cập nhật. ";
+                        else if (code == 2)
+                            message = "Số điện thoại đã có người sử dụng. ";
+                    }
+                    if (responseDict.ContainsKey("code_email"))
+                    {
+                        code = int.Parse(responseDict["code_email"].ToString());
+                        responseStatus = code == 0;
+                        if (code == 1)
+                            message += "Email đã từng được cập nhật.";
+                        else if (code == 2)
+                            message += "Email đã có người sử dụng.";
+                    }
+                }
+                else
+                    message = data;
+
+                if (callback != null)
+                    callback(responseStatus, message);
+
+            }, "type", "changeInformationSpecial");
         }
         #endregion
 

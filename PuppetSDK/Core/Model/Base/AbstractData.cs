@@ -116,11 +116,12 @@ namespace Puppet.Core.Model
                 DispatchDataChanged();
         }
 
-        public void DispatchAttribute(string propertyName)
+        public void DispatchAttribute(string propertyName, bool autoDispatchDataChanged = true)
         {
             if (onAttributeChange != null)
                 onAttributeChange(this, propertyName);
-            DispatchDataChanged();
+            if (autoDispatchDataChanged)
+                DispatchDataChanged();
         }
 
         public void DispatchDataChanged()

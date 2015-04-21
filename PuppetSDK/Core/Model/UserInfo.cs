@@ -30,6 +30,7 @@ namespace Puppet.Core.Model
             if (info != null)
             {
                 this.info.UpdateData(newInfo);
+                DispatchAttribute("info", false);
             }
 
             if (newAssets != null && newAssets.content != null)
@@ -47,8 +48,10 @@ namespace Puppet.Core.Model
                     }
                 }
                 assets.content = currentContent.ToArray();
+                DispatchAttribute("assets", false);
             }
-            DispatchAttribute("assets");
+
+            DispatchDataChanged();
         }
     }
 }
