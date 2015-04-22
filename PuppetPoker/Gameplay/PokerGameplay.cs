@@ -72,7 +72,6 @@ namespace Puppet.Poker
             if (_dictAllPlayers.ContainsKey(dictKey))
             {
                 _dictAllPlayers[dictKey].globalAsset.UpdateAssets(userInfo.assets.content);
-                _dictAllPlayers[dictKey].SetGlobalInfo(userInfo.info);
             }
         }
 

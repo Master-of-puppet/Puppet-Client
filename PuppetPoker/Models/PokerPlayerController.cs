@@ -14,8 +14,6 @@ namespace Puppet.Poker.Models
         public bool inTurn { get; set; }
         public DataAssets globalAsset { get; set; }
 
-        private DataUser _globalInfo;
-
         public PokerPlayerController() 
             : base()
         {
@@ -46,15 +44,6 @@ namespace Puppet.Poker.Models
             if (globalAsset == null || globalAsset.GetAsset(EAssets.Chip) == null)
                 return 0;
             return globalAsset.GetAsset(EAssets.Chip).value;
-        }
-
-        internal void SetGlobalInfo(DataUser dataUser)
-        {
-            _globalInfo = dataUser;
-        }
-        public DataUser GetUserInfo()
-        {
-            return _globalInfo;
         }
     }
 }

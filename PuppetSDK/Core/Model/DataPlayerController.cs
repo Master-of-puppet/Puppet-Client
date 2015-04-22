@@ -6,19 +6,12 @@ using System.Text;
 
 namespace Puppet.Core.Model
 {
-    public class DataPlayerController : DataModel
+    public class DataPlayerController : DataUser
     {
-        public int id { get; set; }
-        public string userName { get; set; }
         public DataAssets asset { get; set; }
         public string gameState { get; set; }
-        public string avatar { get; set; }
         public int slotIndex { get; set; }
         public bool isMaster { get; set; }
-
-        public string firstName { get; set; }
-        public string middleName { get; set; }
-        public string lastName { get; set; }
 
         public DataPlayerController() 
             : base()
