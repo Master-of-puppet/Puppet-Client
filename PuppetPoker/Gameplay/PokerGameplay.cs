@@ -268,6 +268,17 @@ namespace Puppet.Poker
         #region Others
         public string Dealer { get { return _dealerName; } }
 
+        public bool CanBePlay 
+        { 
+            get 
+            { 
+                double currentChip = Puppet.API.Client.APIUser.GetUserInformation().assets.GetAsset(EAssets.Chip).value; 
+                return currentChip >= MinimumChipToPlay; 
+            } 
+        }
+
+        public double MinimumChipToPlay { get { return SmallBlind * 20f; } }
+
         public double SmallBlind { get { return gameDetails.customConfiguration.SmallBlind; } }
 
         public double MaxBlind { get { return gameDetails.customConfiguration.SmallBlind * 2; } }
