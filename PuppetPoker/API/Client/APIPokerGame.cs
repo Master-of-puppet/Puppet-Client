@@ -15,9 +15,10 @@ namespace Puppet.API.Client
             return PokerMain.Instance.game;
         }
 
-        public static void SitDown(int slotIndex, double money)
+        public static void SitDown(int slotIndex, double money, bool isAutoBuy)
         {
             PuMain.Socket.Request(Puppet.Poker.Datagram.RequestPool.GetSitRequest(PokerRequestPlay.SIT, slotIndex, money));
+            PuMain.Socket.Request(RequestPool.SetAutoBuy(isAutoBuy));
         }
 
         public static void PlayRequest(PokerRequestPlay request, double value)
@@ -38,11 +39,6 @@ namespace Puppet.API.Client
         public static void GetOrderCommunity(int [] cards)
         {
             PuMain.Socket.Request(RequestPool.GetOrderCommunity(cards));
-        }
-
-        public static void SetAutoBuy(bool autoBuy)
-        {
-            PuMain.Socket.Request(RequestPool.SetAutoBuy(autoBuy));
         }
 
         public static void StandUp()

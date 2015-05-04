@@ -493,7 +493,7 @@ namespace Puppet.Poker
                 if (listIndex.Contains(i) == false) { minValue = i; break; }
             
             if (minValue >= 0)
-                API.Client.APIPokerGame.SitDown(minValue, LastBetForSitdown);
+                API.Client.APIPokerGame.SitDown(minValue, LastBetForSitdown, false);
         }
         #endregion
 
