@@ -38,16 +38,17 @@ namespace Puppet.Poker
         SortedDictionary<string, int> _timesInteractiveInRound = new SortedDictionary<string, int>();
         List<string> _listPlayerInGame = new List<string>();
         List<string> _listPlayerWaitNextGame = new List<string>();
-        string mainPlayerUsername = string.Empty;
         string _dealerName = string.Empty;
         List<PokerCard> _comminityCards = new List<PokerCard>();
         List<PokerCard> _cardMainPlayer = new List<PokerCard>();
         string _roomMaster = string.Empty;
         double _lastBetForSitdown;
         bool firstTimeJoinGame = false;
+        UserInfo _mUserInfo;
 
         public override void EnterGameplay()
         {
+            _mUserInfo = Puppet.API.Client.APIUser.GetUserInformation();
             gameDetails = null;
             MainPlayer = LastPlayer = CurrentPlayer = null;
             isClientWasListener = false;
@@ -57,12 +58,12 @@ namespace Puppet.Poker
             _listPlayerInGame = new List<string>();
             _listPlayerWaitNextGame = new List<string>();
             _lastBetForSitdown = 0;
-            mainPlayerUsername = Puppet.API.Client.APIUser.GetUserInformation().info.userName;
             firstTimeJoinGame = true;
             PuMain.Dispatcher.onUserInfoUpdate += Dispatcher_onUserInfoUpdate;
         }
 
-        public override void ExitGameplay() {
+        public override void ExitGameplay() 
+        {
             PuMain.Dispatcher.onUserInfoUpdate -= Dispatcher_onUserInfoUpdate;
         }
 
@@ -70,9 +71,7 @@ namespace Puppet.Poker
         {
             string dictKey = userInfo.info.userName;
             if (_dictAllPlayers.ContainsKey(dictKey))
-            {
                 _dictAllPlayers[dictKey].globalAsset.UpdateAssets(userInfo.assets.content);
-            }
         }
 
         public override void ProcessEvents(string eventType, ISocketResponse onEventResponse)
@@ -85,8 +84,8 @@ namespace Puppet.Poker
                     string command = Puppet.Utils.Utility.GetCommandName(messageObj);
                     switch (command)
                     {
-                        case "updateGameToWaitingPlayer":
-                        case "updateGame":
+                        case "updateGameToWaitingPlayer":   /// Nhận được command khi lần đầu vào game (trạng thái là đang chờ người chơi khác)
+                        case "updateGame":                  /// Nhận được command khi lần đầu vào game (nhưng trận đấu đang diễn ra)
                             ResponseUpdateGame dataUpdateGame = SFSDataModelFactory.CreateDataModel<ResponseUpdateGame>(messageObj);
                             if (dataUpdateGame != null && dataUpdateGame.gameDetails != null)
                             {
@@ -94,29 +93,26 @@ namespace Puppet.Poker
                                 MAX_PLAYER_IN_GAME = gameDetails.customConfiguration.numPlayers;
                             }
                             RefreshDataPlayer(dataUpdateGame.players);
-                            //if (command != "updateGameToWaitingPlayer")
-                            {
-                                RefreshListPlayerInGame(false, dataUpdateGame.players);
-                                UpdateCardDeal(dataUpdateGame.dealComminityCards);
-                            }
+                            RefreshListPlayerInGame(false, dataUpdateGame.players);
+                            UpdateCardDeal(dataUpdateGame.dealComminityCards);
                             DispathToClient(command, dataUpdateGame);
                             break;
-                        case "updateGameState":
+                        case "updateGameState":             /// Nhận được command khi gameState thay đổi
                             ResponseUpdateGameState dataGameState = SFSDataModelFactory.CreateDataModel<ResponseUpdateGameState>(messageObj);
                             DispathToClient(command, dataGameState);
                             break;
-                        case "updateRoomMaster":
+                        case "updateRoomMaster":            /// Nhận được command khi chủ phòng bị thay đổi
                             ResponseUpdateRoomMaster dataRoomMaster = SFSDataModelFactory.CreateDataModel<ResponseUpdateRoomMaster>(messageObj);
                             _roomMaster = dataRoomMaster.player.userName;
                             RefreshDataPlayer(dataRoomMaster.player);
                             DispathToClient(command, dataRoomMaster);
                             break;
-                        case "playerListChanged" :
+                        case "playerListChanged":          /// Nhận được command khi có người chơi thay đổi trong phòng
                             ResponsePlayerListChanged dataPlayerListChanged = SFSDataModelFactory.CreateDataModel<ResponsePlayerListChanged>(messageObj);
                             UpdatePlayerInRoom(dataPlayerListChanged);
                             DispathToClient(command, dataPlayerListChanged);
                             break;
-                        case "updateHand":
+                        case "updateHand":                  /// Nhận được command khi bắt đầu chia bài
                             ResponseUpdateHand dataUpdateHand = SFSDataModelFactory.CreateDataModel<ResponseUpdateHand>(messageObj);
                             UpdateCardMainPlayer(dataUpdateHand.hand);
                             RefreshDataPlayer(dataUpdateHand.players);
@@ -124,35 +120,35 @@ namespace Puppet.Poker
                             HandleUpdateHand(dataUpdateHand.dealer);
                             DispathToClient(command, dataUpdateHand);
                             break;
-                        case "turn":
+                        case "turn":                        /// Nhận được command khi chuyển đến lượt chơi của người nào đó
                             ResponseUpdateTurnChange dataTurn = SFSDataModelFactory.CreateDataModel<ResponseUpdateTurnChange>(messageObj);
                             UpdatePlayerData(dataTurn);
                             UpdateCardDeal(dataTurn.dealComminityCards);
                             RefreshDataPlayer(dataTurn.fromPlayer, dataTurn.toPlayer);
                             DispathToClient(command, dataTurn);
                             break;
-                        case "finishGame":
+                        case "finishGame":                  /// Nhận được command khi ván chơi kết thúc
                             ResponseFinishGame dataFinishGame = SFSDataModelFactory.CreateDataModel<ResponseFinishGame>(messageObj);
                             UpdateCardDeal(dataFinishGame.dealComminityCards);
                             HandleFinishGame(dataFinishGame);
                             DispathToClient(command, dataFinishGame);
                             break;
-                        case "waitingDealCard":
+                        case "waitingDealCard":             /// Nhận được command khi 
                             ResponseWaitingDealCard dataWaitingDealcard = SFSDataModelFactory.CreateDataModel<ResponseWaitingDealCard>(messageObj);
                             HandleWaitNewGame();
                             DispathToClient(command, dataWaitingDealcard);
                             break;
-                        case "udpatePot":
+                        case "udpatePot":                   /// Nhận được command khi có một pot thay đổi giá trị
                             ResponseUpdatePot dataPot = SFSDataModelFactory.CreateDataModel<ResponseUpdatePot>(messageObj);
                             ResetCurrentBetting();
                             DispathToClient(command, dataPot);
                             break;
-                        case "updateUserInfo" :
+                        case "updateUserInfo":             /// Nhận được command khi thông tin của người chơi trong bàn có cập nhật
                             ResponseUpdateUserInfo dataUserInfo = SFSDataModelFactory.CreateDataModel<ResponseUpdateUserInfo>(messageObj);
                             UpdateUserInfo(dataUserInfo);
                             DispathToClient(command, dataUserInfo);
                             break;
-                        case "error" :
+                        case "error":                      /// Nhận được command khi có mỗi xẩy ra trong gameplay
                             ResponseError dataError = SFSDataModelFactory.CreateDataModel<ResponseError>(messageObj);
                             DispathToClient(command, dataError);
                             break;
@@ -242,10 +238,7 @@ namespace Puppet.Poker
             if(cards != null && cards.Length > 0)
             {
                 for (int i = 0; i < cards.Length;i++ )
-                {
-                    int cardId = cards[i];
-                    _cardMainPlayer.Add(new PokerCard(cardId));
-                }
+                    _cardMainPlayer.Add(new PokerCard(cards[i]));
             }
         }
 
@@ -263,37 +256,6 @@ namespace Puppet.Poker
         public List<PokerCard> DealComminityCards { get { return _comminityCards; } }
 
         public List<PokerCard> CardsMainPlayer { get { return _cardMainPlayer; } }
-        #endregion
-
-        #region Others
-        public string Dealer { get { return _dealerName; } }
-
-        public bool CanBePlay 
-        { 
-            get 
-            { 
-                double currentChip = Puppet.API.Client.APIUser.GetUserInformation().assets.GetAsset(EAssets.Chip).value; 
-                return currentChip >= MinimumChipToPlay; 
-            } 
-        }
-
-        public double MinimumChipToPlay { get { return SmallBlind * 20f; } }
-
-        public double SmallBlind { get { return gameDetails.customConfiguration.SmallBlind; } }
-
-        public double MaxBlind { get { return gameDetails.customConfiguration.SmallBlind * 2; } }
-
-        public double LastBetForSitdown
-        {
-            get
-            {
-                if (_lastBetForSitdown <= 0)
-                    _lastBetForSitdown = SmallBlind * 20;
-                return _lastBetForSitdown;
-            }
-        }
-
-        public string RoomMaster { get { return _roomMaster; } }
         #endregion
 
         #region Betting
@@ -424,7 +386,7 @@ namespace Puppet.Poker
                     else
                         _dictAllPlayers[p.userName].UpdateData(p, false, false);
 
-                    if (_dictAllPlayers[p.userName].userName == mainPlayerUsername)
+                    if (_dictAllPlayers[p.userName].userName == _mUserInfo.info.userName)
                         MainPlayer = _dictAllPlayers[p.userName];
                 }
 
@@ -473,16 +435,6 @@ namespace Puppet.Poker
         public PokerPlayerController GetPlayer(string userName)
         {
             return ListPlayer.Find(p => p.userName == userName);
-        }
-
-        public bool IsMainPlayerInGame
-        {
-            get { return IsPlayerInGame(mainPlayerUsername); }
-        }
-
-        public bool IsPlayerInGame(string userName)
-        {
-            return ListPlayerInGame.Contains(userName);
         }
 
         public PokerPlayerController MainPlayer
@@ -542,6 +494,84 @@ namespace Puppet.Poker
             
             if (minValue >= 0)
                 API.Client.APIPokerGame.SitDown(minValue, LastBetForSitdown);
+        }
+        #endregion
+
+        #region Others
+        public string Dealer { get { return _dealerName; } }
+
+        public bool CanBePlay
+        {
+            get
+            {
+                double currentChip = Puppet.API.Client.APIUser.GetUserInformation().assets.GetAsset(EAssets.Chip).value;
+                return currentChip >= MinimumChipToPlay;
+            }
+        }
+
+        public double MinimumChipToPlay { get { return SmallBlind * 20f; } }
+
+        public double SmallBlind { get { return gameDetails.customConfiguration.SmallBlind; } }
+
+        public double MaxBlind { get { return gameDetails.customConfiguration.SmallBlind * 2; } }
+
+        public double LastBetForSitdown
+        {
+            get
+            {
+                if (_lastBetForSitdown <= 0)
+                    _lastBetForSitdown = SmallBlind * 20;
+                return _lastBetForSitdown;
+            }
+        }
+
+        public string RoomMaster { get { return _roomMaster; } }
+
+        public bool IsMainPlayer(string userName)
+        {
+            return _mUserInfo.info.userName == userName;
+        }
+
+        public bool IsMainPlayerInGame
+        {
+            get { return IsPlayerInGame(_mUserInfo.info.userName); }
+        }
+
+        public bool IsPlayerInGame(string userName)
+        {
+            return ListPlayerInGame.Contains(userName);
+        }
+
+        public bool IsMainPlayerSatDown
+        {
+            get { return ListPlayerInGame.Find(userName => userName == _mUserInfo.info.userName) != null; }
+        }
+
+        public bool IsMainTurn
+        {
+            get { try { return CurrentPlayer.userName == MainPlayer.userName; } catch { return false; } }
+        }
+
+        public int GetTotalPlayerNotFold
+        {
+            get { return ListPlayer.FindAll(p => p.GetPlayerState() != PokerPlayerState.fold && p.GetPlayerState() != PokerPlayerState.none).Count; }
+        }
+
+        public double CurrentBettingDiff
+        {
+            get
+            {
+                if (CurrentPlayer == null)
+                    return 0;
+                double leftMoney = CurrentPlayer.GetMoney();
+                double diff = MaxCurrentBetting - MainPlayer.currentBet;
+                return leftMoney > diff ? diff : leftMoney;
+            }
+        }
+
+        public UserInfo mUserInfo
+        {
+            get { return _mUserInfo; }
         }
         #endregion
     }
