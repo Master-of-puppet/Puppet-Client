@@ -14,7 +14,13 @@ namespace Puppet.Utils
     {
         public static void SimpleCoroutine(IEnumerator ienumerator)
         {
-            try { while (!ienumerator.MoveNext()) break; }
+            try 
+            { 
+                while (ienumerator.MoveNext())
+                {
+                    //ienumerator.Current;
+                }
+            }
             finally
             {
                 IDisposable disposable = ienumerator as IDisposable;

@@ -27,8 +27,8 @@ namespace Puppet.Poker
         public event Action<DataMessageBase> onDispatchViewCard;
         public event Action<ResponseUpdateGame> onFirstTimeJoinGame;
 
-        List<KeyValuePair<string, object>> queueWaitingSendClient;
-        bool isClientWasListener;
+        List<KeyValuePair<string, object>> queueWaitingEvent;
+        bool __isClientListening;
 
         /// <summary>
         /// Thông tin người chơi trong game
@@ -48,11 +48,12 @@ namespace Puppet.Poker
 
         public override void EnterGameplay()
         {
+            IsClientListening = false;
+            isRunningIEnumerator = false;
             _mUserInfo = Puppet.API.Client.APIUser.GetUserInformation();
             gameDetails = null;
             MainPlayer = LastPlayer = CurrentPlayer = null;
-            isClientWasListener = false;
-            queueWaitingSendClient = new List<KeyValuePair<string, object>>();
+            queueWaitingEvent = new List<KeyValuePair<string, object>>();
             _dictAllPlayers = new Dictionary<string, PokerPlayerController>();
             _maxCurrentBetting = 0;
             _listPlayerInGame = new List<string>();
@@ -170,18 +171,50 @@ namespace Puppet.Poker
         #region Dispath To Client
         private void DispathToClient(string command, object data)
         {
-            if (isClientWasListener)
+            if (IsClientListening && queueWaitingEvent.Count == 0)
                 SendGameEventToClient(command, data);
             else
-                queueWaitingSendClient.Add(new KeyValuePair<string, object>(command, data));
+                queueWaitingEvent.Add(new KeyValuePair<string, object>(command, data));
         }
 
-        public void StartListenerEvent()
+        /// <summary>
+        /// Client need call at start/end method when need handle event with IEnumerator or invoke
+        /// to PuppetSDK need queue events to wait dispath.
+        /// Set: IsClientListening = true; when start game and UI ready
+        /// </summary>
+        public bool IsClientListening
         {
-            foreach (KeyValuePair<string, object> keyAndValue in queueWaitingSendClient)
-                SendGameEventToClient(keyAndValue.Key, keyAndValue.Value);
-            queueWaitingSendClient.Clear();
-            isClientWasListener = true;
+            get { return __isClientListening; }
+            set
+            {
+                if(__isClientListening != value)
+                {
+                    __isClientListening = value;
+
+                    if (__isClientListening && !isRunningIEnumerator)
+                        Utility.SimpleCoroutine(_ProcessStackWaiting());
+                }
+            }
+        }
+
+        bool isRunningIEnumerator = false;
+        IEnumerator<object> _ProcessStackWaiting()
+        {
+            isRunningIEnumerator = true;
+
+            while (queueWaitingEvent.Count > 0)
+            {
+                while (!IsClientListening)
+                    yield return 0;
+
+                SendGameEventToClient(queueWaitingEvent[0].Key, queueWaitingEvent[0].Value);
+                queueWaitingEvent.RemoveAt(0);
+
+                yield return 0;
+            }
+
+            isRunningIEnumerator = false;
+            yield return 0;
         }
 
         void SendGameEventToClient(string command, object data)
@@ -200,13 +233,8 @@ namespace Puppet.Poker
             }
         }
 
-        public void StartFinishGame()
-        {
-            isClientWasListener = false;
-        }
         public void EndFinishGame()
         {
-            StartListenerEvent();
             ResetListPlayerInGame();
         }
         #endregion
@@ -411,10 +439,10 @@ namespace Puppet.Poker
         }
         void ResetListPlayerInGame()
         {
+            CurrentPlayer = LastPlayer = null;
             _listPlayerInGame.Clear();
             _listPlayerWaitNextGame.Clear();
             ListPlayer.ForEach(p => { if (p != null) p.DispatchAttribute(string.Empty); });
-            CurrentPlayer = LastPlayer = null;
         }
 
         public List<PokerPlayerController> ListPlayer 
