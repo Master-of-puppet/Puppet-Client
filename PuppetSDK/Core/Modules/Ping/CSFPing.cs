@@ -44,14 +44,6 @@ namespace Puppet.Core.Modules.Ping
         #region for IPingManager
         public void StartPing()
         {
-            Utility.SimpleCoroutine(_Start());
-        }
-
-        IEnumerator _Start()
-        {
-            while (!Initialized || socket.IsConnected == false)
-                yield return null;
-
             _lagMonitor.Start();
         }
 
