@@ -39,7 +39,7 @@ namespace Puppet
             AppDomain.CurrentDomain.AssemblyResolve += RegisterAssembly;
 
             //Required called before using
-            PuMain.Instance.Load();
+            PuMain.Instance.Load(null);
 
             PuMain.Dispatcher.onChangeScene += Instance_onChangeScene;
             PuMain.Dispatcher.onDailyGift += Dispatcher_onDailyGift;

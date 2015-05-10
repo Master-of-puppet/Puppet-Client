@@ -87,14 +87,6 @@ namespace Puppet
         protected override void Init()
         {
             Logger.Log(ELogColor.GREEN, "PuppetMain has been initialized");
-
-            CacheHandler.Instance.LoadFile((status) =>
-            {
-                PuDLCache.Instance.Start();
-                PuSession.Instance.Start(status);
-
-                AutoLogin();
-            });
         }
 
         public Sfs2X.Entities.Room SfsRoom
@@ -103,22 +95,12 @@ namespace Puppet
         }
 
         /// <summary>
-        /// Called to initialize
+        /// Called to initialize and download data
         /// </summary>
-        public void Load()
+        public void Load(Action<float, string> onLoadCallback)
         {
-            new LoadConfig();
+            new LoadConfig(onLoadCallback);
         }
-
-        private void AutoLogin()
-        {
-            if (!string.IsNullOrEmpty(PuSession.Login.Time))
-            {
-                if (!string.IsNullOrEmpty(PuSession.Login.Token))
-                    API.Client.APILogin.Login(PuSession.Login.Token, null);
-                else
-                    API.Client.APILogin.LoginTrial(null);
-            }
-        }
+        
     }
 }

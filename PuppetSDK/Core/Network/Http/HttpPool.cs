@@ -7,12 +7,12 @@ namespace Puppet.Core.Network.Http
 {
     internal sealed class HttpPool
     {
-        internal static void GetAppConfig()
+        internal static void GetAppConfig(Action<bool, string> onGetAppVersion)
         {
-            Request(Commands.GET_APPLICATION_CONFIG, GetVersion(), null);
+            Request(Commands.GET_APPLICATION_CONFIG, GetVersion(), onGetAppVersion); 
         }
 
-        internal static void CheckVersion()
+        internal static void CheckVersion(Action<bool, string> onCheckVersionCompleted)
         {
             Request(Commands.CHECK_VERSION, GetVersion(), (bool status, string message) =>
             {
@@ -24,6 +24,9 @@ namespace Puppet.Core.Network.Http
                     string url = currentDict.ContainsKey("market") ? currentDict["market"].ToString() : string.Empty;
                     PuMain.Dispatcher.SetWarningUpgrade(type, currentDict["message"].ToString(), url);
                 }
+
+                if (onCheckVersionCompleted != null)
+                    onCheckVersionCompleted(status, message);
             });
         }
 

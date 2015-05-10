@@ -521,7 +521,7 @@ namespace Puppet.Poker
                 if (listIndex.Contains(i) == false) { minValue = i; break; }
             
             if (minValue >= 0)
-                API.Client.APIPokerGame.SitDown(minValue, LastBetForSitdown, false);
+                API.Client.APIPokerGame.SitDown(minValue, LastBetForSitdown, true);
         }
         #endregion
 
@@ -532,7 +532,7 @@ namespace Puppet.Poker
         {
             get
             {
-                double currentChip = Puppet.API.Client.APIUser.GetUserInformation().assets.GetAsset(EAssets.Chip).value;
+                double currentChip = mUserInfo.assets.GetAsset(EAssets.Chip).value;
                 return currentChip >= MinimumChipToPlay;
             }
         }
@@ -548,7 +548,17 @@ namespace Puppet.Poker
             get
             {
                 if (_lastBetForSitdown <= 0)
-                    _lastBetForSitdown = SmallBlind * 20;
+                {
+                    double maxBet = SmallBlind * 400;
+                    double minBet = SmallBlind * 20;
+                    double currentChip = mUserInfo.assets.GetAsset(EAssets.Chip).value;
+                    if (currentChip > maxBet)
+                        return maxBet;
+                    else if (currentChip > minBet)
+                        return Math.Floor(currentChip / SmallBlind) * SmallBlind;
+
+                    return minBet;
+                }
                 return _lastBetForSitdown;
             }
         }
