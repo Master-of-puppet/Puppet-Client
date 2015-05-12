@@ -15,11 +15,10 @@ namespace Puppet.Utils
         public static void SimpleCoroutine(IEnumerator ienumerator)
         {
             try 
-            { 
-                while (ienumerator.MoveNext())
-                {
-                    //ienumerator.Current;
-                }
+            {
+                while (true)
+                    if (!ienumerator.MoveNext())
+                        break;
             }
             finally
             {
