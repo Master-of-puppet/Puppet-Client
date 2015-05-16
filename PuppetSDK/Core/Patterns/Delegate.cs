@@ -14,4 +14,5 @@ namespace Puppet
     public delegate void DelegateAPICallbackDataGame(bool status, string message, List<DataGame> data);
     public delegate void DelegateAPICallbackDataChannel(bool status, string message, List<DataChannel> data);
     public delegate void DelegateAPICallbackDataLobby(bool status, string message, List<DataLobby> data);
+    public delegate void DelegateAPICallbackListString(bool status, string message, List<string> data);
 }

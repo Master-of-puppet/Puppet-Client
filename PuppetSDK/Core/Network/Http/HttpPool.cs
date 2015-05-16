@@ -7,9 +7,10 @@ namespace Puppet.Core.Network.Http
 {
     internal sealed class HttpPool
     {
+        #region Init Data On Start
         internal static void GetAppConfig(Action<bool, string> onGetAppVersion)
         {
-            Request(Commands.GET_APPLICATION_CONFIG, GetVersion(), onGetAppVersion); 
+            Request(Commands.GET_APPLICATION_CONFIG, GetVersion(), onGetAppVersion);
         }
 
         internal static void CheckVersion(Action<bool, string> onCheckVersionCompleted)
@@ -29,12 +30,7 @@ namespace Puppet.Core.Network.Http
                     onCheckVersionCompleted(status, message);
             });
         }
-
-        internal static void RequestChangePassword(string yourEmail, DelegateAPICallback callback)
-        {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-            Request(Commands.FORGOT_PASSWORD, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "email", yourEmail);
-        }
+        #endregion
 
         #region CHANGE USER INFORMATION
         /// <summary>
@@ -134,8 +130,15 @@ namespace Puppet.Core.Network.Http
 
             }, "type", "changeInformationSpecial");
         }
+
+        internal static void RequestChangePassword(string yourEmail, DelegateAPICallback callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            Request(Commands.FORGOT_PASSWORD, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "email", yourEmail);
+        }
         #endregion
 
+        #region Login & Register
         internal static void QuickRegister(string username, string password, DelegateAPICallback callback)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
@@ -195,6 +198,7 @@ namespace Puppet.Core.Network.Http
             Dictionary<string, string> dict = new Dictionary<string, string>();
             Request(Commands.GET_ACCESS_TOKEN, dict, (bool status, string data) => HandleCallback(status, data, ref callback), "username", username, "password", password, "type", "register");
         }
+        #endregion
 
         internal static void GetInfoEvents(Action<bool, string, DataResponseEvents> callback)
         {
@@ -280,6 +284,53 @@ namespace Puppet.Core.Network.Http
             dict.Add("request_ids", request);
 
             Request(Commands.SAVE_REQUEST_FB, dict, (bool status, string message) => HandleCallback(status, message, ref callback));
+        }
+
+        /// <summary>
+        /// http://foxpokers.com/static/api/getDefaultAvatar?limit=4
+        /// </summary>
+        internal static void GetDefaultAvatar(int limit, DelegateAPICallbackListString callback)
+        {
+            if (PuGlobal.Instance.listDefaultAvatar != null && PuGlobal.Instance.listDefaultAvatar.Count > 0)
+            {
+                callback(true, string.Empty, PuGlobal.Instance.listDefaultAvatar);
+                return;
+            }
+
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("limit", limit.ToString());
+
+            Request(Commands.GET_DEFAULT_AVATAR, dict, (bool status, string jsonData) =>
+            {
+                if (status)
+                {
+                    ResponseListAvatar data = Puppet.Core.Model.Factory.JsonDataModelFactory.CreateDataModel<ResponseListAvatar>(jsonData);
+                    PuGlobal.Instance.listDefaultAvatar = new List<string>(data.items);
+
+                    bool responseStatus = false;
+                    string responseMessage = string.Empty;
+                    HandleCallback(status, jsonData, out responseStatus, out responseMessage);
+
+                    if (callback != null && data != null)
+                        callback(responseStatus, responseMessage, PuGlobal.Instance.listDefaultAvatar);
+                }
+                else if (callback != null)
+                {
+                    callback(false, jsonData, new List<string>());
+                }
+            });
+        }
+
+        /// <summary>
+        /// http://foxpokers.com/static/api/saveDefaultAvatar?data={"username":"dinhthanh89","path":"files/users/default_avatar_3"}
+        /// </summary>
+        internal static void SaveDefaultAvatar(string userName, string path, DelegateAPICallback callback)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            dict.Add("username", userName);
+            dict.Add("path", path);
+
+            Request(Commands.SAVE_DEFAULT_AVATAR, dict, (bool status, string message) => HandleCallback(status, message, ref callback));
         }
 
         static Dictionary<string, string> GetVersion()

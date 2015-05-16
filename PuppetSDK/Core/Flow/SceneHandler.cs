@@ -5,6 +5,7 @@ using Puppet.Core.Model;
 using Sfs2X.Entities;
 using Puppet.Core.Network.Socket;
 using Sfs2X.Core;
+using Puppet.Utils;
 
 namespace Puppet.Core.Flow
 {
@@ -98,7 +99,10 @@ namespace Puppet.Core.Flow
             else
                 Logger.Log(ELogColor.GREEN, "Server want going to scene: " + serverSceneName);
 
-            PuMain.Dispatcher.SetChangeScene(_lastScene, scene.SceneType);
+            ThreadHandler.QueueOnMainThread(() =>
+            {
+                PuMain.Dispatcher.SetChangeScene(_lastScene, scene.SceneType);
+            });
         }
     }
 }

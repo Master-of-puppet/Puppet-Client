@@ -19,6 +19,9 @@ namespace Puppet
         public const string RECHARGE_CARD               = "/static/api/rechargeCard";
         public const string POST_FACEBOOK               = "/static/api/postFacebook";
         public const string SAVE_REQUEST_FB             = "/static/api/saveRequestFb";
+        public const string GET_DEFAULT_AVATAR          = "/static/api/getDefaultAvatar";
+        public const string SAVE_DEFAULT_AVATAR         = "/static/api/saveDefaultAvatar";
+
         public const string GET_EVENTS                  = "/api/getEvents";
     }
 }

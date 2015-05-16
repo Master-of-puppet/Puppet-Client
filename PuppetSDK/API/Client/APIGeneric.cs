@@ -98,6 +98,22 @@ namespace Puppet.API.Client
         }
 
         /// <summary>
+        /// Lấy danh sách các avatar mặc định từ server.
+        /// </summary>
+        public static void GetDefaultAvatar(DelegateAPICallbackListString callback)
+        {
+            HttpPool.GetDefaultAvatar(4, callback);
+        }
+
+        /// <summary>
+        /// Thay đổi avatar của người chơi sử dụng avatar mặc định.
+        /// </summary>
+        public static void SaveDefaultAvatar(string path, DelegateAPICallback callback)
+        {
+            HttpPool.SaveDefaultAvatar(USERNAME, path, callback);
+        }
+
+        /// <summary>
         /// Lấy thông tin các người chơi có trong phòng hiện tại.
         /// </summary>
         /// <returns>Danh sách các người chơi (bao gồm cả người đang gọi API)</returns>

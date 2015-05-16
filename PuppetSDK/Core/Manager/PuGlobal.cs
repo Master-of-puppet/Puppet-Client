@@ -17,6 +17,7 @@ namespace Puppet
         internal List<DataChannel> GroupsLobby;
         internal RoomInfo SelectedRoomJoin;
         internal DataDailyGift CurrentDailyGift;
+        internal List<string> listDefaultAvatar;
 
         protected override void Init()
         {
