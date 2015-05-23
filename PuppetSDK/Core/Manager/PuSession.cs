@@ -10,6 +10,7 @@ namespace Puppet
     public class PuSession : BaseSingleton<PuSession>
     {
         private bool initialized = false;
+
         private PuSessionLogin c_login;
         public static PuSessionLogin Login
         {
@@ -17,15 +18,32 @@ namespace Puppet
             set { Instance.c_login = value; }
         }
 
+        private PuGameOption c_option;
+        public static PuGameOption Option
+        {
+            get { return Instance.c_option; }
+            set { Instance.c_option = value; }
+        }
+
         internal void Start(bool loadFromCacheSuccess)
         {
             this.initialized = loadFromCacheSuccess;
 
-            if(CacheHandler.Instance.HasKey("SessionLogin"))
+            #region GAME SESSION
+            if (CacheHandler.Instance.HasKey("SessionLogin"))
                 Login = CacheHandler.Instance.GetObject("SessionLogin") as PuSessionLogin;
             else
                 Login = new PuSessionLogin();
             Logger.Log("Login Session Info: " + Login.ToJson());
+            #endregion
+
+            #region GAME OPTION
+            if (CacheHandler.Instance.HasKey("GameOption"))
+                Option = CacheHandler.Instance.GetObject("GameOption") as PuGameOption;
+            else
+                Option = new PuGameOption();
+            Logger.Log("Game Option Info: " + Option.ToJson());
+            #endregion
         }
 
         internal void SaveSession()
@@ -56,6 +74,28 @@ namespace Puppet
         {
             this.Time = string.Empty;
             this.Token = string.Empty;
+        }
+    }
+
+    [Serializable()]
+    public class PuGameOption : DataModel
+    {
+        public bool isEnableSoundBG = true;
+
+        public bool isEnableSoundEffect = true;
+
+        public bool isAutoSitdown = true;
+
+        public bool isAutoLockScreen = true;
+
+        public PuGameOption()
+            : base()
+        {
+        }
+
+        public PuGameOption(SerializationInfo info, StreamingContext ctxt)
+            : base(info, ctxt)
+        {
         }
     }
 }

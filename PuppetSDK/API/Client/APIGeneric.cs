@@ -148,5 +148,23 @@ namespace Puppet.API.Client
         {
             PuMain.Socket.Request(RequestPool.GetPublicMessageRequest(DefineKeys.KEY_CHAT_MESSAGE, data));
         }
+
+        /// <summary>
+        /// Lấy thông tin về cấu hình ứng dụng của người chơi (như âm thanh, các tùy chọn...)
+        /// </summary>
+        /// <param name="version">Và thông tin về phiên bản hiện tại</param>
+        public static PuGameOption GetOptionInfo(out string version)
+        {
+            version = PuMain.Setting.ClientDetails.version.ToString();
+            return PuSession.Option;
+        }
+
+        /// <summary>
+        /// Lưu lại thay đổi của người chơi
+        /// </summary>
+        public static void ChangeOptionInfo(PuGameOption newOption)
+        {
+            PuSession.Option = newOption;
+        }
     }
 }
