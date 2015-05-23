@@ -126,6 +126,9 @@ namespace Puppet.Core.Flow
             UserHandler.Instance.ResetSingleton();
             RoomHandler.Instance.ResetSingleton();
             PuGlobal.Instance.ResetSingleton();
+            SocketHandler.Instance.ResetSingleton();
+
+            PuMain.Setting.Reset();
         }
 
         internal void GetDailyGift()
@@ -153,6 +156,11 @@ namespace Puppet.Core.Flow
         {
             PuSession.Login.Clear();
             this.onLogoutCallback = onLogoutCallback;
+            PuMain.Socket.Request(RequestPool.GetLogout());
+        }
+
+        internal void RequestTimeOut()
+        {
             PuMain.Socket.Request(RequestPool.GetLogout());
         }
         #endregion

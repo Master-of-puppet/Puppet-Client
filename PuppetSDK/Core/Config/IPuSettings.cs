@@ -30,5 +30,6 @@ namespace Puppet
         void OnApplicationPause(bool pauseStatus);
         void OnApplicationQuit();
         void OnUpdate();
+        void Reset();
     }
 }

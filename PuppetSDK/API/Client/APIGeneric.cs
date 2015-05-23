@@ -40,6 +40,14 @@ namespace Puppet.API.Client
         }
 
         /// <summary>
+        /// Khi request server timeout, tạo lại các kết nối.
+        /// </summary>
+        public static void RequestTimeOut()
+        {
+            SceneGeneric.Instance.RequestTimeOut();
+        }
+
+        /// <summary>
         /// Nhận phần thưởng hàng ngày.
         /// Cần implemnent event EventDispatcher.onDailyGift.
         /// </summary>

@@ -38,13 +38,23 @@ namespace Puppet
             server = new ServerMode(soketServer);
             serverBundle = new WebServerMode(domain);
             serverWebHttp = new WebServerMode(domain);
-            
+
+            InitSocket();
+
+            AfterInit();
+        }
+
+        void InitSocket()
+        {
             SocketHandler.Instance.Init(new CSmartFox());
             SocketHandler.Instance.AddPlugin(BuddyHandler.Instance.GetAddOn);
             SocketHandler.Instance.AddPlugin(PingHandler.Instance.GetAddOn);
             SocketHandler.Instance.InitSocket();
+        }
 
-            AfterInit();
+        public void Reset()
+        {
+            InitSocket();
         }
 
         protected virtual void AfterInit()

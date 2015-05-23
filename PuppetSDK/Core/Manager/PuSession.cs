@@ -49,6 +49,7 @@ namespace Puppet
         internal void SaveSession()
         {
             CacheHandler.Instance.SetObject("SessionLogin", c_login);
+            CacheHandler.Instance.SetObject("GameOption", c_option);
         }
 
         protected override void Init() { }
