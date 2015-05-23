@@ -137,6 +137,24 @@ namespace Puppet.Core.Flow
             }
         }
 
+        internal List<DataLobby> Fillter(string name, int? index, int? roomId, int? totalPlayer, double? minBet, double? maxBet)
+        {
+            List<DataLobby> fillter = new List<DataLobby>(_listCacheDataLobby);
+            if(index.HasValue)
+                fillter = fillter.FindAll(lobby => lobby.index == index.Value);
+            if (roomId.HasValue)
+                fillter = fillter.FindAll(lobby => lobby.roomId == roomId.Value);
+            if (totalPlayer.HasValue)
+                fillter = fillter.FindAll(lobby => lobby.gameDetails.numPlayers == totalPlayer.Value);
+            if (minBet.HasValue)
+                fillter = fillter.FindAll(lobby => lobby.gameDetails.betting >= minBet.Value);
+            if (maxBet.HasValue)
+                fillter = fillter.FindAll(lobby => lobby.gameDetails.betting <= maxBet.Value);
+            if (!string.IsNullOrEmpty(name))
+                fillter = fillter.FindAll(lobby => lobby.displayName.Contains(name));
+            return fillter;
+        }
+
         internal void SetSelectChannel(DataChannel channel, DelegateAPICallbackDataLobby onGetGroupChildrenCallback)
         {
             PuGlobal.Instance.SelectedChannel = channel;

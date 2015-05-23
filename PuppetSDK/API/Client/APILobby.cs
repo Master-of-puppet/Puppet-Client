@@ -19,6 +19,11 @@ namespace Puppet.API.Client
             ScenePockerLobby.Instance.GetGroupsLobby(onGetGroupNameCallback);
         }
 
+        public static List<DataLobby> FillterCurrentChannel(string name, int? index, int? roomId, int? totalPlayer, double? minBet, double? maxBet)
+        {
+            return ScenePockerLobby.Instance.Fillter(name, index, roomId, totalPlayer, minBet, maxBet);
+        }
+
         /// <summary>
         /// Chọn và tham gia vào một kênh
         /// </summary>
