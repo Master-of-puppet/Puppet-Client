@@ -137,7 +137,7 @@ namespace Puppet.Core.Flow
             }
         }
 
-        internal List<DataLobby> Fillter(string name, int? index, int? roomId, int? totalPlayer, double? minBet, double? maxBet)
+        internal List<DataLobby> Fillter(string name, int? index, int? roomId, int? totalPlayer, double? minBet, double? maxBet, double[] withBet)
         {
             List<DataLobby> fillter = new List<DataLobby>(_listCacheDataLobby);
             if(index.HasValue)
@@ -152,6 +152,11 @@ namespace Puppet.Core.Flow
                 fillter = fillter.FindAll(lobby => lobby.gameDetails.betting <= maxBet.Value);
             if (!string.IsNullOrEmpty(name))
                 fillter = fillter.FindAll(lobby => lobby.displayName.Contains(name));
+            if(withBet != null && withBet.Length > 0)
+            {
+                List<double> list = new List<double>(withBet);
+                fillter = fillter.FindAll(lobby => list.Contains(lobby.gameDetails.betting));
+            }
             return fillter;
         }
 
