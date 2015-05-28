@@ -97,6 +97,10 @@ namespace Puppet.Poker
                             RefreshListPlayerInGame(false, dataUpdateGame.players);
                             UpdateCardDeal(dataUpdateGame.dealComminityCards);
                             DispathToClient(command, dataUpdateGame);
+
+                            if(PuSession.Option.isAutoSitdown)
+                                AutoSitDown();
+
                             break;
                         case "updateGameState":             /// Nhận được command khi gameState thay đổi
                             ResponseUpdateGameState dataGameState = SFSDataModelFactory.CreateDataModel<ResponseUpdateGameState>(messageObj);
@@ -551,6 +555,7 @@ namespace Puppet.Poker
                 {
                     double maxBet = SmallBlind * 400;
                     double minBet = SmallBlind * 20;
+
                     double currentChip = mUserInfo.assets.GetAsset(EAssets.Chip).value;
                     if (currentChip > maxBet)
                         return maxBet;

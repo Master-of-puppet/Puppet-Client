@@ -81,17 +81,21 @@ namespace Puppet
     [Serializable()]
     public class PuGameOption : DataModel
     {
-        public bool isEnableSoundBG = true;
+        public bool isEnableSoundBG { get; set; }
 
-        public bool isEnableSoundEffect = true;
+        public bool isEnableSoundEffect { get; set; }
 
-        public bool isAutoSitdown = true;
+        public bool isAutoSitdown { get; set; }
 
-        public bool isAutoLockScreen = true;
+        public bool isAutoLockScreen { get; set; }
 
         public PuGameOption()
             : base()
         {
+            isEnableSoundBG = true;
+            isEnableSoundEffect = true;
+            isAutoSitdown = true;
+            isAutoLockScreen = true;
         }
 
         public PuGameOption(SerializationInfo info, StreamingContext ctxt)
