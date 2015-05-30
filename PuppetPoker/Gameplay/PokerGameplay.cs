@@ -45,9 +45,11 @@ namespace Puppet.Poker
         double _lastBetForSitdown;
         bool firstTimeJoinGame = false;
         UserInfo _mUserInfo;
+        bool isAutoSitdown = false;
 
         public override void EnterGameplay()
         {
+            isAutoSitdown = PuSession.Option.isAutoSitdown;
             IsClientListening = false;
             isRunningIEnumerator = false;
             _mUserInfo = Puppet.API.Client.APIUser.GetUserInformation();
@@ -98,8 +100,11 @@ namespace Puppet.Poker
                             UpdateCardDeal(dataUpdateGame.dealComminityCards);
                             DispathToClient(command, dataUpdateGame);
 
-                            if(PuSession.Option.isAutoSitdown)
+                            if (isAutoSitdown)
+                            {
+                                isAutoSitdown = false;
                                 AutoSitDown();
+                            }
 
                             break;
                         case "updateGameState":             /// Nhận được command khi gameState thay đổi
