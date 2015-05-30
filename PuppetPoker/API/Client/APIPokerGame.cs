@@ -46,6 +46,11 @@ namespace Puppet.API.Client
             PokerMain.Instance.game.StandUp();
         }
 
+        public static void QuitGame()
+        {
+            PokerMain.Instance.game.QuitGame();
+        }
+
         public static void RequestViewCard()
         {
             Puppet.API.Client.APIGeneric.SendPublicMessage(Constant.KEY_VIEW_CARD, new DataMessageBase());

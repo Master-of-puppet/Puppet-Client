@@ -45,7 +45,13 @@ namespace Puppet.Poker.Datagram
 
         public static ISocketRequest GetStandUpRequest()
         {
-            ISFSObject obj = new RequestPlugin(new RequestStandUp(), RequestPlugin.GAME_PLUGIN_VALUE).ToSFSObject();
+            ISFSObject obj = new RequestPlugin(new RequestWithAction("standUp"), RequestPlugin.GAME_PLUGIN_VALUE).ToSFSObject();
+            return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, PuMain.Instance.SfsRoom));
+        }
+
+        public static ISocketRequest GetQuitGameRequest()
+        {
+            ISFSObject obj = new RequestPlugin(new RequestWithAction("quitGame"), RequestPlugin.GAME_PLUGIN_VALUE).ToSFSObject();
             return new SFSocketRequest(new ExtensionRequest(Fields.REQUEST_PLUGIN, obj, PuMain.Instance.SfsRoom));
         }
     }

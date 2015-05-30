@@ -6,15 +6,15 @@ using Puppet.Core.Model;
 
 namespace Puppet.Poker.Datagram
 {
-    internal class RequestStandUp : AbstractData
+    internal class RequestWithAction : AbstractData
     {
         public string command { get; set; }
         public string action { get; set; }
 
-        public RequestStandUp()
+        public RequestWithAction(string action)
         {
             this.command = "play";
-            this.action = "standUp";
+            this.action = action;
         }
     }
 }

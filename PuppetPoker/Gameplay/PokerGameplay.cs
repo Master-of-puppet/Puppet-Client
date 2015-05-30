@@ -522,6 +522,11 @@ namespace Puppet.Poker
             PuMain.Socket.Request(RequestPool.GetStandUpRequest());
         }
 
+        internal void QuitGame()
+        {
+            PuMain.Socket.Request(RequestPool.GetQuitGameRequest());
+        }
+
         internal void AutoSitDown()
         {
             List<int> listIndex = (from player in ListPlayer select player.slotIndex).ToList<int>();
