@@ -1,4 +1,5 @@
 ﻿using Puppet.Core.Model;
+using Puppet.Core.Model.Factory;
 using Puppet.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,19 @@ namespace Puppet.Core.Network.Http
     internal sealed class HttpPool
     {
         #region Init Data On Start
-        internal static void GetAppConfig(Action<bool, string> onGetAppVersion)
+        internal static void GetAppConfig(Action<bool, ResponseAppConfig> onGetAppConfig)
         {
-            Request(Commands.GET_APPLICATION_CONFIG, GetVersion(), onGetAppVersion);
+            Request(Commands.GET_APPLICATION_CONFIG, GetVersion(), (bool status, string message) =>
+            {
+                if (status)
+                {
+                    ResponseAppConfig appConfig = JsonDataModelFactory.CreateDataModel<ResponseAppConfig>(message);
+                    PuGlobal.Instance.currentAppConfig = appConfig;
+                }
+
+                if (onGetAppConfig != null)
+                    onGetAppConfig(status, PuGlobal.Instance.currentAppConfig);
+            });
         }
 
         internal static void CheckVersion(Action<bool, string> onCheckVersionCompleted)

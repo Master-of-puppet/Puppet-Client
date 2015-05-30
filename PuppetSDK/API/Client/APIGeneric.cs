@@ -174,5 +174,13 @@ namespace Puppet.API.Client
         {
             PuSession.Option = newOption;
         }
+
+        public static ResponseAppConfig GetAppConfig
+        {
+            get
+            {
+                return PuGlobal.Instance.currentAppConfig;
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace Puppet.Core.Manager
             {
                 //Step 3: Tải thông tin cấu hình
                 Dispatch("Loading config");
-                HttpPool.GetAppConfig((loadStatus, loadMessage) =>
+                HttpPool.GetAppConfig((loadStatus, configResponse) =>
                 {
                     // Gọi để lưu lại danh sách avatar cho lần sau.
                     HttpPool.GetDefaultAvatar(4, null);

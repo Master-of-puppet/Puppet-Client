@@ -9,9 +9,17 @@ namespace Puppet.Core.Model
     {
         public int code { get; set; }
         public string message { get; set; }
-        public AppConfigDetail items { get; set; }
+        public AppConfigDetail [] items { get; set; }
 
         public ResponseAppConfig() : base() { }
+
+        public string GetValue(string key)
+        {
+            if(items != null && items.Length > 0)
+                return System.Array.Find<AppConfigDetail>(items, config => config.name == key).value;
+
+            return string.Empty;
+        }
     }
 
     public class AppConfigDetail : DataModel
