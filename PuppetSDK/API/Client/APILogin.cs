@@ -147,9 +147,21 @@ namespace Puppet.API.Client
             PuMain.WWWHandler.Request(request);
         }
 
+        /// <summary>
+        /// Yêu cầu server gửi thông tin về mật khẩu đến email
+        /// </summary>
+        /// <param name="yourEmail">Địa chỉ email của bạn</param>
         public static void RequestChangePassword(string yourEmail, DelegateAPICallback callback)
         {
             HttpPool.RequestChangePassword(yourEmail, callback);
+        }
+
+        /// <summary>
+        /// Accesstoken hiện tại để truy cập đến server
+        /// </summary>
+        public static string AccessToken
+        {
+            get { return PuGlobal.Instance.token; }
         }
     }
 }

@@ -12,16 +12,6 @@ namespace Puppet.API.Client
 {
     public sealed class APIGeneric
     {
-        private static string USERNAME
-        {
-            get { return PuGlobal.Instance.mUserInfo.info.userName; }
-        }
-
-        private static int USER_ID
-        {
-            get { return PuGlobal.Instance.mUserInfo.info.id; }
-        }
-
         /// <summary>
         /// Thông báo server quay về cảnh trước đó, Bao gồm cả Logout.
         /// </summary>
@@ -80,7 +70,7 @@ namespace Puppet.API.Client
         /// <param name="type">Loại thẻ là một trong các loại 'VIETTEL'; 'VINAPHONE'; 'MOBIFONE'; 'VCOIN'; 'GATE'; 'MEGACARD'</param>
         public static void RechargeCard(string pin, string serial, string trackId, string type, DelegateAPICallback callback)
         {
-            HttpPool.RechargeCard(USERNAME, pin, serial, trackId, type, callback);
+            HttpPool.RechargeCard(APIUser.USERNAME, pin, serial, trackId, type, callback);
         }
 
         /// <summary>
@@ -91,7 +81,7 @@ namespace Puppet.API.Client
         /// <param name="picture">Hình ảnh sẽ được đăng</param>
         public static void PostFacebook(string accessToken, string title, byte[] picture, DelegateAPICallback callback)
         {
-            HttpPool.PostFacebook(USERNAME, accessToken, title, picture, callback);
+            HttpPool.PostFacebook(APIUser.USERNAME, accessToken, title, picture, callback);
         }
 
         /// <summary>
@@ -102,7 +92,7 @@ namespace Puppet.API.Client
         /// <param name="requestIds">Danh sách Ids các người chơi được gửi yêu cầu</param>
         public static void SaveRequestFB(string facebookId, string[] requestIds, DelegateAPICallback callback)
         {
-            HttpPool.SaveRequestFB(facebookId, USER_ID.ToString(), requestIds, callback);
+            HttpPool.SaveRequestFB(facebookId, APIUser.USER_ID.ToString(), requestIds, callback);
         }
 
         /// <summary>
@@ -118,7 +108,7 @@ namespace Puppet.API.Client
         /// </summary>
         public static void SaveDefaultAvatar(string path, DelegateAPICallback callback)
         {
-            HttpPool.SaveDefaultAvatar(USERNAME, path, callback);
+            HttpPool.SaveDefaultAvatar(APIUser.USERNAME, path, callback);
         }
 
         /// <summary>
@@ -175,12 +165,12 @@ namespace Puppet.API.Client
             PuSession.Option = newOption;
         }
 
+        /// <summary>
+        /// Thông tin về cấu hình app được lưu lại server
+        /// </summary>
         public static ResponseAppConfig GetAppConfig
         {
-            get
-            {
-                return PuGlobal.Instance.currentAppConfig;
-            }
+            get { return PuGlobal.Instance.currentAppConfig; }
         }
     }
 }

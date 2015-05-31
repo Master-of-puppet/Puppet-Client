@@ -11,9 +11,22 @@ namespace Puppet.API.Client
 {
     public sealed class APIUser
     {
-        private static string USERNAME
+        public static string USERNAME
         {
             get { return PuGlobal.Instance.mUserInfo.info.userName; }
+        }
+
+        public static int USER_ID
+        {
+            get { return PuGlobal.Instance.mUserInfo.info.id; }
+        }
+
+        /// <summary>
+        /// Lấy về các thông tin về người chơi, Như tài sản, thông tin cá nhân...
+        /// </summary>
+        public static UserInfo GetUserInformation()
+        {
+            return UserHandler.Instance.Self;
         }
 
         #region Change Use Information
@@ -40,11 +53,11 @@ namespace Puppet.API.Client
         }
 
         /// <summary>
-        /// Thay đổi avatar của người chơi
+        /// Thay đổi avatar của người chơi (
         /// </summary>
         /// <param name="avatar">Thông tin về ảnh (byte[]) mới</param>
         /// <param name="callback">Hành động khi hoàn tất đổi thông tin</param>
-        /// 
+        [Obsolete("Please use Puppet.HttpAPI.ChangeUseAvatar(); in clinet FoxPoker", true)]
         public static void ChangeUseInformation(byte[] avatar, DelegateAPICallback callback)
         {
             if (avatar == null)
@@ -96,14 +109,6 @@ namespace Puppet.API.Client
             HttpPool.ChangeUseInformationSpecial(USERNAME, email, mobile, callback);
         }
         #endregion
-
-        /// <summary>
-        /// Lấy về các thông tin về người chơi, Như tài sản, thông tin cá nhân...
-        /// </summary>
-        public static UserInfo GetUserInformation()
-        {
-            return UserHandler.Instance.Self;
-        }
 
         /// <summary>
         /// Không được gọi hàm này khi không hiểu nhé. Tạm thời chỉ sử dụng để các API gọi ngược vào Core SDK thôi.
