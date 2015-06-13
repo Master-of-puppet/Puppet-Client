@@ -8,6 +8,8 @@ namespace Puppet.Core.Network.Socket
 {
     public abstract class SocketAbstract : ISocket
     {
+        protected List<ISocketAddOn> listAddOn = new List<ISocketAddOn>();
+
         Action<string, ISocketResponse> _onResponse;
         public event Action<string, ISocketResponse> onResponse
         {
@@ -20,8 +22,6 @@ namespace Puppet.Core.Network.Socket
                 _onResponse -= value;
             }
         }
-
-        protected List<ISocketAddOn> listAddOn = new List<ISocketAddOn>();
 
         public virtual void InitSocket()
         {
