@@ -8,47 +8,119 @@ namespace Puppet.Core.Manager
 {
     public class EventDispatcher
     {
-        public event Action<EScene, EScene> onChangeScene;
-        public event Action<EMessage, string> onNoticeMessage;
-        public event Action<EUpgrade, string, string> onWarningUpgrade;
-        public event Action<DataDailyGift> onDailyGift;
-        public event Action<DataChat> onChatMessage;
-        public event Action<UserInfo> onUserInfoUpdate;
+        Action<EScene, EScene> _onChangeScene;
+        public event Action<EScene, EScene> onChangeScene
+        {
+            add 
+            {
+                _onChangeScene += value;
+            }
+            remove
+            {
+                _onChangeScene -= value;
+            }
+        }
+
+        Action<EMessage, string> _onNoticeMessage;
+        public event Action<EMessage, string> onNoticeMessage
+        {
+            add
+            {
+                _onNoticeMessage += value;
+            }
+            remove
+            {
+                _onNoticeMessage -= value;
+            }
+        }
+
+        Action<EUpgrade, string, string> _onWarningUpgrade;
+        public event Action<EUpgrade, string, string> onWarningUpgrade
+        {
+            add
+            {
+                _onWarningUpgrade += value;
+            }
+            remove
+            {
+                _onWarningUpgrade -= value;
+            }
+
+        }
+
+        Action<DataDailyGift> _onDailyGift;
+        public event Action<DataDailyGift> onDailyGift
+        {
+            add
+            {
+                _onDailyGift += value;
+            }
+            remove
+            {
+                _onDailyGift -= value;
+            }
+        }
+
+        Action<DataChat> _onChatMessage;
+        public event Action<DataChat> onChatMessage
+        {
+            add
+            {
+                _onChatMessage += value;
+            }
+            remove
+            {
+                _onChatMessage -= value;
+            }
+        }
+
+        Action<UserInfo> _onUserInfoUpdate;
+        public event Action<UserInfo> onUserInfoUpdate
+        {
+            add 
+            {
+                _onUserInfoUpdate += value;
+            }
+            remove
+            {
+                _onUserInfoUpdate -= value;
+            }
+        }
 
         internal void SetChangeScene(EScene fromScene, EScene toScene)
         {
-            if (onChangeScene != null)
-                onChangeScene(fromScene, toScene);
+            if (_onChangeScene != null)
+                _onChangeScene(fromScene, toScene);
         }
 
         internal void SetNoticeMessage(EMessage messageType, string message)
         {
-            if (onNoticeMessage != null)
-                onNoticeMessage(messageType, message);
+            if (_onNoticeMessage != null)
+                _onNoticeMessage(messageType, message);
         }
 
         internal void SetWarningUpgrade(EUpgrade type, string message, string url)
         {
-            if (onWarningUpgrade != null)
-                onWarningUpgrade(type, message, url);
+            if (_onWarningUpgrade != null)
+                _onWarningUpgrade(type, message, url);
         }
 
         internal void SetDailyGift(DataDailyGift data)
         {
-            if (onDailyGift != null)
-                onDailyGift(data);
+            if (_onDailyGift != null)
+                _onDailyGift(data);
         }
 
         internal void SetChatMessage(DataChat data)
         {
-            if (onChatMessage != null)
-                onChatMessage(data);
+            if (_onChatMessage != null)
+                _onChatMessage(data);
         }
 
         internal void SetUpdateUserInfo(UserInfo info)
         {
-            if (onUserInfoUpdate != null)
-                onUserInfoUpdate(info);
+            if (_onUserInfoUpdate != null)
+                _onUserInfoUpdate(info);
         }
     }
 }

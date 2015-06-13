@@ -23,9 +23,46 @@ namespace Puppet.Poker
         /// Info Setting Poker Game
         /// </summary>
         public PokerGameDetails gameDetails;
-        public event Action<PokerCard[]> onDealCardsChange;
-        public event Action<DataMessageBase> onDispatchViewCard;
-        public event Action<ResponseUpdateGame> onFirstTimeJoinGame;
+
+        Action<PokerCard[]> _onDealCardsChange;
+        public event Action<PokerCard[]> onDealCardsChange
+        {
+            add
+            {
+                _onDealCardsChange += value;
+            }
+            remove
+            {
+                _onDealCardsChange -= value;
+            }
+        }
+
+        Action<DataMessageBase> _onDispatchViewCard;
+        public event Action<DataMessageBase> onDispatchViewCard
+        {
+            add
+            {
+                _onDispatchViewCard += value;
+            }
+            remove
+            {
+                _onDispatchViewCard -= value;
+            }
+        }
+
+        Action<ResponseUpdateGame> _onFirstTimeJoinGame;
+        public event Action<ResponseUpdateGame> onFirstTimeJoinGame
+        {
+            add
+            {
+                _onFirstTimeJoinGame += value;
+            }
+            remove
+            {
+                _onFirstTimeJoinGame -= value;
+            }
+        }
+
 
         List<KeyValuePair<string, object>> queueWaitingEvent;
         bool __isClientListening;
@@ -171,8 +208,8 @@ namespace Puppet.Poker
                 {
                     ISFSObject obj = (SFSObject)onEventResponse.Params[Fields.DATA];
                     DataMessageBase dataViewCard = SFSDataModelFactory.CreateDataModel<DataMessageBase>(obj);
-                    if (onDispatchViewCard != null)
-                        onDispatchViewCard(dataViewCard);
+                    if (_onDispatchViewCard != null)
+                        _onDispatchViewCard(dataViewCard);
                 }
             }
         }
@@ -233,8 +270,8 @@ namespace Puppet.Poker
                 firstTimeJoinGame = false;
                 ResponseUpdateGame dataGame = data as ResponseUpdateGame;
                 HandleFirstTimeJoinGame(dataGame);
-                if (onFirstTimeJoinGame != null)
-                    onFirstTimeJoinGame(dataGame);
+                if (_onFirstTimeJoinGame != null)
+                    _onFirstTimeJoinGame(dataGame);
             }
             else
             {
@@ -266,8 +303,8 @@ namespace Puppet.Poker
             if (newCards.Count > 0)
             {
                 _comminityCards.AddRange(newCards);
-                if (onDealCardsChange != null)
-                    onDealCardsChange(newCards.ToArray());
+                if (_onDealCardsChange != null)
+                    _onDealCardsChange(newCards.ToArray());
             }
         }
         void UpdateCardMainPlayer(int [] cards)

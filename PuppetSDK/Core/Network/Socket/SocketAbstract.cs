@@ -8,7 +8,19 @@ namespace Puppet.Core.Network.Socket
 {
     public abstract class SocketAbstract : ISocket
     {
-        public event Action<string, ISocketResponse> onResponse;
+        Action<string, ISocketResponse> _onResponse;
+        public event Action<string, ISocketResponse> onResponse
+        {
+            add
+            {
+                _onResponse += value;
+            }
+            remove
+            {
+                _onResponse -= value;
+            }
+        }
+
         protected List<ISocketAddOn> listAddOn = new List<ISocketAddOn>();
 
         public virtual void InitSocket()
@@ -29,8 +41,8 @@ namespace Puppet.Core.Network.Socket
 
         public virtual void DispatchResponse(string type, ISocketResponse response)
         {
-            if (this.onResponse != null)
-                this.onResponse(type, response);
+            if (this._onResponse != null)
+                this._onResponse(type, response);
 
             foreach(ISocketAddOn addOn in listAddOn)
                 addOn.ProcessMessage(type, response);
