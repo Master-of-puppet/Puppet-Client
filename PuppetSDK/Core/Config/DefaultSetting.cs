@@ -44,6 +44,11 @@ namespace Puppet
             AfterInit();
         }
 
+        public void ChangeRealtimeServer(string server, int port)
+        {
+            this.server = new ServerMode(server, port);
+        }
+
         void InitSocket()
         {
             SocketHandler.Instance.Init(new CSmartFox());
@@ -188,6 +193,7 @@ namespace Puppet
     class ServerMode : IServerMode
     {
         string domain;
+        int port = 9933;
         public ServerMode(string domain)
         {
             if (!string.IsNullOrEmpty(domain))
@@ -196,9 +202,15 @@ namespace Puppet
                 this.domain = "127.0.0.1";
         }
 
+        public ServerMode(string domain, int port)
+        {
+            this.domain = domain;
+            this.port = port;
+        }
+
         public string GetBaseUrl() { return string.Format("https://{0}:{1}", Domain, Port); }
 
-        public int Port { get { return 9933; } }
+        public int Port { get { return port; } }
 
         public string Domain { get { return domain; } }
 

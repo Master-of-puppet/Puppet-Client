@@ -32,6 +32,12 @@ namespace Puppet.Core.Manager
                 Dispatch("Loading config");
                 HttpPool.GetAppConfig((loadStatus, configResponse) =>
                 {
+                    string serverUrl = PuGlobal.Instance.currentAppConfig.GetValue("realtime_server");
+                    string serverPort = PuGlobal.Instance.currentAppConfig.GetValue("realtime_server_port");
+                    int port;
+                    if (!string.IsNullOrEmpty(serverUrl) && int.TryParse(serverPort, out port))
+                        PuMain.Setting.ChangeRealtimeServer(serverUrl, port);
+
                     // Gọi để lưu lại danh sách avatar cho lần sau.
                     HttpPool.GetDefaultAvatar(4, null);
 

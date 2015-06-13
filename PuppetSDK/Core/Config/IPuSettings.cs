@@ -24,7 +24,8 @@ namespace Puppet
         IStorage PlayerPref { get; }
         IThread Threading { get; }
         string PathCache { get; }
-        
+
+        void ChangeRealtimeServer(string server, int port);
         void ActionPrintLog(ELogType type, object message);
         void Init();
         void OnApplicationPause(bool pauseStatus);

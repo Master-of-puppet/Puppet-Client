@@ -8,7 +8,7 @@ namespace Puppet.Poker
 {
     public static class EventDispatcher
     {
-        public static event Action<string, object> onGameEvent;
+        public static Action<string, object> onGameEvent;
         
         internal static void SetGameEvent(string command, object data)
         {

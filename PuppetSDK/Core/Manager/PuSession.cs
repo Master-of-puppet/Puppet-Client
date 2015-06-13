@@ -92,7 +92,7 @@ namespace Puppet
         public PuGameOption()
             : base()
         {
-            isEnableSoundBG = true;
+            isEnableSoundBG = false;
             isEnableSoundEffect = true;
             isAutoSitdown = true;
             isAutoLockScreen = true;
