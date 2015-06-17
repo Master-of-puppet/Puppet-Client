@@ -27,40 +27,22 @@ namespace Puppet.Poker
         Action<PokerCard[]> _onDealCardsChange;
         public event Action<PokerCard[]> onDealCardsChange
         {
-            add
-            {
-                _onDealCardsChange += value;
-            }
-            remove
-            {
-                _onDealCardsChange -= value;
-            }
+            add { _onDealCardsChange += value; }
+            remove { _onDealCardsChange -= value; }
         }
 
         Action<DataMessageBase> _onDispatchViewCard;
         public event Action<DataMessageBase> onDispatchViewCard
         {
-            add
-            {
-                _onDispatchViewCard += value;
-            }
-            remove
-            {
-                _onDispatchViewCard -= value;
-            }
+            add { _onDispatchViewCard += value; }
+            remove { _onDispatchViewCard -= value; }
         }
 
         Action<ResponseUpdateGame> _onFirstTimeJoinGame;
         public event Action<ResponseUpdateGame> onFirstTimeJoinGame
         {
-            add
-            {
-                _onFirstTimeJoinGame += value;
-            }
-            remove
-            {
-                _onFirstTimeJoinGame -= value;
-            }
+            add { _onFirstTimeJoinGame += value; }
+            remove { _onFirstTimeJoinGame -= value; }
         }
 
 
@@ -111,7 +93,12 @@ namespace Puppet.Poker
         {
             string dictKey = userInfo.info.userName;
             if (_dictAllPlayers.ContainsKey(dictKey))
-                _dictAllPlayers[dictKey].globalAsset.UpdateAssets(userInfo.assets.content);
+            {
+                if (_dictAllPlayers[dictKey].globalAsset != null)
+                    _dictAllPlayers[dictKey].globalAsset.UpdateAssets(userInfo.assets.content);
+                else
+                    Logger.LogError("Player {0} Missing globalAsset from Server -> Current Data: {1}", dictKey, _dictAllPlayers[dictKey].ToString());
+            }
         }
 
         public override void ProcessEvents(string eventType, ISocketResponse onEventResponse)
@@ -137,7 +124,7 @@ namespace Puppet.Poker
                             UpdateCardDeal(dataUpdateGame.dealComminityCards);
                             DispathToClient(command, dataUpdateGame);
 
-                            if (isAutoSitdown)
+                            if (isAutoSitdown && Array.Find<PokerPlayerController>(dataUpdateGame.players, p => p.userName == MainPlayer.userName) == null)
                             {
                                 isAutoSitdown = false;
                                 AutoSitDown();

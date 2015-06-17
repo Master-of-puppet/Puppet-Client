@@ -10,16 +10,18 @@ namespace Puppet.Poker
     
         protected override void Init()
         {
-            game = new PokerGameplay();
-            PuMain.GameLogic = game;
+            PuMain.Dispatcher.onPreChangeScene += Dispatcher_onPreChangeScene;
         }
 
-        /// <summary>
-        /// Call when Enter Plaza Game Poker
-        /// </summary>
-        public void EnterPoker()
+        void Dispatcher_onPreChangeScene(EScene fromScene, EScene toScene)
         {
-
+            if(toScene == EScene.Pocker_Gameplay)
+            {
+                game = new PokerGameplay();
+                PuMain.GameLogic = game;
+            }
         }
+
+        public void StartListen() { }
     }
 }

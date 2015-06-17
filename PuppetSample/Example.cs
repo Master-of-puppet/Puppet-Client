@@ -107,6 +107,8 @@ namespace Puppet
             //});
             Logger.Log("Login.....");
             API.Client.APILogin.LoginTrial(null);
+
+            Puppet.Poker.PokerMain.Instance.StartListen();
         }
 
         static void AtWorldScene()
@@ -139,7 +141,7 @@ namespace Puppet
 
         static void AtLobbyScene()
         {
-            Puppet.Poker.PokerMain.Instance.EnterPoker();
+            //Puppet.Poker.PokerMain.Instance.StartListen();
             API.Client.APILobby.GetGroupsLobby((bool getGStatus, string getGMessage, List<DataChannel> data) =>
             {
                 int i = 0;

@@ -33,6 +33,8 @@ namespace Puppet.Core.Flow
             get { return _currentScene; }
             set
             {
+                PuMain.Dispatcher.SetPreChangeScene(_lastScene, value.SceneType);
+
                 if (_currentScene != null)
                 {
                     _lastScene = _currentScene.SceneType;
