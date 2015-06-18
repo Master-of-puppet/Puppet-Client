@@ -146,7 +146,8 @@ namespace Puppet.Core.Flow
         internal void BackScene(DelegateAPICallback onBackSceneCallback)
         {
             this.onBackSceneCallback = onBackSceneCallback;
-            if (RoomHandler.Instance.Current.Id == PuGlobal.Instance.FirtRoomToJoin.roomId)
+            //if (RoomHandler.Instance.Current.Id == PuGlobal.Instance.FirtRoomToJoin.roomId)
+            if (SceneHandler.Instance.Current.SceneType == EScene.Pocker_Plaza || SceneHandler.Instance.Current.SceneType == EScene.Pocker_Lobby)
                 PuMain.Socket.Disconnect();
             else
                 PuMain.Socket.Request(RequestPool.GetJoinRoomRequest(RoomHandler.Instance.GetParentRoom));
