@@ -124,7 +124,7 @@ namespace Puppet.Poker
                             UpdateCardDeal(dataUpdateGame.dealComminityCards);
                             DispathToClient(command, dataUpdateGame);
 
-                            if (isAutoSitdown && Array.Find<PokerPlayerController>(dataUpdateGame.players, p => p.userName == MainPlayer.userName) == null)
+                            if (isAutoSitdown && (MainPlayer == null || Array.Find<PokerPlayerController>(dataUpdateGame.players, p => p.userName == MainPlayer.userName) == null))
                             {
                                 isAutoSitdown = false;
                                 AutoSitDown();
