@@ -45,6 +45,7 @@
     <Compile Include="Core\Config\DefaultSetting.cs" />
     <Compile Include="Core\Config\Enum.cs" />
     <Compile Include="Core\Config\IPuSettings.cs" />
+    <Compile Include="Core\Config\IMainMono.cs" />
     <Compile Include="Core\Flow\SceneGeneric.cs" />
     <Compile Include="Core\Flow\SceneHandler.cs" />
     <Compile Include="Core\Flow\SceneLogin.cs" />

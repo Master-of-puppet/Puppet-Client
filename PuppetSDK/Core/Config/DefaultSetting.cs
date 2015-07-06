@@ -10,6 +10,7 @@ using Puppet.Utils.Storage;
 using Puppet.Utils.Threading;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -144,6 +145,11 @@ namespace Puppet
             get { return SimpleThread.Instance; }
         }
 
+        public virtual IMainMono MainMono
+        {
+            get { return SimpleMono.Instance; }
+        }
+
         public virtual string UniqueDeviceIdentification
         {
             get { return Guid.NewGuid().ToString(); }
@@ -235,5 +241,40 @@ namespace Puppet
         public string Domain { get { return domain; } }
 
         public string GetPath(string path) { return string.Format("{0}{1}", GetBaseUrl(), path); }
+    }
+
+    class SimpleMono : BaseSingleton<SimpleMono>, IMainMono
+    {
+        public void BeginCoroutine(IEnumerator routine)
+        {
+            Thread t = new Thread(() =>
+            {
+                try
+                {
+                    while (true)
+                    {
+                        Thread.Sleep(100);
+                        if (!routine.MoveNext())
+                            break;
+                    }
+                }
+                finally
+                {
+                    IDisposable disposable = routine as IDisposable;
+                    if (disposable != null)
+                        disposable.Dispose();
+                }
+            });
+            t.Start();
+        }
+
+        public void EndCoroutine(IEnumerator routine)
+        {
+        }
+
+        protected override void Init()
+        {
+        }
+   
     }
 } 

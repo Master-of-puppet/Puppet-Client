@@ -12,22 +12,6 @@ namespace Puppet.Utils
 {
     public class Utility
     {
-        public static void SimpleCoroutine(IEnumerator ienumerator)
-        {
-            try 
-            {
-                while (true)
-                    if (!ienumerator.MoveNext())
-                        break;
-            }
-            finally
-            {
-                IDisposable disposable = ienumerator as IDisposable;
-                if (disposable != null)
-                    disposable.Dispose();
-            }
-        }
-
         public static string SFSObjectToString(ISFSObject obj)
         {
             Dictionary<string, object> dict = new Dictionary<string, object>();

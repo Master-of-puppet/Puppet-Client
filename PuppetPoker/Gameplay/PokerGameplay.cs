@@ -225,7 +225,7 @@ namespace Puppet.Poker
                     __isClientListening = value;
 
                     if (__isClientListening && !isRunningIEnumerator)
-                        Utility.SimpleCoroutine(_ProcessStackWaiting());
+                        PuMain.Setting.MainMono.BeginCoroutine(_ProcessStackWaiting());
                 }
             }
         }
