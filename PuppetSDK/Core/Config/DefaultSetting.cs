@@ -150,6 +150,11 @@ namespace Puppet
             get { return SimpleMono.Instance; }
         }
 
+        public virtual ENetworkDataType NetworkDataType
+        {
+            get { return ENetworkDataType.Cable; }
+        }
+
         public virtual string UniqueDeviceIdentification
         {
             get { return Guid.NewGuid().ToString(); }

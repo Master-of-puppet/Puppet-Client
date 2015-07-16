@@ -73,6 +73,17 @@ namespace Puppet
                 return _eventDispatcher;
             }
         }
+
+        static ClientDispatcher _clientDispatcher;
+        public static ClientDispatcher ClientDispatcher
+        {
+            get
+            {
+                if (_clientDispatcher == null)
+                    _clientDispatcher = new ClientDispatcher();
+                return _clientDispatcher;
+            }
+        }
         #endregion
 
         #region GameLogic
@@ -101,6 +112,10 @@ namespace Puppet
         {
             new LoadConfig(onLoadCallback);
         }
-        
+
+        public void SetNetworkChange(ENetworkDataType from, ENetworkDataType to)
+        {
+
+        }
     }
 }

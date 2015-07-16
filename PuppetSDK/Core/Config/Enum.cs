@@ -85,5 +85,12 @@ namespace Puppet
         Heart = 3,
     }
 
-    
+    public enum ENetworkDataType
+    {
+        None = -1,
+        Unknown = 0,
+        Cable = 1,
+        Wifi = 2,
+        MobileData = 3
+    }
 }

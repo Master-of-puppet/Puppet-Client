@@ -25,6 +25,7 @@ namespace Puppet
         IThread Threading { get; }
         string PathCache { get; }
         IMainMono MainMono { get; }
+        ENetworkDataType NetworkDataType { get; }
         
 
         void ChangeRealtimeServer(string server, int port);

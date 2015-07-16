@@ -53,6 +53,7 @@
     <Compile Include="Core\Flow\ScenePockerLobby.cs" />
     <Compile Include="Core\Flow\ScenePockerPlaza.cs" />
     <Compile Include="Core\Flow\SceneWorldGame.cs" />
+    <Compile Include="Core\Manager\ClientDispatcher.cs" />
     <Compile Include="Core\Manager\EventDispatcher.cs" />
     <Compile Include="Core\Manager\LoadConfig.cs" />
     <Compile Include="Core\Manager\PuGlobal.cs" />

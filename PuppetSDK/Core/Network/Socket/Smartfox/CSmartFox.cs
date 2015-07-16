@@ -38,7 +38,15 @@ namespace Puppet.Core.Network.Socket
             //    foreach (LogLevel log in Enum.GetValues(typeof(LogLevel)))
             //        smbtartFox.AddLogListener(log, OnDebugMessage);
 
+            smartFox.UseBlueBox = PuMain.Setting.NetworkDataType == ENetworkDataType.MobileData;
+            PuMain.ClientDispatcher.onNetworkConnectChange += ClientDispatcher_onNetworkConnectChange;
+
             base.InitSocket();
+        }
+
+        void ClientDispatcher_onNetworkConnectChange(ENetworkDataType fromData, ENetworkDataType toData)
+        {
+            smartFox.UseBlueBox = toData == ENetworkDataType.MobileData;
         }
 
         public override bool IsConnected
@@ -80,6 +88,8 @@ namespace Puppet.Core.Network.Socket
 
         public override void Request(ISocketRequest request)
         {
+            
+
             SFSocketRequest myRequest = (SFSocketRequest)request;
             smartFox.Send(myRequest.Resquest);
 
