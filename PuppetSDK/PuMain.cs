@@ -112,10 +112,5 @@ namespace Puppet
         {
             new LoadConfig(onLoadCallback);
         }
-
-        public void SetNetworkChange(ENetworkDataType from, ENetworkDataType to)
-        {
-
-        }
     }
 }

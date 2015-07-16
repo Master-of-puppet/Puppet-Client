@@ -19,6 +19,7 @@ namespace Puppet.Core.Network.Socket
 {
     internal class CSmartFox : SocketAbstract
     {
+        int TEST_BLUEBOX_PORT = 1313;
         SmartFox smartFox;
         ConfigData configData;
 
@@ -35,10 +36,12 @@ namespace Puppet.Core.Network.Socket
             smartFox.ThreadSafeMode = PuMain.Setting.UseUnity;
 
             //if (PuMain.Setting.UseUnity && PuMain.Setting.IsDebug)
-            //    foreach (LogLevel log in Enum.GetValues(typeof(LogLevel)))
-            //        smbtartFox.AddLogListener(log, OnDebugMessage);
+                foreach (LogLevel log in Enum.GetValues(typeof(LogLevel)))
+                    smartFox.AddLogListener(log, OnDebugMessage);
 
-            smartFox.UseBlueBox = PuMain.Setting.NetworkDataType == ENetworkDataType.MobileData;
+            //smartFox.UseBlueBox = PuMain.Setting.NetworkDataType == ENetworkDataType.MobileData;
+            smartFox.UseBlueBox = true;
+
             PuMain.ClientDispatcher.onNetworkConnectChange += ClientDispatcher_onNetworkConnectChange;
 
             base.InitSocket();
@@ -56,23 +59,27 @@ namespace Puppet.Core.Network.Socket
 
         public override void Connect()
         {
-            base.Connect();
-            if (!IsConnected)
+            PuMain.Setting.Threading.QueueOnMainThread(() =>
             {
-                configData = new ConfigData();
-                configData.Host = PuMain.Setting.ServerModeSocket.Domain;
-                configData.Port = PuMain.Setting.ServerModeSocket.Port;
-                configData.Zone = PuMain.Setting.ZoneName;
-
-                smartFox.Connect(configData);
-                Logger.Log(ELogColor.GREEN, "Connecting...");
-
-                //After connect: Start get event in queue
-                PuMain.Setting.ActionUpdate = () =>
+                base.Connect();
+                if (!IsConnected)
                 {
-                    smartFox.ProcessEvents();
-                };
-            }
+                    configData = new ConfigData();
+                    configData.Host = PuMain.Setting.ServerModeSocket.Domain;
+                    configData.Port = PuMain.Setting.NetworkDataType == ENetworkDataType.MobileData ? TEST_BLUEBOX_PORT :
+                        PuMain.Setting.ServerModeSocket.Port;
+                    configData.Zone = PuMain.Setting.ZoneName;
+
+                    smartFox.Connect(configData);
+                    Logger.Log(ELogColor.GREEN, "Connecting smartfox... Host: {0} - Port: {1}", configData.Host, configData.Port);
+
+                    //After connect: Start get event in queue
+                    PuMain.Setting.ActionUpdate = () =>
+                    {
+                        smartFox.ProcessEvents();
+                    };
+                }
+            });
         }
 
         public override void Disconnect()
@@ -88,8 +95,6 @@ namespace Puppet.Core.Network.Socket
 
         public override void Request(ISocketRequest request)
         {
-            
-
             SFSocketRequest myRequest = (SFSocketRequest)request;
             smartFox.Send(myRequest.Resquest);
 
@@ -144,7 +149,7 @@ namespace Puppet.Core.Network.Socket
         {
             if (PuMain.Setting.IsDebug)
             {
-                Logger.Log("{0}: {1}", evt.Type, evt.Params[Fields.MESSAGE]);
+                Logger.Log("SmartFox - {0}: {1}", evt.Type, evt.Params[Fields.MESSAGE]);
             }
         }
     }

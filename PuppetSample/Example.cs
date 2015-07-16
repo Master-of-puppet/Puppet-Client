@@ -86,7 +86,7 @@ namespace Puppet
                 enter = "puppet.esimo.vn";
             else if (enter.EndsWith("3"))
                 enter = "127.0.0.1";
-            DefaultSetting.domain = DefaultSetting.soketServer = enter;
+            DefaultSetting.domain = DefaultSetting.socketServer = enter;
             //DefaultSetting.soketServer = "192.168.10.143";
 
             Console.Write("Enter your Username: ");

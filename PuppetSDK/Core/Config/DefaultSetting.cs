@@ -22,7 +22,8 @@ namespace Puppet
     public class DefaultSetting : IPuSettings
     {
         public static string domain;
-        public static string soketServer;
+        public static string socketServer;
+        public static int socketPort;
 
         protected IServerMode server, serverWebHttp, serverBundle;
         EPlatform _platform;
@@ -36,7 +37,7 @@ namespace Puppet
             _platform = EPlatform.Editor;
             _env = ServerEnvironment.Dev;
 
-            server = new ServerMode(soketServer);
+            server = new ServerMode(socketServer);
             serverBundle = new WebServerMode(domain);
             serverWebHttp = new WebServerMode(domain);
 
@@ -47,6 +48,8 @@ namespace Puppet
 
         public void ChangeRealtimeServer(string server, int port)
         {
+            socketServer = server;
+            socketPort = port;
             this.server = new ServerMode(server, port);
         }
 
