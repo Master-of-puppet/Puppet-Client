@@ -19,7 +19,7 @@ namespace Puppet.Core.Network.Socket
 {
     internal class CSmartFox : SocketAbstract
     {
-        int TEST_BLUEBOX_PORT = 1313;
+        //int TEST_BLUEBOX_PORT = 1313;
         SmartFox smartFox;
         ConfigData configData;
 
@@ -40,17 +40,17 @@ namespace Puppet.Core.Network.Socket
                     smartFox.AddLogListener(log, OnDebugMessage);
 
             //smartFox.UseBlueBox = PuMain.Setting.NetworkDataType == ENetworkDataType.MobileData;
-            smartFox.UseBlueBox = true;
+            //smartFox.UseBlueBox = true;
 
-            PuMain.ClientDispatcher.onNetworkConnectChange += ClientDispatcher_onNetworkConnectChange;
+            //PuMain.ClientDispatcher.onNetworkConnectChange += ClientDispatcher_onNetworkConnectChange;
 
             base.InitSocket();
         }
 
-        void ClientDispatcher_onNetworkConnectChange(ENetworkDataType fromData, ENetworkDataType toData)
-        {
-            smartFox.UseBlueBox = toData == ENetworkDataType.MobileData;
-        }
+        //void ClientDispatcher_onNetworkConnectChange(ENetworkDataType fromData, ENetworkDataType toData)
+        //{
+        //    smartFox.UseBlueBox = toData == ENetworkDataType.MobileData;
+        //}
 
         public override bool IsConnected
         {
@@ -66,8 +66,9 @@ namespace Puppet.Core.Network.Socket
                 {
                     configData = new ConfigData();
                     configData.Host = PuMain.Setting.ServerModeSocket.Domain;
-                    configData.Port = PuMain.Setting.NetworkDataType == ENetworkDataType.MobileData ? TEST_BLUEBOX_PORT :
-                        PuMain.Setting.ServerModeSocket.Port;
+                    //configData.Port = PuMain.Setting.NetworkDataType == ENetworkDataType.MobileData ? TEST_BLUEBOX_PORT :
+                    //    PuMain.Setting.ServerModeSocket.Port;
+                    configData.Port = PuMain.Setting.ServerModeSocket.Port;
                     configData.Zone = PuMain.Setting.ZoneName;
 
                     smartFox.Connect(configData);
